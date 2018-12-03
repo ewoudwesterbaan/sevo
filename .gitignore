@@ -1,0 +1,7 @@
+/bin
+
+# toegevoegd ivm Latex
+*.pdf
+*.synctex.gz
+
+
