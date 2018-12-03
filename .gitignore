@@ -1,4 +1,4 @@
-eclipse/bin/**
+bin/**
 
 # toegevoegd ivm Latex
 *.pdf
