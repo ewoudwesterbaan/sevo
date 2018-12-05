@@ -1,11 +1,16 @@
 module Main
 
-import Volume;
-import Unitsize;
-import Utils;
+import utils::Utils;
+import metrics::Volume;
+import metrics::UnitSize;
+import IO;
 
 public void main() {
 	loc project = |project://smallsql/|;
-	LocationMetrics volume = volumeMetrics(project);
-	LocationMetrics unitSize = unitSizeMetrics(project);
+	println("Calculating volume");
+	RelLinesOfCode volume = volumeMetrics(project);
+	println("Calculating unitsize");
+	RelLinesOfCode unitSize = unitSizeMetrics(project);
+	
+	println("Program ended succesfully");
 }
