@@ -18,34 +18,44 @@ public alias RelLinesOfCode = rel[loc location, int totalLines, int commentLines
 //     codeLines: Aantal regels code
 //
 public TupLinesOfCode getLinesOfCode(loc location) {
-	int totalLines = size(readFileLines(location));
-
-	// alle characters tussen (en inclusief) /* en */ is block commentaar
-	list[str] blockComments = [ bc | /<bc:(?s)\/\*.*?\*\/>/ := readFile(location)];
-	
-	// nieuwe content opbouwen waarbij we de blockcommentaar eruit halen
-	str totalContent = readFile(location);
-	for (bc <- blockComments) {
-		totalContent = replaceAll(totalContent, bc, "");
-	};
-	
-	// split the content in aparte regels, nu hebben we de code en de linecomments over
-	list[str] contentInStrings = [l | /<l:.*>/ := totalContent, !isEmpty(trim(l))];
+	// bepalen van het totaal aantal regels
+	list[str] rawContent = readFileLines(location);
+	int totalLines = size(rawContent);	
 	
 	// als een regels start met '//' is dat line commentaar
 	// inline commentaar wordt hier niet meegenomen
-	int lineComments = size([ c | c <- contentInStrings,  startsWith(trim(c), "//")]);
+	int lineComments = size([ c | c <- rawContent,  startsWith(trim(c), "//")]);
 
 	// De codeLines hier kunnen inline commentaar bevatten. Dit maakt voor de metriek niet uit.
-	int codeLines = size(contentInStrings) - lineComments;
+	int codeLines = size(cleanContent(location));
 	
 	// We moeten de blockcomment splitsen in regels om de size te bepalen
 	int blockCommentsLines = 0;
-	for (bc <- blockComments)
+	for (bc <- getBlockComments(location))
 	{
 		blockCommentsLines += size([l | /<l:.*>/ := bc, !isEmpty(trim(l))]);
 	}
 	int commentLines = lineComments + blockCommentsLines;
 
 	return <location, totalLines, commentLines, codeLines>;
+}
+
+private list[str] getBlockComments(loc location) {
+	// alle characters tussen (en inclusief) /* en */ is block commentaar
+	list[str] blockComments = [ bc | /<bc:(?s)\/\*.*?\*\/>/ := readFile(location)];	
+}
+
+public list[str] cleanContent(loc location) {
+	// nieuwe content opbouwen waarbij we de blockcommentaar eruit halen
+	str totalContent = readFile(location);
+	for (bc <- getBlockComments(location)) {
+		totalContent = replaceAll(totalContent, bc, "");
+	};
+	// split the content in aparte regels, nu hebben we de code en de linecomments over
+	list[str] contentInStringsBeforeLineComments = [l | /<l:.*>/ := totalContent, !isEmpty(trim(l))];
+	// verwijder de linecomments en haal de lege ruimte voor en na de string weg
+	// TODO: linecommentaar eruit filteren. Voor aantal codelines maakt dit niet uit, maar kan voor duplication
+	//		wel vervelend worden.
+	list[str] cleanedContent = [trim(x) | x <- contentInStringsBeforeLineComments, !startsWith(trim(x), "//")];
+	return cleanedContent;
 }

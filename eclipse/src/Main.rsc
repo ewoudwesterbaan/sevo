@@ -12,8 +12,8 @@ public void main() {
 	RelLinesOfCode volume = volumeMetrics(project);
 	println("Calculating unitsize");
 	RelLinesOfCode unitSize = unitSizeMetrics(project);
-	
-	methodsForDuplication = { <m, cod> | <m, tot, com, cod> <- unitSize, code >= 6 }; 
+	println("Calculating duplication");
+	methodsForDuplication = { <m, cod> | <m, tot, com, cod> <- unitSize, cod >= 6 }; 
 	duplication(methodsForDuplication);
 	
 	println("Program ended succesfully");
