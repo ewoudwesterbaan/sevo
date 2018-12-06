@@ -1,13 +1,17 @@
 module metrics::Complexity
 
-import lang::java::jdt::m3::AST;
+import utils::Utils;
 import lang::java::jdt::m3::Core;
 import Boolean;
 
-public int cyclomaticComplexity(loc project) {
+public RelComplexities cyclomaticComplexity(loc project) {
 	M3 model = createM3FromEclipseProject(project);
+	return {getUnitComplexity(m) | <c, m> <- getUnits(model)};
+}
+
+private TupComplexity getUnitComplexity(loc unit) {
 	// TODO
-	return 1; 
+	return <unit, 1>;
 }
 
 private int dummy() {

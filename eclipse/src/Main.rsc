@@ -21,7 +21,7 @@ public void main() {
 	duplication(methodsForDuplication);
 	
 	println("Calculating cyclomatic complexity");
-	int cc = cyclomaticComplexity(project);
+	RelComplexities = cyclomaticComplexity(project);
 	
 	println("Program ended succesfully");
 }

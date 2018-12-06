@@ -4,11 +4,26 @@ import IO;
 import String;
 import List;
 import Boolean;
+import lang::java::jdt::m3::Core;
 
 // Tuple van locatie met metrieken
 public alias TupLinesOfCode = tuple[loc location, int totalLines, int commentLines, int codeLines];
 // Set van bovenstaance tuples (relatie)
 public alias RelLinesOfCode = rel[loc location, int totalLines, int commentLines, int codeLines];
+// Tuple van unit met cyclomatische complexiteit
+public alias TupComplexity = tuple[loc unit, int complexity];
+// Set van bovenstaance complexity tuples (relatie)
+public alias RelComplexities = rel[loc unit, int complexity];
+
+// Haal alle methoden en constructoren op, per java-klasse
+//     c = klasse
+//     m = methode
+public rel[loc, loc] getUnits(M3 model) {
+	return { <c,m> | <c,m> <- model.containment,
+	                 c.scheme  == "java+class", 
+	                 m.scheme == "java+method" || 
+	                 m.scheme == "java+constructor" };
+}
 
 // Haal metrieken uit een locatie
 // Geeft een tuple terug met de volgende attributen:
@@ -42,7 +57,8 @@ public TupLinesOfCode getLinesOfCode(loc location) {
 
 private list[str] getBlockComments(loc location) {
 	// alle characters tussen (en inclusief) /* en */ is block commentaar
-	list[str] blockComments = [ bc | /<bc:(?s)\/\*.*?\*\/>/ := readFile(location)];	
+	list[str] blockComments = [ bc | /<bc:(?s)\/\*.*?\*\/>/ := readFile(location)];
+	return blockComments;	
 }
 
 public list[str] cleanContent(loc location) {
@@ -59,3 +75,4 @@ public list[str] cleanContent(loc location) {
 	list[str] cleanedContent = [trim(x) | x <- contentInStringsBeforeLineComments, !startsWith(trim(x), "//")];
 	return cleanedContent;
 }
+

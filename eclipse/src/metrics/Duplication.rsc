@@ -12,7 +12,9 @@ public void duplication(rel[loc location, int codeSize] methods) {
 	createComparePairs(domain(methods));
 }
 
-public rel[loc, loc] createComparePairs(set[loc] methods) {
+// Tijdelijk op void gezet om foutmelding te voorkomen: Missing return statement
+public void createComparePairs(set[loc] methods) {
+//public rel[loc, loc] createComparePairs(set[loc] methods) {
 	println("size of methods: <size(methods)>");
 	rel[loc methodA, loc methodB] cartesianProduct = methods*methods; // 682276
 	println("size of cartesianProduct: <size(cartesianProduct)>");
