@@ -14,7 +14,6 @@ public RelLinesOfCode unitSizeMetrics(loc project) {
 	M3 model = createM3FromEclipseProject(project);
 	rel[loc c, loc m] units = getUnits(model);
 	RelLinesOfCode unitSizeMetrics = {getLinesOfCode(m) | <c, m> <- units};
-	// println(unitSizeMetrics);
 	return unitSizeMetrics;
 }
 
