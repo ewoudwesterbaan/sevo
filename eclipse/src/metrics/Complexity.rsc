@@ -39,14 +39,3 @@ private TupComplexity getUnitComplexity(str unitName, Statement stat) {
     return <stat.src, unitName, complexity>;
 }
 
-private int dummy() {
-    return 0;
-}
-
-test bool testDummySuccess() {
-    return dummy() == 0;
-}
-
-test bool testDummyFail() {
-    return dummy() == 1;
-}
