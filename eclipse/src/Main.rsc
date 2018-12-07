@@ -21,7 +21,8 @@ public void main() {
 	duplication(methodsForDuplication);
 	
 	println("Calculating cyclomatic complexity");
-	RelComplexities = cyclomaticComplexity(project);
+	RelComplexities complexities = cyclomaticComplexity(project);
+	for (TupComplexity c <- complexities) println("Complexity: location = <c.location>, method = <c.unitName>, complexity = <c.complexity>.");
 	
 	println("Program ended succesfully");
 }

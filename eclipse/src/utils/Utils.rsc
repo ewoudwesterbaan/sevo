@@ -8,12 +8,12 @@ import lang::java::jdt::m3::Core;
 
 // Tuple van locatie met metrieken
 public alias TupLinesOfCode = tuple[loc location, int totalLines, int commentLines, int codeLines];
-// Set van bovenstaance tuples (relatie)
+// Set van bovenstaande tuples (relatie)
 public alias RelLinesOfCode = rel[loc location, int totalLines, int commentLines, int codeLines];
 // Tuple van unit met cyclomatische complexiteit
-public alias TupComplexity = tuple[loc unit, int complexity];
-// Set van bovenstaance complexity tuples (relatie)
-public alias RelComplexities = rel[loc unit, int complexity];
+public alias TupComplexity = tuple[loc location, str unitName, int complexity];
+// Set van bovenstaande complexity tuples (relatie)
+public alias RelComplexities = rel[loc location, str unitName, int complexity];
 
 // Haal alle methoden en constructoren op, per java-klasse
 //     c = klasse
