@@ -9,49 +9,44 @@ import List;
 // Input moet een set van locaties van methodes zijn 
 // waarvan het aantal regel gelijk of groter is dan 6.
 public void duplication(rel[loc location, int codeSize] methods) {
-	createComparePairs(domain(methods));
+	rel[loc methodA, loc methodB] createComparePairs(domain(methods));
 }
 
 // Maakt een relatie met methodes om met elkaar te verglijken.
 // Geeft een relatie terug van twee methodes.
 public rel[loc methodA, loc methodB] createComparePairs(set[loc] methods) {
 	println("size of methods: <size(methods)>");
-	rel[loc methodA, loc methodB] cartesianProduct = methods*methods; // 682276
+	rel[loc methodA, loc methodB] cartesianProduct = methods*methods;
 	println("size of cartesianProduct: <size(cartesianProduct)>");
-	rel[loc, loc] part1 = { <methodA, methodB> | <methodA, methodB> <- cartesianProduct, methodA < methodB };
-	println("size of part1: <size(part1)>");
-	
-	// Onderstaande lijkt me overbodig, volgens mij als we part2 terug geven, zijn we er ook
-	rel[loc, loc] part2 = { <methodB, methodA> | <methodA, methodB> <- cartesianProduct, methodA > methodB };
-	println("size of part2: <size(part2)>");
-	rel[loc methodA, loc methodB] distinct = part1 + part2;
-	println("size of distinct: <size(distinct)>");
-	return distinct;
+	rel[loc, loc] pairs = { <methodA, methodB> | <methodA, methodB> <- cartesianProduct, methodA < methodB };
+	println("size of pairs: <size(pairs)>");
+	return pairs;
 }
 
 // Vergelijk de methodes met elkaar.
 // Als 6 aan elkaar gesloten regels overeenkomen, geeft dan True terug, anders False
 public bool compare(loc methodA, loc methodB) {
-	int locMethodA = getLinesOfCode(methodA).codeLines;
-	int locMethodB = getLinesOfCode(methodB).codeLines;
-	// verdelen, a bevat de minste content (of gelijk)
-	loc a = locMethodA < locMethodB ? methodA : methodB;
-	loc b = locMethodA < locMethodB ? methodB : methodA;
-	list[str] contentA = cleanContent(a);
-	list[str] contentB = cleanContent(b);
-	int sizeA = size(contentA);
-	int sizeB = size(contentB);
-	int equalRows = 0;
-	// we gaan uit van de methode met het minst aantal regels
-	for (lineA <- contentA) {
-		for (lineB <- contentB) {
-			if (lineB == lineA) {
-				equalRows += 1;
-			} else {
-				equalRows = 0;
-				
+	// We vergelijken 'schoongemaate' content
+	list[str] contentA = cleanContent(methodA);
+	list[str] contentB = cleanContent(methodB);
+	for (indA <- index(contentA)) { // [0, 1, 2 ..]
+		if (size(contentA[indA ..]) < 6) return false;
+		for (indB <- index(contentB)) {
+			if (compareListOfStrings(contentA[indA ..], contentB[indB ..], 6)) {
+				return true;
 			};
 		};
 	};
-	return equalRows >= 6;
+	return false;
 }
+
+// Vergelijks twee lijsten van strings met elkaar
+// Geeft het aantal gelijke rgeles terug als het minimaal aantal van numLinesMustBeEqual opeenvolgende regels gelijk zijn
+public bool compareListOfStrings(list[str] lstStringA, list[str] lstStringB, int numLinesMustBeEqual) {
+	if (size(lstStringA) >= numLinesMustBeEqual && size(lstStringB) >= numLinesMustBeEqual) {
+		return head(lstStringA, numLinesMustBeEqual) == head(lstStringB, numLinesMustBeEqual);
+	} else {
+		return false;
+	};
+}
+
