@@ -18,7 +18,8 @@ public void main() {
 
 	println("Calculating duplication");
 	methodsForDuplication = { <m, cod> | <m, tot, com, cod> <- unitSize, cod >= 6 }; 
-	duplication(methodsForDuplication);
+	rel[loc methodA, loc methodB, int locEqual] duplicationResult = duplication(methodsForDuplication);
+	for (<methodA, methodB, locEqual> <- duplicationResult) println("<methodA> and <methodB> contains <locEqual> rows of duplicated code");
 	
 	println("Calculating cyclomatic complexity");
 	RelComplexities complexities = cyclomaticComplexity(project);

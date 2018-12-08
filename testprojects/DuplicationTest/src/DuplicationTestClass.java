@@ -10,6 +10,8 @@ public class DuplicationTestClass {
 			System.out.println(s + " " + x);
 		}
 		System.out.println("End method");
+		System.out.println("Morecode");
+		System.out.println("MuchMorecode");
 	}
 	
 	// Exact gelijk
@@ -20,6 +22,8 @@ public class DuplicationTestClass {
 			System.out.println(s + " " + x);
 		}
 		System.out.println("End method");
+		System.out.println("Morecode");
+		System.out.println("MuchMorecode");
 	}
 	
 	// Eerste deel gelijk
