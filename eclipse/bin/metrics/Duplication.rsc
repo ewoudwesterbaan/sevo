@@ -12,18 +12,25 @@ public void duplication(rel[loc location, int codeSize] methods) {
 	createComparePairs(domain(methods));
 }
 
-public rel[loc, loc] createComparePairs(set[loc] methods) {
+// Maakt een relatie met methodes om met elkaar te verglijken.
+// Geeft een relatie terug van twee methodes.
+public rel[loc methodA, loc methodB] createComparePairs(set[loc] methods) {
 	println("size of methods: <size(methods)>");
 	rel[loc methodA, loc methodB] cartesianProduct = methods*methods; // 682276
 	println("size of cartesianProduct: <size(cartesianProduct)>");
 	rel[loc, loc] part1 = { <methodA, methodB> | <methodA, methodB> <- cartesianProduct, methodA < methodB };
 	println("size of part1: <size(part1)>");
+	
+	// Onderstaande lijkt me overbodig, volgens mij als we part2 terug geven, zijn we er ook
 	rel[loc, loc] part2 = { <methodB, methodA> | <methodA, methodB> <- cartesianProduct, methodA > methodB };
 	println("size of part2: <size(part2)>");
 	rel[loc methodA, loc methodB] distinct = part1 + part2;
 	println("size of distinct: <size(distinct)>");
+	return distinct;
 }
 
+// Vergelijk de methodes met elkaar.
+// Als 6 aan elkaar gesloten regels overeenkomen, geeft dan True terug, anders False
 public bool compare(loc methodA, loc methodB) {
 	int locMethodA = getLinesOfCode(methodA).codeLines;
 	int locMethodB = getLinesOfCode(methodB).codeLines;
