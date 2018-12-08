@@ -35,4 +35,22 @@ class ComplexityTestClass {
     		}
     	}
     }
+    
+    void complexityFive(boolean male, int age) {
+    	if (male && (age < 18 || age >= 50)) {
+    		return;
+    	} else if (!male) {
+    		return;
+    	}
+    	aString = "Male between 18 and 50";
+    }
+
+    void complexitySix(boolean male, int age) {
+    	if ((male && age < 18) || (male && age >= 50)) {
+    		return;
+    	} else if (!male) {
+    		return;
+    	}
+    	aString = "Male between 18 and 50";
+    }
 }
