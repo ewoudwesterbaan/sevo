@@ -8,7 +8,7 @@ import Set;
 import List;
 
 // De testdata voor deze testmodule bevindt zich in het complexity project
-private loc project = |project://complexity/|;
+private loc project = |project://ComplexityTest/|;
 
 // Test de methode metrics::Complexity::cyclomaticComplexity
 test bool testCyclomaticComplexity() {
@@ -16,13 +16,14 @@ test bool testCyclomaticComplexity() {
     RelComplexities complexities = cyclomaticComplexity(project);
     
     // Controleer de uitkomsten
-    bool result = assertEqual(6, size(complexities), "Unexpected number of complexities."); 
+    bool result = assertEqual(7, size(complexities), "Unexpected number of complexities."); 
     result = result && assertComplexity(1, complexities, "complexityOne");
     result = result && assertComplexity(2, complexities, "complexityTwo");
     result = result && assertComplexity(3, complexities, "complexityThree");
     result = result && assertComplexity(4, complexities, "complexityFour");
     result = result && assertComplexity(5, complexities, "complexityFive");
     result = result && assertComplexity(6, complexities, "complexitySix");
+    result = result && assertComplexity(21, complexities, "complexityTwentyOne");
     return result;
 }
 
