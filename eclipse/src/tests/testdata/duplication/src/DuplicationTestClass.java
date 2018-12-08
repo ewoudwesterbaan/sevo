@@ -1,5 +1,3 @@
-package tests.testdata.duplication.src;
-
 public class DuplicationTestClass {
 	
 	// Methode om andere methodes mee te vergelijken.
