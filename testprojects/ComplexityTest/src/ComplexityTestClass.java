@@ -21,6 +21,7 @@ class ComplexityTestClass {
     	        this.aString = "2";
     	        break;
     	    default : 
+    	    	// Default 0
     		    this.aString = "0";
     		    break;
         }
