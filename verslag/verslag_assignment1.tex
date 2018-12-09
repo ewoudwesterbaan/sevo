@@ -18,12 +18,20 @@
 	\item [Cursuscode] IM0202
 	\item [Naam] \todo{invullen}
 	\item [Studentnummer] \todo{invullen}
-	\item [Naam] \todo{invullen}
-	\item [Studentnummer] \todo{invullen}
+	\item [Naam] Martin de Boer
+	\item [Studentnummer] 837372832
 \end{description}
 
 \section*{Aanpak}
-\todo{<Geef aan hoe jullie de opdracht hebben aangepakt en wie wat heeft gedaan, maximaal 1 A-4. Geef expliciet aandacht aan de volgorde van activiteiten>}
+Nadat Ewoud een git repository had aangemaakt voor het rascal project, zijn we beide begonnen aan een eigen module. De modules zijn parallel aan elkaar ontwikkeld, zodat er redelijk zelfstandig kon worden gewerkt. In grote lijnen heeft Ewoud de modules \texttt{metrics::Volume.rsc} en \texttt{metrics::Duplicates.rsc} voor zijn rekening genomen, en Martin de modules \texttt{metrics::UnitSize.rsc} en \texttt{metrics::Complexity.rsc}. 
+
+De module \texttt{metrics::Volume.rsc} berekent het aantal lines of code (LOC). \texttt{metrics::UnitSize.rsc} doet hetzelfde voor de units (methodes en constructoren) in het project. De module \texttt{metrics::Duplicates.rsc} zoekt naar dubbele code in het project. En de module \texttt{metrics::Complexity.rsc}, tenslotte, bepaalt per unit (methode/constructor) de complexity measure.
+
+Bepaalde code leende zich voor hergebruik, en daarvoor is in samenspraak een module \texttt{utils::Utils} in het leven geroepen, waaraan beide auteurs hebben gewerkt. 
+
+Martin heeft tijdens het ontwikkelen van de modules een eerste opzet gemaakt voor het unittesten van de modules. Het inhoudelijk schrijven van de testcode is op dezelfde wijze verdeeld als de modules zelf: beide  auteurs hebben de testcode voor hun eigen modules geschreven. Voor het testen is er wat intensiever samengewerkt, ook omdat daarbij aanvankelijk wat technische probleempjes optraden. 
+
+\todo{Geef aan hoe jullie de opdracht hebben aangepakt en wie wat heeft gedaan, maximaal 1 A-4. Geef expliciet aandacht aan de volgorde van activiteiten}
 
 
 
