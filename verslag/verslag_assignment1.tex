@@ -37,7 +37,7 @@ Martin heeft tijdens het ontwikkelen van de modules een eerste opzet gemaakt voo
 
 \section{Keuzen}
 \subsection{Lines of code}
-Dit is van belang voor de metrieken volume en unitsize. Beiden maken gebruik van regels code die geen commentaar zijn. Omdat dit een gemeenschappelijke logica is, is deze gedefinieerd in een Utils module.
+Dit is van belang voor de metrieken volume en unitsize. Beiden maken gebruik van regels code die geen commentaar zijn. Omdat dit een gemeenschappelijke logica is, is deze gedefinieerd in de \texttt{utils::Utils} module.
 Regels code worden nu beschouwd als alle niet lege regels minus de commentaar regels.
 
 We beschouwen een regel commentaar als deze begint met \lstinline{//}. Voor blokcommentaar is de eerste gedacht om zo ook rgeles die starten met \lstinline{/*}, \lstinline{*} of \lstinline{*/} te beschouwen als commentaar. Dit gaat alleen niet helemaal op. Listing \ref{lst:asterixcmt} is valide java code en regel 2 begint met een \lstinline{*}.
@@ -49,6 +49,31 @@ int i = 1
 
 We zouden kunnen zeggen dat de volume het aantal LOC van de methodes is. Maar dan missen we de velden en de Instance Initialization Blocks (wat geen constructors zijn).
 
+\subsection{Complexity}
+De complexiteitsmaat heeft betrekking op het aantal paden die in een unit (methode of constructor) kan worden bewandeld. Dit zegt iets over de testbaarheid van zo'n unit. We gaan er vanuit dat de standaard complexiteitsmaat de waarde 1 heeft, en dat er voor een aantal taaconstructies reden is om deze met 1 te verhogen. Deze taalconstructies blijken duidelijk uit de onderstaande code:
+
+\begin{lstlisting}[caption={Taalsconstructies die de complexiteit verhogen},label={lst:complexity},escapechar=|, frame = single]
+int complexity = 1;
+visit(stat) {
+  case \case(_) : complexity += 1;
+  case \do(_, _) : complexity += 1;
+  case \if(_, _) : complexity += 1;
+  case \catch(_,_): complexity += 1;
+  case \while(_, _) : complexity += 1;
+  case \if(_, _, _) : complexity += 1;
+  case \for(_, _, _) : complexity += 1;
+  case infix(_,"&&",_) : complexity += 1;
+  case infix(_,"||",_) : complexity += 1;    
+  case \for(_, _, _, _) : complexity += 1;
+  case \foreach(_, _, _) : complexity += 1;
+  case \conditional(_,_,_): complexity += 1;
+}
+\end{lstlisting}
+
+De \texttt{if}-constructies spreken voor zich: de conditie kan waar zijn of niet. Er zijn dus twee mogelijkheden, waarmee het aantal mogelijke paden met 1 wordt uitgebreid. Ditzelfde geldt voor de \texttt{conditional} in Java (feitelijk een alternatieve manier van  het schrijven van een if-constructie, bijv.: \texttt{b == true ? x : y;}). De \texttt{do}, \texttt{while}, \texttt{for}, en \texttt{foreach} be\"invloeden de complexiteit op een vergelijkbare manier. In het \texttt{switch}-statement, is iedere \texttt{case} te beschouwen als een \texttt{if}-statement, en dus verhogen we voor iedere \texttt{case} de complexiteitsmaat met 1. 
+De \texttt{default}-tak voegt wel een extra stap, maar geen extra pad aan de sequentie van statements toe, en heeft dus geen invoed op de complexiteitsmaat.
+Het optreden van een exception kan worden afgehandeld in een \texttt{catch}-blok. Ieder \texttt{catch}-blok voegt een nieuw pad aan de control-flow van het programma toe, zodat ook dit de complexiteit verhoogd.
+Tenslotte is er de infix-notatie (AND, of OR-variant) die invloed heeft op het aantal paden. We verhogen hiervoor de de complexiteitsmaat wederom met 1, omdat het al dan niet \texttt{true} zijn van de linker-conditie bepaald of de tweede conditie wordt bepaald.
 
 
 \section{Sourcecode}
