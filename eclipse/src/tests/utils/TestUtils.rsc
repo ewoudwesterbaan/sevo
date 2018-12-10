@@ -3,6 +3,7 @@ module tests::utils::TestUtils
 import Boolean;
 import List;
 import Set;
+import IO;
 
 // Bevat een aantal utility methoden ten behoeve van de testmodules.
 

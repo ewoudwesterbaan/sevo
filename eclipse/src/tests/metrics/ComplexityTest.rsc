@@ -37,28 +37,34 @@ test bool testGetTupRiskCategoryByCategoryName() {
 // Test de methode metrics::Complexity::cyclomaticComplexity
 test bool testCyclomaticComplexity() {
     RelComplexities complexities = cyclomaticComplexity(project);
-    bool result = assertEqual(7, size(complexities), "Unexpected number of complexities."); 
+    bool result = assertEqual(9, size(complexities), "Unexpected number of complexities."); 
 
     result = result && assertComplexity(1, complexities, "complexityOne");
     result = result && assertRiskCategory("Simple", complexities, "complexityOne");
 
     result = result && assertComplexity(2, complexities, "complexityTwo");
-    //result = result && assertRiskCategory("Simple", complexities, "complexityTwo");
+    result = result && assertRiskCategory("Simple", complexities, "complexityTwo");
 
     result = result && assertComplexity(3, complexities, "complexityThree");
-    //result = result && assertRiskCategory("Simple", complexities, "complexityThree");
+    result = result && assertRiskCategory("Simple", complexities, "complexityThree");
 
     result = result && assertComplexity(4, complexities, "complexityFour");
-    //result = result && assertRiskCategory("Simple", complexities, "complexityFour");
+    result = result && assertRiskCategory("Simple", complexities, "complexityFour");
 
     result = result && assertComplexity(5, complexities, "complexityFive");
-    //result = result && assertRiskCategory("Simple", complexities, "complexityFive");
+    result = result && assertRiskCategory("Simple", complexities, "complexityFive");
 
     result = result && assertComplexity(6, complexities, "complexitySix");
-    //result = result && assertRiskCategory("Simple", complexities, "complexitySix");
+    result = result && assertRiskCategory("Simple", complexities, "complexitySix");
+
+    result = result && assertComplexity(20, complexities, "complexityTwenty");
+    result = result && assertRiskCategory("Moderate", complexities, "complexityTwenty");
 
     result = result && assertComplexity(21, complexities, "complexityTwentyOne");
-    //result = result && assertRiskCategory("Moderate", complexities, "complexityTwentyOne");
+    result = result && assertRiskCategory("Complex", complexities, "complexityTwentyOne");
+
+    result = result && assertComplexity(51, complexities, "complexityFiftyOne");
+    result = result && assertRiskCategory("Untestable", complexities, "complexityFiftyOne");
 
     return result;
 }

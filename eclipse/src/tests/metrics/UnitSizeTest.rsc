@@ -15,7 +15,7 @@ private loc project = |project://ComplexityTest/|;
 test bool testUnitSizeMetrics() {
     RelLinesOfCode rloc = unitSizeMetrics(project);
 
-    bool result = assertEqual(7, size(rloc), "Unexpected number of tuples."); 
+    bool result = assertEqual(9, size(rloc), "Unexpected number of tuples."); 
 
     result = result && assertTotalLines(3, rloc, "complexityOne");
     result = result && assertCommentLines(0, rloc, "complexityOne");
