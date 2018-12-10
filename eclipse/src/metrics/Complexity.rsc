@@ -8,6 +8,18 @@ import IO;
 import List;
 import Set;
 
+// Tuple voor risicocategorie voor de complexiteit
+public alias TupComplexityRiskCategory = tuple[str categoryName, str description, int minComplexity, int maxComplexity];
+// Relatie van risicocategorieen voor de complexiteit
+public alias RelComplexityRiskCategories = rel[str categoryName, str description, int minComplexity, int maxComplexity];
+
+public RelComplexityRiskCategories riskCategories = {
+	<"Simple", "Without much risk", 1, 10>,
+	<"Moderate", "With moderate risk", 11, 20>,
+	<"Complex", "Complex, with high risk", 21, 50>,
+	<"Untestable", "Untestable, very high risk", 50, -1>
+};
+
 // Geeft van alle methdodes en constructoren van alle klassen in een project de complexiteismaten
 //    project - het (Java-)project dat moet worden geanalysseerd
 public RelComplexities cyclomaticComplexity(loc project) {
@@ -41,7 +53,20 @@ private TupComplexity getUnitComplexity(str unitName, Statement stat) {
         case \foreach(_, _, _) : complexity += 1;
         case \conditional(_,_,_): complexity += 1;
     }
-    // TODO CC risk evaluation
-    return <stat.src, unitName, complexity>; 
+    return <stat.src, unitName, complexity, getCategoryName(complexity)>; 
+}
+
+// Geeft de risicocategorienaam terug bij een complexiteitsmaat
+private str getCategoryName(int complexityMeasure) {
+	return head([riskCategory.categoryName | riskCategory <- riskCategories, 
+		complexityMeasure >= riskCategory.minComplexity, 
+		complexityMeasure <= riskCategory.maxComplexity || 
+		-1 == riskCategory.maxComplexity]
+	);
+}
+
+// Geeft een tupel met complexiteitsrisicogegevens terug op basis van de categorienaam
+public TupComplexityRiskCategory getTupRiskCategoryByCategoryName(str name) {
+	return head([riskCategory | riskCategory <- riskCategories, name == riskCategory.categoryName]);	
 }
 

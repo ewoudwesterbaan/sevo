@@ -1,5 +1,6 @@
 module tests::metrics::UnitSizeTest
 
+import tests::utils::TestUtils;
 import metrics::UnitSize;
 import utils::Utils;
 import IO;
@@ -46,9 +47,3 @@ private bool assertCodeLines(int expected, RelLinesOfCode rloc, str unitName) {
     return assertEqual(expected, actual, "Method <unitName> has unexpected lines of actual code.");
 }
 
-private bool assertEqual(int expected, int actual, str msg) {
-    if (expected != actual) {
-        println("Test failed. Msg: <msg> Expected = <expected>, actual = <actual>");
-    }
-    return expected == actual;
-}

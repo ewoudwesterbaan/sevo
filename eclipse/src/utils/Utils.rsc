@@ -10,10 +10,11 @@ import lang::java::jdt::m3::Core;
 public alias TupLinesOfCode = tuple[loc location, int totalLines, int commentLines, int codeLines];
 // Set van bovenstaande tuples (relatie)
 public alias RelLinesOfCode = rel[loc location, int totalLines, int commentLines, int codeLines];
+
 // Tuple van unit met cyclomatische complexiteit
-public alias TupComplexity = tuple[loc location, str unitName, int complexity];
+public alias TupComplexity = tuple[loc location, str unitName, int complexity, str riskCategory];
 // Set van bovenstaande complexity tuples (relatie)
-public alias RelComplexities = rel[loc location, str unitName, int complexity];
+public alias RelComplexities = rel[loc location, str unitName, int complexity, str riskCategory];
 
 // Haal alle methoden en constructoren op, per java-klasse
 //     c = klasse
