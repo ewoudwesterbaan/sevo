@@ -8,6 +8,8 @@ import IO;
 import List;
 import Set;
 
+// Geeft van alle methdodes en constructoren van alle klassen in een project de complexiteismaten
+//    project - het (Java-)project dat moet worden geanalysseerd
 public RelComplexities cyclomaticComplexity(loc project) {
     RelComplexities result = {};
     for (Declaration ast <- createAstsFromEclipseProject(project, true)) { 
@@ -20,6 +22,9 @@ public RelComplexities cyclomaticComplexity(loc project) {
     return result;
 }
 
+// Geeft de complexiteitsmaat van een unit
+//   unitName -  de naam van de unit (methode of constructor)
+//   stat - de implementatie van de unit (een Statement)
 private TupComplexity getUnitComplexity(str unitName, Statement stat) {
     int complexity = 1;
     visit(stat) {
