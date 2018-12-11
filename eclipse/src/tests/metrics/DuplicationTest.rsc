@@ -7,6 +7,7 @@ import Boolean;
 import Relation;
 import Set;
 import IO;
+import TestUtils;
 
 // Testobject
 private loc project = |project://DuplicationTest/|;
@@ -94,16 +95,6 @@ test bool testCompare_duplicationTestFirstRowRepeat_ExpectTrue() {
 	int result = compare(benchMarkMethod, compareMethod);
 	int expect = 6;
 	return assertEquals(result, expect);
-}
-
-private bool assertEquals(int result, int expect) {
-	if (result == expect)
-	{
-		return true;
-	} else {
-		println("Expected value: <expect> Result: <result>");
-		return false;
-	};
 }
 
 

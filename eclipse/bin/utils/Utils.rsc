@@ -10,10 +10,11 @@ import lang::java::jdt::m3::Core;
 public alias TupLinesOfCode = tuple[loc location, int totalLines, int commentLines, int codeLines];
 // Set van bovenstaande tuples (relatie)
 public alias RelLinesOfCode = rel[loc location, int totalLines, int commentLines, int codeLines];
+
 // Tuple van unit met cyclomatische complexiteit
-public alias TupComplexity = tuple[loc location, str unitName, int complexity];
+public alias TupComplexity = tuple[loc location, str unitName, int complexity, str riskCategory];
 // Set van bovenstaande complexity tuples (relatie)
-public alias RelComplexities = rel[loc location, str unitName, int complexity];
+public alias RelComplexities = rel[loc location, str unitName, int complexity, str riskCategory];
 
 // Haal alle methoden en constructoren op, per java-klasse
 //     c = klasse
@@ -35,7 +36,7 @@ public rel[loc, loc] getUnits(M3 model) {
 public TupLinesOfCode getLinesOfCode(loc location) {
 	// bepalen van het totaal aantal regels
 	list[str] rawContent = readFileLines(location);
-	int totalLines = size(rawContent);	
+	int totalLines = size(rawContent);
 	
 	// als een regels start met '//' is dat line commentaar
 	// inline commentaar wordt hier niet meegenomen
@@ -68,11 +69,41 @@ public list[str] cleanContent(loc location) {
 		totalContent = replaceAll(totalContent, bc, "");
 	};
 	// split the content in aparte regels, nu hebben we de code en de linecomments over
-	list[str] contentInStringsBeforeLineComments = [l | /<l:.*>/ := totalContent, !isEmpty(trim(l))];
-	// verwijder de linecomments en haal de lege ruimte voor en na de string weg
-	// TODO: linecommentaar eruit filteren. Voor aantal codelines maakt dit niet uit, maar kan voor duplication
-	//		wel vervelend worden.
-	list[str] cleanedContent = [trim(x) | x <- contentInStringsBeforeLineComments, !startsWith(trim(x), "//")];
+	// en haal de lege ruimte voor en na de string weg
+	list[str] contentInStringsBeforeLineComments = [trim(l) | /<l:.*>/ := totalContent, !isEmpty(trim(l))];
+	// verwijder de linecomments
+	list[str] cleanedContent = [cleanLineComment(x) | x <- contentInStringsBeforeLineComments, !startsWith(x, "//")];
 	return cleanedContent;
+}
+
+// Haalt het commentaar uit de regel
+// geef zo snel mogelijk een resultaat terug
+// Let op! commentaar regels die beginnen met // zullen niet goed gaan!
+public str cleanLineComment(str input) {
+	if (contains(input, "//")) {
+		list[str] strParts = split("//", input);
+		// Added contains part for perf improvement
+		if (size(strParts) == 2 
+			&& (
+				!contains(strParts[0], "\"") 
+				|| 
+				size(findAll(replaceAll(strParts[0], "\\\"", ""), "\"")) % 2 == 0)
+				) {
+			return trim(strParts[0]);
+		};
+		str returnValue = "";
+		for (int i <- index(strParts)) {
+			str s = strParts[i];
+			// vervangen van de geescapde quotes door niets
+			t = replaceAll(s, "\\\"", "");
+			if (size(findAll(t, "\"")) % 2 == 1) {
+				returnValue = returnValue + s + "//";
+			} else {
+				break;
+			};
+		};
+		return trim(substring(returnValue, 0, size(returnValue) - 2));
+	};
+	return input;
 }
 
