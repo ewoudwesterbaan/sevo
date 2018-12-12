@@ -8,13 +8,14 @@ import List;
 
 // Input moet een set van locaties van methodes zijn 
 // waarvan het aantal regel gelijk of groter is dan 6.
-public rel[loc methodA, loc methodB, int methodA_start, int locDuplicate] duplication(rel[loc location, int codeSize] methods) {
-	rel[loc methodA, loc methodB, int methodA_start, int locDuplicate] result = {};
+//public rel[loc methodA, loc methodB, int methodA_start, int locDuplicate]
+public RelDuplications duplication(rel[loc location, int codeSize] methods) {
+	RelDuplications result = {};
 	int counter = 0; // Teller om de voortgang van het proces te tonen
 	for (<methodA, methodB> <- createComparePairs(domain(methods))) {
 		counter += 1;
 		counter % 1000 == 0 ? println("Processing number <counter>");
-		compareTwoMethods(methodA, methodB);
+		result + compareTwoMethods(methodA, methodB);
 	};
 	println("Number duplication found: <size(result)>");
 	return result;
@@ -26,8 +27,8 @@ public rel[loc methodA, loc methodB, int methodA_start, int locDuplicate] duplic
 //    methodB: methode om te vergelijken
 //    methodA_start: regel in methodeA waar de gelijkenis start
 //    duplicateLines: aantal regels die gelijk zijn
-public rel[loc methodA, loc methodB, int methodA_start, int duplicateLines] compareTwoMethods(loc methodA, loc methodB) {
-	rel[loc methodA, loc methodB, int methodA_start, int duplicateLines] result = {};
+public RelDuplications compareTwoMethods(loc methodA, loc methodB) {
+	RelDuplications result = {};
 	int methodAStart = 0;
 	bool foundDup = true;
 	while (foundDup) {
@@ -62,7 +63,7 @@ public alias CompareResult = tuple[int fromLine, int toLine, int duplicateLines]
 // Als 6 aan elkaar gesloten regels overeenkomen
 // Geeft een tuple CompareResult terug
 public CompareResult compare(loc methodA, loc methodB, int methodAStartIndex) {
-	// We vergelijken 'schoongemaate' content
+	// We vergelijken 'schoongemaakte' content
 	list[str] contentA = cleanContent(methodA);
 	list[str] contentB = cleanContent(methodB);
 	

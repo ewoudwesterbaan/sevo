@@ -16,6 +16,9 @@ public alias TupComplexity = tuple[loc location, str unitName, int complexity, s
 // Set van bovenstaande complexity tuples (relatie)
 public alias RelComplexities = rel[loc location, str unitName, int complexity, str riskCategory];
 
+// Set van duplicaties
+public alias RelDuplications = rel[loc methodA, loc methodB, int methodA_start, int duplicateLines];
+
 // Haal alle methoden en constructoren op, per java-klasse
 //     c = klasse
 //     m = methode
@@ -77,7 +80,7 @@ public list[str] cleanContent(loc location) {
 }
 
 // Haalt het commentaar uit de regel
-// geef zo snel mogelijk een resultaat terug
+// Geeft zo snel mogelijk een resultaat terug
 // Let op! commentaar regels die beginnen met // zullen niet goed gaan!
 public str cleanLineComment(str input) {
 	if (contains(input, "//")) {
