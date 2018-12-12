@@ -114,6 +114,6 @@ test bool CompareTwoMethods_TC02() {
 	loc compareMethod = |java+method:///DuplicationTestClass/duplicationTest_CompareTwoMethods_TC2()|;
 	rel[loc methodA, loc methodB, int methodA_start, int duplicateLines] result = compareTwoMethods(benchMarkMethodCompareTwoMethods, compareMethod);
 	println(result);
-	return assertEqual(2, size(result), "Invalid number of results");
+	return assertEqual(2, size(result), "Invalid number of results"); 
 }
 
