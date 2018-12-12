@@ -1,4 +1,4 @@
- 
+
 public class DuplicationTestClass {
 	
 	// Methode om andere methodes mee te vergelijken.
@@ -86,5 +86,61 @@ public class DuplicationTestClass {
 		}
 		System.out.println("End method");
 	}
-
+	
+	void duplicationTest_CompareTwoMethods_Base() {
+		System.out.println("Line 1");
+		System.out.println("Line 2");
+		System.out.println("Line 3");
+		System.out.println("Line 4");
+		System.out.println("Line 5");
+		System.out.println("Line 6");
+		System.out.println("Line 7");
+		System.out.println("Line 8");
+		System.out.println("Line 9");
+		System.out.println("Line 10");
+		System.out.println("Line 11");
+		System.out.println("Line 12");
+		System.out.println("Line 13");
+		System.out.println("Line 14");
+	}
+	
+	void duplicationTest_CompareTwoMethods_TC1() {
+		System.out.println("Line 1");
+		System.out.println("Line 2");
+		System.out.println("Line 2");
+		System.out.println("Line 2");
+		System.out.println("Line 2");
+		System.out.println("Line 2");
+		System.out.println("Line 3");
+		System.out.println("Line 4");
+		System.out.println("Line 5");
+		System.out.println("Line 6");
+		System.out.println("Line 7");
+		System.out.println("Line 8");
+		System.out.println("Line 9");
+		System.out.println("Line 10");
+		System.out.println("Line 11");
+		System.out.println("Line 12");
+		System.out.println("Line 13");
+		System.out.println("Line 14");
+	}
+	
+	void duplicationTest_CompareTwoMethods_TC2() {
+		System.out.println("Line 1");
+		System.out.println("Line 2");
+		System.out.println("Line 3");
+		System.out.println("Line 4");
+		System.out.println("Line 5");
+		System.out.println("Line 6");
+		System.out.println("Deze is anders");
+		System.out.println("Line 8");
+		System.out.println("Line 9");
+		System.out.println("Line 10");
+		System.out.println("Line 11");
+		System.out.println("Line 12");
+		System.out.println("Line 13");
+		System.out.println("Line 14");
+	}
+	
+	
 }
