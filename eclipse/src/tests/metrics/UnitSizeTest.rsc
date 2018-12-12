@@ -29,7 +29,7 @@ test bool testUnitSizeMetrics() {
     result = result && assertCommentLines(1, rloc, "complexityThree");
     result = result && assertCodeLines(13, rloc, "complexityThree");
 
-    return true;
+    return result;
 }
 
 private bool assertTotalLines(int expected, RelLinesOfCode rloc, str unitName) {
