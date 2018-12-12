@@ -4,6 +4,7 @@ class ComplexityTestClass {
 	
     void complexityOne() {
         this.aString = "hello";
+        
     }
     
     void complexityTwo(boolean hello) {
