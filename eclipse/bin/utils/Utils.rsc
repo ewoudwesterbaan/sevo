@@ -82,7 +82,7 @@ public list[str] cleanContent(loc location) {
 public str cleanLineComment(str input) {
 	if (contains(input, "//")) {
 		list[str] strParts = split("//", input);
-		// Added contains part for perf improvement
+		// Deel heeft ook contain deel, zodat sneller resultaat terug gegeven wordt
 		if (size(strParts) == 2 
 			&& (
 				!contains(strParts[0], "\"") 
@@ -92,13 +92,16 @@ public str cleanLineComment(str input) {
 			return trim(strParts[0]);
 		};
 		str returnValue = "";
+		int totaalAantalQuotes = 0;
 		for (int i <- index(strParts)) {
 			str s = strParts[i];
 			// vervangen van de geescapde quotes door niets
 			t = replaceAll(s, "\\\"", "");
-			if (size(findAll(t, "\"")) % 2 == 1) {
-				returnValue = returnValue + s + "//";
-			} else {
+			int aantalQuotesDeel = size(findAll(t, "\""));
+			totaalAantalQuotes += aantalQuotesDeel;
+			returnValue = returnValue + s + "//";
+			// Als het totaal aantal quotes even is, is alles wat na de // komt commentaar
+			if (totaalAantalQuotes % 2 == 0) {
 				break;
 			};
 		};

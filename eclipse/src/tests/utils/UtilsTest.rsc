@@ -41,3 +41,45 @@ test bool testCleanLineComment_SlashInString() {
 	str actual = cleanLineComment(input);
 	return assertEqual(expect, actual, "Assert failed");
 }
+
+test bool testCleanLineComment_SlashInString() {
+	str input = "\"Text with \"just a string\"//\" in a string\"";
+	str expect =  "\"Text with \"just a string\"//\" in a string\"";
+	str actual = cleanLineComment(input);
+	return assertEqual(expect, actual, "Assert failed");
+}
+
+test bool testCleanLineComment_SlashInString() {
+	str input = "\"Text with \"just a string\"//\" in a string // commentaar";
+	str expect =  "\"Text with \"just a string\"//\" in a string";
+	str actual = cleanLineComment(input);
+	return assertEqual(expect, actual, "Assert failed");
+}
+
+test bool testCleanLineComment_SlashInString() {
+	str input = "\"//\"\"\"//\"\"\"\"";
+	str expect =  "\"//\"\"\"";
+	str actual = cleanLineComment(input);
+	return assertEqual(expect, actual, "Assert failed");
+}
+
+test bool testCleanLineComment_SlashInString() {
+	str input = "a //\"\"\"\"";
+	str expect =  "a";
+	str actual = cleanLineComment(input);
+	return assertEqual(expect, actual, "Assert failed");
+}
+
+test bool testCleanLineComment_SlashInString() {
+	str input = "a \"//\"";
+	str expect =  "a \"//\"";
+	str actual = cleanLineComment(input);
+	return assertEqual(expect, actual, "Assert failed");
+}
+
+test bool testCleanLineComment_SlashInString() {
+	str input = "a \"\"//\"";
+	str expect =  "a \"\"";
+	str actual = cleanLineComment(input);
+	return assertEqual(expect, actual, "Assert failed");
+}
