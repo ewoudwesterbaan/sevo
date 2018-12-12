@@ -21,7 +21,7 @@ public RelComplexityRiskCategories riskCategories = {
 };
 
 // Geeft van alle methdodes en constructoren van alle klassen in een project de complexiteismaten
-//    project - het (Java-)project dat moet worden geanalysseerd
+//    project - het (Java-)project dat moet worden geanalyseerd
 public RelComplexities cyclomaticComplexity(loc project) {
     RelComplexities result = {};
     for (Declaration ast <- createAstsFromEclipseProject(project, true)) { 

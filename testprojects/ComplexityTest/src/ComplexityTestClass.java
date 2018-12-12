@@ -1,19 +1,19 @@
-class ComplexityTestClass {
+class ComplexityTestClass implements ComplexityTestInterface {
 
 	private String aString;
 	
-    void complexityOne() {
+    public void complexityOne() {
         this.aString = "hello";
         
     }
     
-    void complexityTwo(boolean hello) {
+    public void complexityTwo(boolean hello) {
     	if (hello) {
             this.aString = "hello";
     	}
     }
     
-    void complexityThree(int n) {
+    public void complexityThree(int n) {
     	switch (n) {
     	    case 1 : 
     	        this.aString = "1";
@@ -28,7 +28,7 @@ class ComplexityTestClass {
         }
     }
 
-    void complexityFour() {
+    public void complexityFour() {
     	while (true) {
     		if (true) {
     			for (;true;) {
@@ -47,7 +47,7 @@ class ComplexityTestClass {
     	aString = "Male between 18 and 50";
     }
 
-    void complexitySix(boolean male, int age) {
+    public void complexitySix(boolean male, int age) {
     	if ((male && age < 18) || (male && age >= 50)) {
     		return;
     	} else if (!male) {
@@ -56,7 +56,7 @@ class ComplexityTestClass {
     	aString = "Male between 18 and 50";
     }
     
-    void complexityTwenty(int c) {
+    public void complexityTwenty(int c) {
     	switch(c) {
     	case 1: break;
     	case 2: break;
@@ -81,7 +81,7 @@ class ComplexityTestClass {
     	}
     }
 
-    void complexityTwentyOne(int c) {
+    public void complexityTwentyOne(int c) {
     	switch(c) {
     	case 1:
     		do {
@@ -136,7 +136,7 @@ class ComplexityTestClass {
     	}
     }
 
-    void complexityFiftyOne(int c) {
+    public void complexityFiftyOne(int c) {
     	switch(c) {
     	case 1: break;
     	case 2: break;
