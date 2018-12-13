@@ -57,6 +57,9 @@ class ComplexityTestClass implements ComplexityTestInterface {
     }
     
     public void complexityTwenty(int c) {
+    	/*
+    	 * Comment
+    	 */
     	switch(c) {
     	case 1: break;
     	case 2: break;
@@ -123,12 +126,15 @@ class ComplexityTestClass implements ComplexityTestInterface {
     		System.out.println("Case 8 = " + b8);
     		break;
     	case 9:
+    		
+    		// Negen
     		String[] arr = {"9"};
     		for (String s : arr) {
 				System.out.println("Case " + s);
 			}
     		break;
     	case 10:
+    		// Tien
     		System.out.println("Case " + (c == 10 ? c : 0));
     		break;
     	default:
