@@ -13,6 +13,7 @@ public alias TupComplexityRiskCategory = tuple[str categoryName, str description
 // Relatie van risicocategorieen voor de complexiteit
 public alias RelComplexityRiskCategories = rel[str categoryName, str description, int minComplexity, int maxComplexity];
 
+// Risicocategorieen
 public RelComplexityRiskCategories riskCategories = {
 	<"Simple", "Without much risk", 1, 10>,
 	<"Moderate", "With moderate risk", 11, 20>,

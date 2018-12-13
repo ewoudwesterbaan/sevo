@@ -5,6 +5,7 @@ import String;
 import List;
 import Boolean;
 import lang::java::jdt::m3::Core;
+import lang::java::jdt::m3::AST;
 
 // Tuple van locatie met metrieken
 public alias TupLinesOfCode = tuple[loc location, int totalLines, int commentLines, int codeLines];
@@ -19,19 +20,26 @@ public alias RelComplexities = rel[loc location, str unitName, int complexity, s
 // Set van duplicaties
 public alias RelDuplications = rel[loc methodA, loc methodB, int methodA_start, int duplicateLines];
 
-// Haal alle methoden en constructoren op, per java-klasse
+// Haal alle methoden en constructoren op, per java-klasse, op basis van het project (een location)
 //     c = klasse
 //     m = methode
-public rel[loc, loc] getUnits(M3 model) {
-	return { <c,m> | <c,m> <- model.containment,
-	                 c.scheme  == "java+class", 
-	                 m.scheme == "java+method" || 
-	                 m.scheme == "java+constructor" };
+public rel[loc, loc] getUnits(loc project) {
+	rel[loc, loc] result = {};	
+    for (Declaration ast <- createAstsFromEclipseProject(project, true)) {
+    	// Class locatie
+    	loc c = ast.src; 
+        // We halen de locaties van de constructoren en methodes op.
+        visit(ast) {
+            case \constructor(name, _, _, impl) : result += <c, impl.src>;
+            case \method(_, name, _, _, impl) : result += <c, impl.src>;
+        }
+    }
+    return result;
 }
 
 // Haal metrieken uit een locatie
 // Geeft een tuple terug met de volgende attributen:
-//     location: Locatie waarover de metrieken berekent zijn
+//     location: Locatie waarover de metrieken berekend zijn
 //     totalLines: Totaal van regels in een locatie
 //     commentLines: Aantal regels commentaar
 //     codeLines: Aantal regels code
