@@ -32,12 +32,16 @@ public rel[loc, loc] getUnits(loc project) {
 }
 
 // Vergelijkt twee locaties van het formaat |project://projectName/src/MyClass.java|(1769,171,<67,47>,<75,2>)
-// op basis van hun klassenaam naam en startpositie.
+// op basis van hun klassenaam naam en startpositie. 
+// De methode werkt ook voor het formaat |java+method:///MyClass/myMethod()| omdat ook op de naam wordt gecontroleerd.
 // Geeft een waarde < 0 terug wanneer a < b; 0 wanneer a == b; > 0 wanner a > b.
-public int comparePhysicalLocations(loc a, loc b) {
+public int compareLocations(loc a, loc b) {
 	if (a < b) return -1;
 	if (a > b) return 1;
-	return (a.begin.line - b.begin.line);
+	try {
+		return (a.begin.line - b.begin.line);
+	} catch UnavailableInformation() :
+		return 0;	
 }
 
 // Haal metrieken uit een locatie

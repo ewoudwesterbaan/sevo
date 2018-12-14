@@ -5,34 +5,52 @@ import Boolean;
 import IO;
 import tests::utils::TestUtils;
 
-test bool testCompareLocation_GreaterThanByPosition() {
+test bool testCompareLocations_GreaterThanByPosition() {
 	loc a = |project://example-project/src/HelloWorld.java|(0,1,<22,3>,<24,5>);
 	loc b = |project://example-project/src/HelloWorld.java|(0,1,<12,3>,<14,5>);
-	return comparePhysicalLocations(a, b) > 0;
+	return compareLocations(a, b) > 0;
 }
 
-test bool testCompareLocation_GreaterThanByClassName() {
+test bool testCompareLocations_GreaterThanByClassName() {
 	loc a = |project://example-project/src/HelloWorld.java|(0,1,<22,3>,<24,5>);
 	loc b = |project://example-project/src/HalloWereld.java|(0,1,<22,3>,<24,5>);
-	return comparePhysicalLocations(a, b) > 0;
+	return compareLocations(a, b) > 0;
 }
 
-test bool testCompareLocation_LessThanByPosition() {
+test bool testCompareLocations_GreaterThanLogicalFormat() {
+	loc a = |java+method:///MyClass/method_b()|;
+	loc b = |java+method:///MyClass/method_a()|;
+	return compareLocations(a, b) > 0;
+}
+
+test bool testCompareLocations_LessThanByPosition() {
 	loc a = |project://example-project/src/HelloWorld.java|(0,1,<12,3>,<14,5>);
 	loc b = |project://example-project/src/HelloWorld.java|(0,1,<22,3>,<24,5>);
-	return comparePhysicalLocations(a, b) < 0;
+	return compareLocations(a, b) < 0;
 }
 
-test bool testCompareLocation_LessThanByClassName() {
+test bool testCompareLocations_LessThanByClassName() {
 	loc a = |project://example-project/src/HalloWorld.java|(0,1,<22,3>,<24,5>);
 	loc b = |project://example-project/src/HelloWereld.java|(0,1,<22,3>,<24,5>);
-	return comparePhysicalLocations(a, b) < 0;
+	return compareLocations(a, b) < 0;
 }
 
-test bool testCompareLocation_Equal() {
+test bool testCompareLocations_LessThanLogicalFormat() {
+	loc a = |java+method:///MyClass/method_a()|;
+	loc b = |java+method:///MyClass/method_b()|;
+	return compareLocations(a, b) < 0;
+}
+
+test bool testCompareLocations_Equal() {
 	loc a = |project://example-project/src/HelloWorld.java|(0,1,<22,3>,<24,5>);
 	loc b = |project://example-project/src/HelloWorld.java|(0,1,<22,3>,<24,5>);
-	return comparePhysicalLocations(a, b) == 0;
+	return compareLocations(a, b) == 0;
+}
+
+test bool testCompareLocations_EqualLogicalFormat() {
+	loc a = |java+method:///MyClass/method_a()|;
+	loc b = |java+method:///MyClass/method_a()|;
+	return compareLocations(a, b) == 0;
 }
 
 test bool testCleanLineComment_NoComment() {
