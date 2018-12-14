@@ -11,10 +11,10 @@ import Set;
 import util::Math;
 
 public void main() {
-	loc project = |project://smallsql/|;
-	// loc project = |project://ComplexityTest/|;
+	// loc project = |project://smallsql/|;
+	loc project = |project://ComplexityTest/|;
 	
-	println("\nVolume bereken ...");
+	println("\nVolume berekenen ...");
 	RelLinesOfCode volume = volumeMetrics(project);
 	println("Berekend volume: ");
 	println("- totaal aantal regels (incl. lege regels): <sum(volume.totalLines)>");
@@ -44,24 +44,23 @@ public void main() {
 	methodsForDuplication = { <m, cod> | <m, tot, com, cod> <- unitSize, cod >= 6 }; 
 	RelDuplications duplicationResult = duplication(methodsForDuplication);
 	// duplicatie wordt alleen bekeken in de methodes en constructors. De verhouding duplicates is dan ook ten opzichte van de som an de unitsize
-	num sumUnitSize = sum({x.codeLines | x <- unitSize});
+	num sumUnitSize = sumOfUnitSizeMetrics(project).codeLines;
 	println("sumUnitSize: <sumUnitSize>");
+	println(duplicationResult);
 	
-	num sumDuplicatedCode = sum({ x.duplicateLines | x <- duplicationResult});
+	num sumDuplicatedCode = sum({0}+{ x.duplicateLines | x <- duplicationResult});
 	println("sumDuplicatedCode: <sumDuplicatedCode>");
 	
 	num duplicationPercentage = sumDuplicatedCode / sumUnitSize;
 	
 	println("Result duplication: <duplicationPercentage>");
 
-	/*
 	// We moeten de resultaten van unit size met cyclomatic complexity joinen op locatie
-	a = {<unitSize.location, unitSize.codeLines, complexities.riskCategory> | <unitSize.location, unitSize.codeLines, complexities.riskCategory> <- unitSize join complexities, unitSize.location == complexities.location}
+	// a = {<unitSize.location, unitSize.codeLines, complexities.riskCategory> | <unitSize.location, unitSize.codeLines, complexities.riskCategory> <- unitSize join complexities, unitSize.location == complexities.location}
 	
 	// join is echt betreurenswaardig traag
 	// andere probeersel:
 	//g = {<c.location, c.unitSize, d.riskCategory> | c <- unitSize, d <- complexities, c.location == d.location};
-	*/
 	
 	println("Program ended succesfully");
 }
