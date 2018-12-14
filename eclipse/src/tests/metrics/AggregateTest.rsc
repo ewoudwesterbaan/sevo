@@ -29,7 +29,7 @@ test bool testGetComplexityRating() {
     return result;
 }
 
-public bool assertRating(ComplexityRatingMap ratingMap, int perc, str categoryName, str msg) {
+private bool assertRating(ComplexityRatingMap ratingMap, int perc, str categoryName, str msg) {
 	TupComplexityRiskCategory riskCategory = getTupRiskCategoryByCategoryName(categoryName);
 	return assertEqual(perc, ratingMap[riskCategory], msg);
 }
