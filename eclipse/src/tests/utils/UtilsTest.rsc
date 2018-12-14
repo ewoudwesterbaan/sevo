@@ -7,13 +7,6 @@ import tests::utils::TestUtils;
 
 private loc project = |project://UtilsTest/|;
 
-// dummy
-test bool testLinesOfCode() {
-	TupLinesOfCode = getLinesOfCode(|project://UtilsTest/src/UtilsTest.java|);
-	// println(TupLinesOfCode);
-    return true;
-}
-
 test bool testCleanLineComment_NoComment() {
 	str input = "Text with no comment";
 	str expect = "Text with no comment";
