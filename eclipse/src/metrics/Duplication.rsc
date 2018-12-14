@@ -14,8 +14,8 @@ public RelDuplications duplication(rel[loc location, int codeSize] methods) {
 	int counter = 0; // Teller om de voortgang van het proces te tonen
 	for (<methodA, methodB> <- createComparePairs(domain(methods))) {
 		counter += 1;
-		counter % 1000 == 0 ? println("Processing number <counter>");
-		result + compareTwoMethods(methodA, methodB);
+		if (counter % 1000 == 0) println("Processing number <counter>");
+		result += compareTwoMethods(methodA, methodB);
 	};
 	println("Number duplication found: <size(result)>");
 	return result;
@@ -31,8 +31,11 @@ public RelDuplications compareTwoMethods(loc methodA, loc methodB) {
 	RelDuplications result = {};
 	int methodAStart = 0;
 	bool foundDup = true;
+	// We vergelijken 'schoongemaakte' content
+	list[str] contentA = cleanContent(methodA);
+	list[str] contentB = cleanContent(methodB);
 	while (foundDup) {
-		CompareResult compareResult = compare(methodA, methodB, methodAStart);
+		CompareResult compareResult = compare(contentA, contentB, methodAStart);
 		// println("compareResult: <compareResult>");
 		if (compareResult.duplicateLines == -1) { 
 			break;
@@ -62,11 +65,7 @@ public alias CompareResult = tuple[int fromLine, int toLine, int duplicateLines]
 // Vergelijk de methodes met elkaar.
 // Als 6 aan elkaar gesloten regels overeenkomen
 // Geeft een tuple CompareResult terug
-public CompareResult compare(loc methodA, loc methodB, int methodAStartIndex) {
-	// We vergelijken 'schoongemaakte' content
-	list[str] contentA = cleanContent(methodA);
-	list[str] contentB = cleanContent(methodB);
-	
+public CompareResult compare(list[str] contentA, list[str] contentB, int methodAStartIndex) {	
 	for (indA <- index(contentA), indA >= methodAStartIndex) { // [0, 1, 2 ..]	
 		if (size(contentA[indA ..]) < 6) return <-1, -1, -1>;
 		for (indB <- index(contentB)) {
@@ -84,9 +83,9 @@ public CompareResult compare(loc methodA, loc methodB, int methodAStartIndex) {
 // Geeft het aantal terug van opeenvolgende regels indien deze groter zijn dan numLinesMustBeEqual, 
 // anders -1 
 public int compareListOfStrings(list[str] lstStringA, list[str] lstStringB, int numLinesMustBeEqual) {
-	if (size(lstStringA) >= numLinesMustBeEqual && size(lstStringB) >= numLinesMustBeEqual) {
-		if(head(lstStringA, numLinesMustBeEqual) == head(lstStringB, numLinesMustBeEqual)) {
-			int sizeLstStringA = size(lstStringA);
+	int sizeLstStringA = size(lstStringA);
+	if (sizeLstStringA >= numLinesMustBeEqual && size(lstStringB) >= numLinesMustBeEqual) {
+		if(head(lstStringA, numLinesMustBeEqual) == head(lstStringB, numLinesMustBeEqual)) {			
 			for (rowNum <- [numLinesMustBeEqual .. sizeLstStringA]) {
 				if (lstStringA[rowNum] == lstStringB[rowNum]) {
 					numLinesMustBeEqual += 1;

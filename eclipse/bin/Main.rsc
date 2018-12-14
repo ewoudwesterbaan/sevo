@@ -34,10 +34,10 @@ public void main() {
 
 	println("Calculating cyclomatic complexity");
 	RelComplexities complexities = cyclomaticComplexity(project);
-	for (TupComplexity c <- complexities) println("Complexity: location = <c.location>, method = <c.unitName>, complexity = <c.complexity>.");
+	//for (TupComplexity c <- complexities) println("Complexity: location = <c.location>, method = <c.unitName>, complexity = <c.complexity>.");
 	
 	// We moeten de resultaten van unit size met cyclomatic complexity joinen op locatie
-	//a = {<unitSize.location, unitSize.codeLines, complexities.riskCategory> | <unitSize.location, unitSize.codeLines, complexities.riskCategory> <- unitSize join complexities, unitSize.location == complexities.location}
+	a = {<unitSize.location, unitSize.codeLines, complexities.riskCategory> | <unitSize.location, unitSize.codeLines, complexities.riskCategory> <- unitSize join complexities, unitSize.location == complexities.location}
 	
 	// join is echt betreurenswaardig traag
 	// andere probeersel:

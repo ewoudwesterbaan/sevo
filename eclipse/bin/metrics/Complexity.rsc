@@ -13,6 +13,7 @@ public alias TupComplexityRiskCategory = tuple[str categoryName, str description
 // Relatie van risicocategorieen voor de complexiteit
 public alias RelComplexityRiskCategories = rel[str categoryName, str description, int minComplexity, int maxComplexity];
 
+// Risicocategorieen
 public RelComplexityRiskCategories riskCategories = {
 	<"Simple", "Without much risk", 1, 10>,
 	<"Moderate", "With moderate risk", 11, 20>,
@@ -21,7 +22,7 @@ public RelComplexityRiskCategories riskCategories = {
 };
 
 // Geeft van alle methdodes en constructoren van alle klassen in een project de complexiteismaten
-//    project - het (Java-)project dat moet worden geanalysseerd
+//    project - het (Java-)project dat moet worden geanalyseerd
 public RelComplexities cyclomaticComplexity(loc project) {
     RelComplexities result = {};
     for (Declaration ast <- createAstsFromEclipseProject(project, true)) { 
