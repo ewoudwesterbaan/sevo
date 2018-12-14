@@ -56,6 +56,7 @@ test bool testCompareListOfStrings_MoreThanReq() {
 // Method to compare other method against
 private loc benchMarkMethod = |java+method:///DuplicationTestClass/baseMethod()|;
 
+/*
 test bool testCompare_duplicationTestEquals_ExpectTrue() {
 	loc compareMethod = |java+method:///DuplicationTestClass/duplicationTestEquals_ExpectTrue()|;
 	int result = compare(benchMarkMethod, compareMethod, 0).duplicateLines;
@@ -97,6 +98,7 @@ test bool testCompare_duplicationTestFirstRowRepeat_ExpectTrue() {
 	int expect = 6;
 	return assertEqual(expect, result, "Invalid number of duplicate codes");
 }
+*/
 
 // From here compareTwoMethods
 
@@ -106,14 +108,14 @@ private loc benchMarkMethodCompareTwoMethods = |java+method:///DuplicationTestCl
 test bool CompareTwoMethods_TC01() {
 	loc compareMethod = |java+method:///DuplicationTestClass/duplicationTest_CompareTwoMethods_TC1()|;
 	rel[loc methodA, loc methodB, int methodA_start, int duplicateLines] result = compareTwoMethods(benchMarkMethodCompareTwoMethods, compareMethod);
-	println(result);
+	// println(result);
 	return assertEqual(1, size(result), "Invalid number of results");	
 }
 
 test bool CompareTwoMethods_TC02() {
 	loc compareMethod = |java+method:///DuplicationTestClass/duplicationTest_CompareTwoMethods_TC2()|;
 	rel[loc methodA, loc methodB, int methodA_start, int duplicateLines] result = compareTwoMethods(benchMarkMethodCompareTwoMethods, compareMethod);
-	println(result);
+	// println(result);
 	return assertEqual(2, size(result), "Invalid number of results"); 
 }
 
