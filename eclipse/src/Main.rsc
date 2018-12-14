@@ -11,8 +11,8 @@ import Set;
 import util::Math;
 
 public void main() {
-	// loc project = |project://smallsql/|;
-	loc project = |project://ComplexityTest/|;
+	loc project = |project://smallsql/|;
+	// loc project = |project://ComplexityTest/|;
 	
 	println("\nVolume bereken ...");
 	RelLinesOfCode volume = volumeMetrics(project);
