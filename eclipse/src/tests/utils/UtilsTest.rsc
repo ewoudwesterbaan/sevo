@@ -5,8 +5,6 @@ import Boolean;
 import IO;
 import tests::utils::TestUtils;
 
-private loc project = |project://UtilsTest/|;
-
 test bool testCleanLineComment_NoComment() {
 	str input = "Text with no comment";
 	str expect = "Text with no comment";
