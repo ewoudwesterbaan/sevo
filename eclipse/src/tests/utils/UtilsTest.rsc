@@ -5,6 +5,36 @@ import Boolean;
 import IO;
 import tests::utils::TestUtils;
 
+test bool testCompareLocation_GreaterThanByPosition() {
+	loc a = |project://example-project/src/HelloWorld.java|(0,1,<22,3>,<24,5>);
+	loc b = |project://example-project/src/HelloWorld.java|(0,1,<12,3>,<14,5>);
+	return comparePhysicalLocations(a, b) > 0;
+}
+
+test bool testCompareLocation_GreaterThanByClassName() {
+	loc a = |project://example-project/src/HelloWorld.java|(0,1,<22,3>,<24,5>);
+	loc b = |project://example-project/src/HalloWereld.java|(0,1,<22,3>,<24,5>);
+	return comparePhysicalLocations(a, b) > 0;
+}
+
+test bool testCompareLocation_LessThanByPosition() {
+	loc a = |project://example-project/src/HelloWorld.java|(0,1,<12,3>,<14,5>);
+	loc b = |project://example-project/src/HelloWorld.java|(0,1,<22,3>,<24,5>);
+	return comparePhysicalLocations(a, b) < 0;
+}
+
+test bool testCompareLocation_LessThanByClassName() {
+	loc a = |project://example-project/src/HalloWorld.java|(0,1,<22,3>,<24,5>);
+	loc b = |project://example-project/src/HelloWereld.java|(0,1,<22,3>,<24,5>);
+	return comparePhysicalLocations(a, b) < 0;
+}
+
+test bool testCompareLocation_Equal() {
+	loc a = |project://example-project/src/HelloWorld.java|(0,1,<22,3>,<24,5>);
+	loc b = |project://example-project/src/HelloWorld.java|(0,1,<22,3>,<24,5>);
+	return comparePhysicalLocations(a, b) == 0;
+}
+
 test bool testCleanLineComment_NoComment() {
 	str input = "Text with no comment";
 	str expect = "Text with no comment";

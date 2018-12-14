@@ -16,8 +16,7 @@ public alias RelLinesOfCode = rel[loc location, int totalLines, int commentLines
 public alias RelDuplications = rel[loc methodA, loc methodB, int methodA_start, int duplicateLines];
 
 // Haal alle methoden en constructoren op, per java-klasse, op basis van het project (een location)
-//     c = klasse
-//     m = methode
+//     <c, m>, waarbij c = klasse, en m = methode
 public rel[loc, loc] getUnits(loc project) {
 	rel[loc, loc] result = {};	
     for (Declaration ast <- createAstsFromEclipseProject(project, true)) {
@@ -30,6 +29,15 @@ public rel[loc, loc] getUnits(loc project) {
         }
     }
     return result;
+}
+
+// Vergelijkt twee locaties van het formaat |project://projectName/src/MyClass.java|(1769,171,<67,47>,<75,2>)
+// op basis van hun klassenaam naam en startpositie.
+// Geeft een waarde < 0 terug wanneer a < b; 0 wanneer a == b; > 0 wanner a > b.
+public int comparePhysicalLocations(loc a, loc b) {
+	if (a < b) return -1;
+	if (a > b) return 1;
+	return (a.begin.line - b.begin.line);
 }
 
 // Haal metrieken uit een locatie
