@@ -12,7 +12,7 @@ import util::Math;
 
 public void main() {
 	// loc project = |project://smallsql/|;
-	loc project = |project://ComplexityTest/|;
+	loc project = |project://DuplicationTest/|;
 	
 	println("\nVolume berekenen ...");
 	RelLinesOfCode volume = volumeMetrics(project);
@@ -46,7 +46,6 @@ public void main() {
 	// duplicatie wordt alleen bekeken in de methodes en constructors. De verhouding duplicates is dan ook ten opzichte van de som an de unitsize
 	num sumUnitSize = sumOfUnitSizeMetrics(project).codeLines;
 	println("sumUnitSize: <sumUnitSize>");
-	println(duplicationResult);
 	
 	num sumDuplicatedCode = sum({0}+{ x.duplicateLines | x <- duplicationResult});
 	println("sumDuplicatedCode: <sumDuplicatedCode>");
