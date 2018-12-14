@@ -12,11 +12,6 @@ public alias TupLinesOfCode = tuple[loc location, int totalLines, int commentLin
 // Set van bovenstaande tuples (relatie)
 public alias RelLinesOfCode = rel[loc location, int totalLines, int commentLines, int codeLines];
 
-// Tuple van unit met cyclomatische complexiteit
-public alias TupComplexity = tuple[loc location, str unitName, int complexity, str riskCategory];
-// Set van bovenstaande complexity tuples (relatie)
-public alias RelComplexities = rel[loc location, str unitName, int complexity, str riskCategory];
-
 // Set van duplicaties
 public alias RelDuplications = rel[loc methodA, loc methodB, int methodA_start, int duplicateLines];
 
