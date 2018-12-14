@@ -87,8 +87,8 @@ test bool testSumOfUnitSizeMetrics() {
 
 	bool result = true;
     result = result && assertEqual(187, sumTotalLines, "Unexpected sum of totalLines (all units)."); 
-    result = result && assertEqual(5, sumCommentLines, "Unexpected sum of commentLines (all units)."); 
-    result = result && assertEqual(171, sumCodeLines, "Unexpected sum of codeLines (all units).");
+    result = result && assertEqual(6, sumCommentLines, "Unexpected sum of commentLines (all units)."); 
+    result = result && assertEqual(179, sumCodeLines, "Unexpected sum of codeLines (all units).");
     return result; 
 }
 
