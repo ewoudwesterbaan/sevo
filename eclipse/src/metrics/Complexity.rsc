@@ -8,6 +8,11 @@ import IO;
 import List;
 import Set;
 
+// Tuple van unit met cyclomatische complexiteit
+public alias TupComplexity = tuple[loc location, str unitName, int complexity, str riskCategory];
+// Set van bovenstaande complexity tuples (relatie)
+public alias RelComplexities = rel[loc location, str unitName, int complexity, str riskCategory];
+
 // Tuple voor risicocategorie voor de complexiteit
 public alias TupComplexityRiskCategory = tuple[str categoryName, str description, int minComplexity, int maxComplexity];
 // Relatie van risicocategorieen voor de complexiteit
