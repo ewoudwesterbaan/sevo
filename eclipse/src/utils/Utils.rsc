@@ -91,7 +91,16 @@ public list[str] cleanContent(loc location) {
 	list[str] contentInStringsBeforeLineComments = [trim(l) | /<l:.*>/ := totalContent, !isEmpty(trim(l))];
 	// verwijder de linecomments
 	list[str] cleanedContent = [cleanLineComment(x) | x <- contentInStringsBeforeLineComments, !startsWith(x, "//")];
-	return cleanedContent;
+	// Haal de eerste accolade weg
+	if (startsWith(cleanedContent[0], "{")) {
+		cleanedContent[0] = substring(cleanedContent[0], 1);
+	};
+	// Haal de laatste accolade weg
+	if (endsWith(cleanedContent[size(cleanedContent)-1], "}")) {
+		cleanedContent[size(cleanedContent)-1] = substring(cleanedContent[size(cleanedContent)-1], 0, size(cleanedContent[size(cleanedContent)-1])-1);
+	};
+	list[str] returnValue = [x | x <- cleanedContent, !isEmpty(trim(x))];
+	return returnValue;
 }
 
 // Haalt het commentaar uit de regel

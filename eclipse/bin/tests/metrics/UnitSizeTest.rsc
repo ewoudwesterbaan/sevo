@@ -76,6 +76,22 @@ test bool testUnitSizeMetrics() {
     return result;
 }
 
+// Test de methode tests::metrics::UnitSize::sumOfUnitSizeMetrics
+test bool testSumOfUnitSizeMetrics() {
+	// Roep de methode aan die we willen testen
+	TupLinesOfCode sumMetrics = sumOfUnitSizeMetrics(project);
+
+    int sumTotalLines = sumMetrics.totalLines;
+    int sumCommentLines = sumMetrics.commentLines;
+    int sumCodeLines = sumMetrics.codeLines;
+
+	bool result = true;
+    result = result && assertEqual(187, sumTotalLines, "Unexpected sum of totalLines (all units)."); 
+    result = result && assertEqual(6, sumCommentLines, "Unexpected sum of commentLines (all units)."); 
+    result = result && assertEqual(179, sumCodeLines, "Unexpected sum of codeLines (all units).");
+    return result; 
+}
+
 private bool assertTotalLines(int expected, RelLinesOfCode rloc, loc unitLocation) {
     int actual = head([cc.totalLines | cc <- rloc, unitLocation == cc.location ]);
     return assertEqual(expected, actual, "Method has unexpected lines (total) of code.");

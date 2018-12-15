@@ -14,7 +14,7 @@ public RelDuplications duplication(rel[loc location, int codeSize] methods) {
 	int counter = 0; // Teller om de voortgang van het proces te tonen
 	for (<methodA, methodB> <- createComparePairs(domain(methods))) {
 		counter += 1;
-		if (counter % 1000 == 0) println("Processing number <counter>");
+		// if (counter % 1000 == 0) println("Processing number <counter>");
 		result += compareTwoMethods(methodA, methodB);
 	};
 	println("Number duplication found: <size(result)>");

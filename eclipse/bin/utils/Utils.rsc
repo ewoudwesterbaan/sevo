@@ -12,17 +12,11 @@ public alias TupLinesOfCode = tuple[loc location, int totalLines, int commentLin
 // Set van bovenstaande tuples (relatie)
 public alias RelLinesOfCode = rel[loc location, int totalLines, int commentLines, int codeLines];
 
-// Tuple van unit met cyclomatische complexiteit
-public alias TupComplexity = tuple[loc location, str unitName, int complexity, str riskCategory];
-// Set van bovenstaande complexity tuples (relatie)
-public alias RelComplexities = rel[loc location, str unitName, int complexity, str riskCategory];
-
 // Set van duplicaties
 public alias RelDuplications = rel[loc methodA, loc methodB, int methodA_start, int duplicateLines];
 
 // Haal alle methoden en constructoren op, per java-klasse, op basis van het project (een location)
-//     c = klasse
-//     m = methode
+//     <c, m>, waarbij c = klasse, en m = methode
 public rel[loc, loc] getUnits(loc project) {
 	rel[loc, loc] result = {};	
     for (Declaration ast <- createAstsFromEclipseProject(project, true)) {
@@ -35,6 +29,19 @@ public rel[loc, loc] getUnits(loc project) {
         }
     }
     return result;
+}
+
+// Vergelijkt twee locaties van het formaat |project://projectName/src/MyClass.java|(1769,171,<67,47>,<75,2>)
+// op basis van hun klassenaam naam en startpositie. 
+// De methode werkt ook voor het formaat |java+method:///MyClass/myMethod()| omdat ook op de naam wordt gecontroleerd.
+// Geeft een waarde < 0 terug wanneer a < b; 0 wanneer a == b; > 0 wanner a > b.
+public int compareLocations(loc a, loc b) {
+	if (a < b) return -1;
+	if (a > b) return 1;
+	try {
+		return (a.begin.line - b.begin.line);
+	} catch UnavailableInformation() :
+		return 0;	
 }
 
 // Haal metrieken uit een locatie
@@ -84,7 +91,16 @@ public list[str] cleanContent(loc location) {
 	list[str] contentInStringsBeforeLineComments = [trim(l) | /<l:.*>/ := totalContent, !isEmpty(trim(l))];
 	// verwijder de linecomments
 	list[str] cleanedContent = [cleanLineComment(x) | x <- contentInStringsBeforeLineComments, !startsWith(x, "//")];
-	return cleanedContent;
+	// Haal de eerste accolade weg
+	if (startsWith(cleanedContent[0], "{")) {
+		cleanedContent[0] = substring(cleanedContent[0], 1);
+	};
+	// Haal de laatste accolade weg
+	if (endsWith(cleanedContent[size(cleanedContent)-1], "}")) {
+		cleanedContent[size(cleanedContent)-1] = substring(cleanedContent[size(cleanedContent)-1], 0, size(cleanedContent[size(cleanedContent)-1])-1);
+	};
+	list[str] returnValue = [x | x <- cleanedContent, !isEmpty(trim(x))];
+	return returnValue;
 }
 
 // Haalt het commentaar uit de regel

@@ -35,8 +35,7 @@ public void main() {
 	
 	println("\nBerekenen cyclomatische complexiteit ...");
 	RelComplexities complexities = cyclomaticComplexity(project);
-	// for (TupComplexity c <- complexities) println("Complexity: location = <c.location>, method = <c.unitName>, complexity = <c.complexity>.");
-	
+
 	
 	println("\nAggregeren gegevens (unit size and complexity) ...");
 	ComplexityDistributionMap cdMap = getComplexityDistribution(project);
@@ -49,7 +48,7 @@ public void main() {
 	println("\nBerekenen duplicatie");
 	methodsForDuplication = { <m, cod> | <m, tot, com, cod> <- unitSize, cod >= 6 }; 
 	RelDuplications duplicationResult = duplication(methodsForDuplication);
-	// duplicatie wordt alleen bekeken in de methodes en constructors. De verhouding duplicates is dan ook ten opzichte van de som an de unitsize
+	// duplicatie wordt alleen bekeken in de methodes en constructors. De verhouding duplicates is dan ook ten opzichte van de som van de unitsize
 	num sumUnitSize = sumOfUnitSizeMetrics(project).codeLines;
 	println("sumUnitSize: <sumUnitSize>");
 	
@@ -60,27 +59,5 @@ public void main() {
 	
 	println("Result duplication: <duplicationPercentage>");
 
-	// We moeten de resultaten van unit size met cyclomatic complexity joinen op locatie
-	// a = {<unitSize.location, unitSize.codeLines, complexities.riskCategory> | <unitSize.location, unitSize.codeLines, complexities.riskCategory> <- unitSize join complexities, unitSize.location == complexities.location}
-	
-	// join is echt betreurenswaardig traag
-	// andere probeersel:
-	//g = {<c.location, c.unitSize, d.riskCategory> | c <- unitSize, d <- complexities, c.location == d.location};
-	
 	println("Program ended succesfully");
 }
-
-//public rel[loc location, int unitSize, str riskCategory] joinUnitSizeComplexity(RelComplexities complexities, RelLinesOfCode unitSize) {
-//	rel[loc location, int unitSize, str riskCategory] newResult = {};
-//	for ( c <- unitSize)
-//	{
-//		for ( d <- complexities) {
-//			if (c.location == d.location) {
-//				println("Same!!!");
-//				newResult += <c.location, c.unitSize, d.riskCategory>;
-//				break;
-//			};
-//		};
-//	};
-//	return newResult;
-//}
