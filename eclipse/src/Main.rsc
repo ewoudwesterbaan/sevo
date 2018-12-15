@@ -10,6 +10,8 @@ import metrics::Duplication;
 import IO;
 import Set;
 import util::Math;
+import List;
+import analysis::graphs::Graph;
 
 public void main() {
 	// loc project = |project://smallsql/|;
@@ -25,17 +27,16 @@ public void main() {
 	
 	println("\nUnit size berekenen ...");
 	RelLinesOfCode unitSize = unitSizeMetrics(project);
+
 	TupLinesOfCode sumOfUnitSizes = sumOfUnitSizeMetrics(project);
 	println("Aantal gevonden units (methodes en constructoren): <size(unitSize)>");
 	println("Som van de aantallen regels per methode/constructor: ");
 	println("- totaal aantal regels (incl lege regels binnen de units): <sumOfUnitSizes.totalLines>");
 	println("- commentaarregels: <sumOfUnitSizes.commentLines>");
 	println("- coderegels: <sumOfUnitSizes.codeLines>");
-
 	
 	println("\nBerekenen cyclomatische complexiteit ...");
 	RelComplexities complexities = cyclomaticComplexity(project);
-
 	
 	println("\nAggregeren gegevens (unit size and complexity) ...");
 	ComplexityDistributionMap cdMap = getComplexityDistribution(project);
@@ -45,19 +46,22 @@ public void main() {
 	println("- Rank op basis van aggregatie: <getComplexityRank(cdMap)>");
 
 
-	println("\nBerekenen duplicatie");
+	println("\nBerekenen duplicatie ...");
 	methodsForDuplication = { <m, cod> | <m, tot, com, cod> <- unitSize, cod >= 6 }; 
 	RelDuplications duplicationResult = duplication(methodsForDuplication);
 	// duplicatie wordt alleen bekeken in de methodes en constructors. De verhouding duplicates is dan ook ten opzichte van de som van de unitsize
-	num sumUnitSize = sumOfUnitSizeMetrics(project).codeLines;
-	println("sumUnitSize: <sumUnitSize>");
+	println("- Aantal duplicaties: <size(duplicationResult)>");
 	
-	num sumDuplicatedCode = sum({0}+{ x.duplicateLines | x <- duplicationResult});
-	println("sumDuplicatedCode: <sumDuplicatedCode>");
-	
-	num duplicationPercentage = sumDuplicatedCode / sumUnitSize;
-	
-	println("Result duplication: <duplicationPercentage>");
+	num totalDupLines = 0;	
+	for (int dupLines <- duplicationResult.duplicateLines) {
+		rel[loc from, loc to] tmp = { <methodA + "_<methodA_start>", methodB + "_<methodB_start>"> | <loc methodA, int methodA_start, loc methodB, int methodB_start, int duplicateLines> <- duplicationResult, duplicateLines == dupLines};
+		totalDupLines += sum([size(d) * dupLines | d <- toList(connectedComponents(tmp))]);
+	};
 
-	println("Program ended succesfully");
+	println("- Aantal regels gedupliceerd: <totalDupLines>");
+	
+	num duplicationPercentage = (totalDupLines * 100) / sumOfUnitSizes.codeLines;
+	println("- Duplicatepercentage: <duplicationPercentage>%");
+
+	println("\nProgramma beëindigd");
 }

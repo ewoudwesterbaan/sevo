@@ -3,6 +3,7 @@
 \usepackage{xcolor}
 \usepackage{fancyheadings}
 \usepackage{listings}
+\usepackage{graphicx}
 
 
 \newcommand{\todo}[1]{\textcolor{red}{[#1]}}
@@ -22,7 +23,7 @@
 	\item [Studentnummer] 837372832
 \end{description}
 
-\section*{Aanpak}
+\section*{Samenwerking}
 Nadat Ewoud een git repository had aangemaakt voor het rascal
 project, zijn we beide begonnen aan een eigen module. De modules
 zijn parallel aan elkaar ontwikkeld, zodat er redelijk
@@ -52,13 +53,21 @@ voor hun eigen modules geschreven. Voor het testen is er wat
 intensiever samengewerkt, ook omdat daarbij aanvankelijk wat
 technische probleempjes optraden.
 
-\todo{Geef aan hoe jullie de opdracht hebben aangepakt en wie
-wat heeft gedaan, maximaal 1 A-4. Geef expliciet aandacht aan de
-volgorde van activiteiten}
+\section{Aannames}
+\subsection{Duplicaten}
+In onze oplossing vergelijken we de content van methodes en constructoren met elkaar, maar dit gebeurt in één richting. Als methode A wordt vergeleken met methode B, wordt methode B niet meer vergeleken met methode A. Stel dat het aantal opeenvolgende regels dat identiek is, 6 is. Dan is de duplicatiewaarde over de oplossing dus 6 / 12, dus 50\%. Als we dan drie methodes gebruiken, dan wordt methode A met methode B vergeleken, methode A met methode C én methode B en methode C. Het aantal duplicate regels is dan 18, wat gelijk is aan het totaal van aantal regels. In figuur \ref{fig:DuplicatenDetectie} hebben we dit doorgetrokken. op de x as staan het aantal methodes dat dezelfde code bevat. De blauwe lijn geeft het totaal aantal regels code in de oplossing aan, en de rode lijn het aantal gedetecteerde duplicate regels. Het is dus mogelijk dat het duplicatiepercentage boven de 100\% komt.
+\begin{figure}[htbp]
+\caption{Oplopen van detectieregels bij meerdere methodes}
+\centering
+\includegraphics[width=0.8 \textwidth]{DuplicatenDetectie.PNG}
+\label{fig:DuplicatenDetectie}
+\end{figure}
+Wij hebben dit dus anders aangepakt. 
+
+\subsection{Unitsize versus volume}
+We zien een verschil in de dom van de unitsize ten opzicht an het volume. Wij beschouwen het volume als alle regels code in een java file, zonder commentaar en zonder de lege ruimtes. \texttt{Import} statements en field definitions beschouwen wij als ook onderdeel van het volume. De som van de regels code daarentegen, is de som van de inhoud van de methodes en contructoren. Omdat de complexiteit en duplicaten berekend worden over de inhoud van de methodes en constructoren, gebruiken wij deze metriek om het duplicaat en de complexiteit percentages te berekenen.
 
 
-
-\section{Keuzen}
 \subsection{Lines of code}
 Dit is van belang voor de metrieken volume en unitsize. Beiden
 maken gebruik van regels code die geen commentaar zijn. Omdat
@@ -88,7 +97,7 @@ Initialization Blocks (wat geen constructors zijn).
 \subsection{Volume}
 De volume metric maakt volledig gebruik van de Utils module. De
 hoeveelheid regels code per java bestand wordt bepaald. Om de
-regels code te tellen, verwijderen we het blockcoimmentaar en
+regels code te tellen, verwijderen we het blockcommentaar en
 
 \subsection{Complexity}
 De complexiteitsmaat heeft betrekking op het aantal paden die in
@@ -160,8 +169,10 @@ opgehaald worden met de accolade (\texttt{\{}) achter de method
 signature. Met de regressie testen van de duplicaten, blijkt dus
 dat het aantal gelijke regels overal met 1 was toegenomen. De vraag die nu opspeelt is: moeten we de methode signatures ook zien als code dat vergeleken moet worden. In het artikel wordt aangegeven dat duplicatie gaat over code in de code-blocks. We beschouwen de method signature daar niet onder. De accolades waarmee de methode start en eind moeten dus ook verwijderd worden bij het schoonmaken (trimmen van de content en het verwijderen van commentaar).
 
-\section{Juistheid}
+\section{Betrouwbaarheid}
+De betrouwbaaheid en de juistheid van de oplossing kunnen we waarborgen door het gebruik van unittests. We hebben meerdere `dummy'-projecten gemaakt die dienen als referentieproject bij het draaien van deze tests. Door dat we zelf deze projecten maken, welke klein en overzichtelijk zijn, kunnen we vrij specifiek meten, testen en de juistheid valideren van de opgeleverde code.
 
 \section{Interpretatie}
+
 
 \end{document}

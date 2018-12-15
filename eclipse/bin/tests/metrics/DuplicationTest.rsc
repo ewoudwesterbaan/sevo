@@ -119,15 +119,15 @@ private loc benchMarkMethodCompareTwoMethods = |project://DuplicationTest/src/Du
 
 test bool CompareTwoMethods_TC01() {
 	loc compareMethod = |project://DuplicationTest/src/DuplicationTestClass.java|(2967,604,<107,46>,<126,2>);
-	rel[loc methodA, loc methodB, int methodA_start, int duplicateLines] result = compareTwoMethods(benchMarkMethodCompareTwoMethods, compareMethod);
-	println(result);
+	rel[loc methodA, int methodA_start, loc methodB, int methodB_start, int duplicateLines] result = compareTwoMethods(compareMethod, benchMarkMethodCompareTwoMethods);
+	//println(result);
 	return assertEqual(1, size(result), "Invalid number of results");	
 }
 
 test bool CompareTwoMethods_TC02() {
 	loc compareMethod = |project://DuplicationTest/src/DuplicationTestClass.java|(3622,480,<128,46>,<143,2>);
-	rel[loc methodA, loc methodB, int methodA_start, int duplicateLines] result = compareTwoMethods(benchMarkMethodCompareTwoMethods, compareMethod);
-	println(result);
+	rel[loc methodA, int methodA_start, loc methodB, int methodB_start, int duplicateLines] result = compareTwoMethods(benchMarkMethodCompareTwoMethods, compareMethod);
+	//println(result);
 	return assertEqual(2, size(result), "Invalid number of results"); 
 }
 

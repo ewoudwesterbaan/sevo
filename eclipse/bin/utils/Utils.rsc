@@ -12,8 +12,6 @@ public alias TupLinesOfCode = tuple[loc location, int totalLines, int commentLin
 // Set van bovenstaande tuples (relatie)
 public alias RelLinesOfCode = rel[loc location, int totalLines, int commentLines, int codeLines];
 
-// Set van duplicaties
-public alias RelDuplications = rel[loc methodA, loc methodB, int methodA_start, int duplicateLines];
 
 // Haal alle methoden en constructoren op, per java-klasse, op basis van het project (een location)
 //     <c, m>, waarbij c = klasse, en m = methode

@@ -15,6 +15,7 @@ public TupLinesOfCode sumOfUnitSizeMetrics(loc project) {
 	int sumOfTotalLines = 0;
 	int sumOfCommentLines = 0;
 	int sumOfCodeLines = 0;
+	
 	for (metrics <- unitSizeMetrics(project)) {
 		sumOfTotalLines += metrics.totalLines;
 		sumOfCommentLines += metrics.commentLines;
