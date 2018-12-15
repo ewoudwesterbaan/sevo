@@ -5,6 +5,7 @@ import metrics::Volume;
 import metrics::UnitSize;
 import metrics::Complexity;
 import metrics::Aggregate;
+import metrics::Rate;
 import metrics::Duplication;
 import IO;
 import Set;
@@ -21,6 +22,7 @@ public void main() {
 	println("- commentaarregels: <sum(volume.commentLines)>");
 	println("- coderegels: <sum(volume.codeLines)>");
 	
+	
 	println("\nUnit size berekenen ...");
 	RelLinesOfCode unitSize = unitSizeMetrics(project);
 	TupLinesOfCode sumOfUnitSizes = sumOfUnitSizeMetrics(project);
@@ -30,15 +32,19 @@ public void main() {
 	println("- commentaarregels: <sumOfUnitSizes.commentLines>");
 	println("- coderegels: <sumOfUnitSizes.codeLines>");
 
+	
 	println("\nBerekenen cyclomatische complexiteit ...");
 	RelComplexities complexities = cyclomaticComplexity(project);
 	// for (TupComplexity c <- complexities) println("Complexity: location = <c.location>, method = <c.unitName>, complexity = <c.complexity>.");
+	
 	
 	println("\nAggregeren gegevens (unit size and complexity) ...");
 	ComplexityDistributionMap cdMap = getComplexityDistribution(project);
 	for (entry <- cdMap) {
 		println("- Categorie <entry.categoryName> (<entry.description>): <cdMap[entry]>%");
 	}
+	println("- Rank op basis van aggregatie: <getComplexityRank(cdMap)>");
+
 
 	println("\nBerekenen duplicatie");
 	methodsForDuplication = { <m, cod> | <m, tot, com, cod> <- unitSize, cod >= 6 }; 
