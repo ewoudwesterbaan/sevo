@@ -12,12 +12,12 @@ import Map;
 // Een map met het aantal regels code per complexiteitscategorie (simple, moderate, high, ...)
 public alias ComplexityDistributionMap = map[TupComplexityRiskCategory category, int lines];
 
-// Produceert een complexity rating. Per complexiteitscategorie (simple, moderate, high, ...)
+// Produceert een verdeling van de complexity. Per complexiteitscategorie (simple, moderate, high, ...)
 // wordt op basis van de regels code in het hele systeem, afgezet tegen de regels code per unit 
 // (methode/constructor) een overzicht gegenereerd.
 // Geeft een ComplexityDistributionMap terug met per risicocategorie een percentage. Dit percentage is
 // het aantal coderegels in verhouding tot het totaal aantal coderegels per categorie.
-public ComplexityDistributionMap getComplexityRating(loc project) {
+public ComplexityDistributionMap getComplexityDistribution(loc project) {
 
 	// Een map waarin we het totaal aantal LOC van alle units per complexiteitscategorie bijhouden
 	ComplexityDistributionMap distributionMap = (rc : 0 | rc <- riskCategories);

@@ -12,9 +12,9 @@ import List;
 // De testdata voor deze testmodule bevindt zich in het complexity project
 private loc project = |project://ComplexityTest/|;
 
-// Test de methode metrics::Aggregate::getComplexityRating
+// Test de methode metrics::Aggregate::getComplexityDistribution
 test bool testGetComplexityRating() {
-    ComplexityDistributionMap cdMap = getComplexityRating(project);
+    ComplexityDistributionMap cdMap = getComplexityDistribution(project);
     
     int simplePerc = (46 * 100) / 179;
     int moderatePerc =  (24 * 100) / 179;
@@ -22,14 +22,14 @@ test bool testGetComplexityRating() {
     int untestablePerc =  (55 * 100) / 179;
     
     bool result = true;
-    result = result && assertRating(cdMap, simplePerc, "Simple", "Unexpected % for Simple category.");
-    result = result && assertRating(cdMap, moderatePerc, "Moderate", "Unexpected % for Moderate category.");
-    result = result && assertRating(cdMap, complexPerc, "Complex", "Unexpected % for Complex category.");
-    result = result && assertRating(cdMap, untestablePerc, "Untestable", "Unexpected % for Untestable category.");
+    result = result && assertDistribution(cdMap, simplePerc, "Simple", "Unexpected % for Simple category.");
+    result = result && assertDistribution(cdMap, moderatePerc, "Moderate", "Unexpected % for Moderate category.");
+    result = result && assertDistribution(cdMap, complexPerc, "Complex", "Unexpected % for Complex category.");
+    result = result && assertDistribution(cdMap, untestablePerc, "Untestable", "Unexpected % for Untestable category.");
     return result;
 }
 
-private bool assertRating(ComplexityDistributionMap cdMap, int perc, str categoryName, str msg) {
+private bool assertDistribution(ComplexityDistributionMap cdMap, int perc, str categoryName, str msg) {
 	TupComplexityRiskCategory riskCategory = getTupRiskCategoryByCategoryName(categoryName);
 	return assertEqual(perc, cdMap[riskCategory], msg);
 }

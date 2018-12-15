@@ -35,9 +35,9 @@ public void main() {
 	// for (TupComplexity c <- complexities) println("Complexity: location = <c.location>, method = <c.unitName>, complexity = <c.complexity>.");
 	
 	println("\nAggregeren gegevens (unit size and complexity) ...");
-	ComplexityRatingMap ratingMap = getComplexityRating(project);
-	for (entry <- ratingMap) {
-		println("- Categorie <entry.categoryName> (<entry.description>): <ratingMap[entry]>%");
+	ComplexityDistributionMap cdMap = getComplexityDistribution(project);
+	for (entry <- cdMap) {
+		println("- Categorie <entry.categoryName> (<entry.description>): <cdMap[entry]>%");
 	}
 
 	println("\nBerekenen duplicatie");
