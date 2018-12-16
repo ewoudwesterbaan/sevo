@@ -237,8 +237,9 @@ Voor de complexity hebben we het percentage berekent per categorie. Als we de ra
 
 Het duplicatiepercentage is 12.04\%. Dat kunnen we vertalen met het rating schema naar een enkele -.
 
+
 Voor de interpretatie van de unitsizes zijn door \cite{A} geen strikte waardes gegeven, daarom dienen wij hier zelf een methode voor te bedenken.
-Wij hebben dit aangepakt door eerst een verdeling op te stellen van de unitsize. In Figuur \ref{fig:VerdelingUnitsize} is een graphische representatie van de verdeling te zien.
+Wij hebben dit aangepakt door eerst een verdeling op te stellen van de unitsize. In Figuur \ref{fig:VerdelingUnitsize} is een graphische representatie van de verdeling te zien van het aantal methodes dat een aantal regels code bevat. Opvallend is hierbij dat een significant aantal units geen implementatie hebben. Steekproeven van deze locaties laten zien dat dit auto-generated code is of methodes om een bepaalde interface te kunnen implementeren.
 \begin{figure}[htbp]
 %\caption{Oplopen van detectieregels bij meerdere methodes}
 \centering
@@ -247,10 +248,9 @@ Wij hebben dit aangepakt door eerst een verdeling op te stellen van de unitsize.
 \end{figure}
 
 Wij zien hierin een significant aantal units zonder implementatie. Wij kiezen er voor om hier een aparte classificatie voor op te nemen: not implemented.
-De volgende grens leggen wij waar de afstand tussen het 0-punt en de `curve' het laagst is. Dit is 3.
+Voor overige verdeling kiezen we ervoor om dezelfde verdeling aan te houden als in \cite{B}, zodat we de uitkomst kunnen vergelijken met de gemiddelde.
 
-
-Eerst classificeren wij de units door middel van Tabel \ref{tbl:UnitSizeClassificatie}.
+Als we de verhouding in \cite{B} aannemen, komen we op een verdeling als in Tabel \ref{tbl:UnitSizeClassificatie}.
 
 \begin{table}[h]
 \caption{Unitsize classificatie}
@@ -258,30 +258,23 @@ Eerst classificeren wij de units door middel van Tabel \ref{tbl:UnitSizeClassifi
 \begin{tabular}{|l|l|}
 \hline
 Unitsize         & Classificatie      \\ \hline
-0                & not implemented    \\
-1-5              & small units        \\
-6-15             & medium sized units \\
-16-25            & large units        \\
-\textgreater{}25 & very large units   \\ \hline
+0-15             & small units        \\
+16-50            & medium sized units \\
+51-100           & large units        \\
+101-150          & very large units   \\
+\textgreater{}250& insane             \\ \hline
 \end{tabular}
 \end{table}
 
-Met de relatieve aantallen ten opzichte van het toaal aantal units, geven we de applicatie een ranking, zoals we deze in Tabel \ref{tbl:UnitsizeRanking} hebben weergegeven.
+Met de relatieve aantallen ten opzichte van het toaal aantal units, geven we de applicatie een ranking. We vergelijken deze aantallen met de waardes uit \cite{B}. De applicatie dat onderzocht wordt kan boven (+), onder (-) of gelijk (o) scoren aan de gemiddelden scoren. Ter referentie hebben we de grafiek uit \cite{B} toegevoegd (zie Figuur \ref{fig:RefVerdeling}).
+\begin{figure}[htbp]
+%\caption{Oplopen van detectieregels bij meerdere methodes}
+\centering
+\includegraphics[width=0.8 \textwidth]{Capture.png}
+\label{fig:RefVerdeling}
+\end{figure}
 
-\begin{table}[h]
-\caption{Unitsize ranking}
-\label{tbl:UnitsizeRanking}
-\begin{tabular}{cl|lll|}
-\cline{3-5}
-\multicolumn{1}{l}{}       &  & \multicolumn{3}{c|}{maximum relative units}                                              \\ \hline
-\multicolumn{1}{|c|}{rank} &  & \multicolumn{1}{c}{moderate} & \multicolumn{1}{c}{high} & \multicolumn{1}{c|}{very high} \\ \hline
-\multicolumn{1}{|c|}{++}   &  & \multicolumn{1}{c}{20\%}     & \multicolumn{1}{c}{0\%}  & \multicolumn{1}{c|}{0\%}       \\
-\multicolumn{1}{|c|}{+}    &  & \multicolumn{1}{c}{30\%}     & \multicolumn{1}{c}{5\%}  & \multicolumn{1}{c|}{0\%}       \\
-\multicolumn{1}{|c|}{o}    &  & \multicolumn{1}{c}{40\%}     & \multicolumn{1}{c}{10\%} & \multicolumn{1}{c|}{0\%}       \\
-\multicolumn{1}{|c|}{-}    &  & \multicolumn{1}{c}{50\%}     & \multicolumn{1}{c}{15\%} & \multicolumn{1}{c|}{5\%}       \\
-\multicolumn{1}{|c|}{--}   &  & \multicolumn{1}{c}{-}        & \multicolumn{1}{c}{-}    & \multicolumn{1}{c|}{-}         \\ \hline
-\end{tabular}
-\end{table}
+
 
 Het resulaat is dat unitsize van ons een score krijgt van \todo{waarde invullen}.
 
