@@ -44,8 +44,8 @@ test bool testGetUnitSizeDistribution() {
 		<|project://unit3|, 16, 10, 6>,
 		<|project://unit4|, 18, 10, 8>,
 		// large
-		<|project://unit5|, 20, 9, 11>,
-		<|project://unit6|, 20, 7, 13>,
+		<|project://unit5|, 30, 9, 21>,
+		<|project://unit6|, 30, 7, 23>,
 		// very large
 		<|project://unit7|, 35, 5, 30>
 	};
@@ -56,7 +56,7 @@ test bool testGetUnitSizeDistribution() {
 	// Verwachte resultaten
     int smallPerc = ((2 + 3) * 100) / sysLinesOfCode;
     int mediumPerc = ((6 + 8) * 100) / sysLinesOfCode;
-    int largePerc = ((11 + 13) * 100) / sysLinesOfCode;
+    int largePerc = ((21 + 23) * 100) / sysLinesOfCode;
     int veryLargePerc = (30 * 100) / sysLinesOfCode;
 
 	// Controleer resultaat
