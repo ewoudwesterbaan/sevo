@@ -54,7 +54,7 @@ public RelDuplications compareTwoMethods(loc methodA, loc methodB) {
 public rel[loc methodA, loc methodB] createComparePairs(set[loc] methods) {
 	rel[loc methodA, loc methodB] cartesianProduct = methods*methods;
 	rel[loc, loc] pairs = { <methodA, methodB> | <methodA, methodB> <- cartesianProduct, compareLocations(methodA, methodB) < 0 };
-	println("size of pairs to check: <size(pairs)>");
+	// println("size of pairs to check: <size(pairs)>");
 	return pairs;
 }
 
