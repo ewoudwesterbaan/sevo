@@ -16,10 +16,10 @@ private loc project = |project://ComplexityTest/|;
 test bool testGetComplexityRating() {
     ComplexityDistributionMap cdMap = getComplexityDistribution(project);
     
-    int simplePerc = (46 * 100) / 179;
-    int moderatePerc =  (24 * 100) / 179;
-    int complexPerc =  (54 * 100) / 179;
-    int untestablePerc =  (55 * 100) / 179;
+    int simplePerc = (34 * 100) / 161;
+    int moderatePerc =  (22 * 100) / 161;
+    int complexPerc =  (52 * 100) / 161;
+    int untestablePerc =  (53 * 100) / 161;
     
     bool result = true;
     result = result && assertDistribution(cdMap, simplePerc, "Simple", "Unexpected % for Simple category.");
