@@ -15,7 +15,7 @@ import analysis::graphs::Graph;
 
 public void main() {
 	// loc project = |project://smallsql/|;
-	loc project = |project://DuplicationTest/|;
+	loc project = |project://ComplexityTest/|;
 	
 	println("\nVolume berekenen ...");
 	RelLinesOfCode volume = volumeMetrics(project);
@@ -27,7 +27,7 @@ public void main() {
 	
 	println("\nUnit size berekenen ...");
 	RelLinesOfCode unitSizes = unitSizeMetrics(project);
-
+	
 	TupLinesOfCode sumOfUnitSizes = sumOfUnitSizeMetrics(project);
 	println("Aantal gevonden units (methodes en constructoren): <size(unitSizes)>");
 	println("Som van de aantallen regels per methode/constructor: ");
