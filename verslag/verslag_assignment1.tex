@@ -238,6 +238,18 @@ Voor de complexity hebben we het percentage berekent per categorie. Als we de ra
 Het duplicatiepercentage is 12.04\%. Dat kunnen we vertalen met het rating schema naar een enkele -.
 
 Voor de interpretatie van de unitsizes zijn door \cite{A} geen strikte waardes gegeven, daarom dienen wij hier zelf een methode voor te bedenken.
+Wij hebben dit aangepakt door eerst een verdeling op te stellen van de unitsize. In Figuur \ref{fig:VerdelingUnitsize} is een graphische representatie van de verdeling te zien.
+\begin{figure}[htbp]
+%\caption{Oplopen van detectieregels bij meerdere methodes}
+\centering
+\includegraphics[width=0.8 \textwidth]{VerdelingUnitsize.png}
+\label{fig:VerdelingUnitsize}
+\end{figure}
+
+Wij zien hierin een significant aantal units zonder implementatie. Wij kiezen er voor om hier een aparte classificatie voor op te nemen: not implemented.
+De volgende grens leggen wij waar de afstand tussen het 0-punt en de `curve' het laagst is. Dit is 3.
+
+
 Eerst classificeren wij de units door middel van Tabel \ref{tbl:UnitSizeClassificatie}.
 
 \begin{table}[h]
@@ -246,6 +258,7 @@ Eerst classificeren wij de units door middel van Tabel \ref{tbl:UnitSizeClassifi
 \begin{tabular}{|l|l|}
 \hline
 Unitsize         & Classificatie      \\ \hline
+0                & not implemented    \\
 1-5              & small units        \\
 6-15             & medium sized units \\
 16-25            & large units        \\
