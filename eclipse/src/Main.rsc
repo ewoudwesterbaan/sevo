@@ -14,8 +14,7 @@ import List;
 import analysis::graphs::Graph;
 
 public void main() {
-	// loc project = |project://smallsql/|;
-	loc project = |project://ComplexityTest/|;
+	loc project = |project://smallsql/|;
 	
 	println("\nVolume berekenen ...");
 	RelLinesOfCode volume = volumeMetrics(project);

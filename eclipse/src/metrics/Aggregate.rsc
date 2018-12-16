@@ -19,10 +19,11 @@ public alias LstUnitSizeCategories = list[TupUnitSizeCategory];
 
 // Categorieen voor de grootte van units (methoden en constructoren)
 public LstUnitSizeCategories unitSizeCategories = [
-	<"Small", "Small units (0-3)", 0, 3>,
-	<"Medium", "Medium size units (4-15)", 4, 15>,
-	<"Large", "Large units (16-25)", 16, 25>,
-	<"Very large", "Untestable, very large units (\>26)", 26, -1>
+	<"Small", "Small units (0-15)", 0, 15>,
+	<"Medium", "Medium size units (16-50)", 16, 50>,
+	<"Large", "Large units (51-100)", 51, 100>,
+	<"Very large", "Very large units (101-250)", 101, 250>,
+	<"Insane", "Extremely large units (\>250)", 251, -1>
 ];
 
 // Een map met de totale hoeveelheid code in het systeem per unit size category

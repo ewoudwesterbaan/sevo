@@ -33,31 +33,33 @@ test bool testGetComplexityRating() {
 test bool testGetUnitSizeDistribution() {
 
 	// Statische testdata
-	int sysLinesOfCode = 100;
+	int sysLinesOfCode = 400;
 	RelLinesOfCode unitSizes = {
-		// not implemented
-		<|project://unit0|, 0, 5, 0>,
 		// small
-		<|project://unit1|, 12, 10, 2>,
-		<|project://unit2|, 10, 7, 3>,
+		<|project://unit1|, 11, 10, 1>,
+		<|project://unit2|, 22, 7, 15>,
 		// medium
-		<|project://unit3|, 16, 10, 6>,
-		<|project://unit4|, 18, 10, 8>,
+		<|project://unit3|, 26, 10, 16>,
+		<|project://unit4|, 60, 10, 50>,
 		// large
-		<|project://unit5|, 30, 9, 21>,
-		<|project://unit6|, 30, 7, 23>,
+		<|project://unit5|, 60, 9, 51>,
+		<|project://unit6|, 107, 7, 100>,
 		// very large
-		<|project://unit7|, 35, 5, 30>
+		<|project://unit7|, 106, 5, 101>,
+		<|project://unit8|, 255, 5, 250>,
+		// insane
+		<|project://unit9|, 256, 5, 251>
 	};
 
 	// Roep de te testen methode aan
 	UnitSizeDistributionMap usdMap = getUnitSizeDistribution(sysLinesOfCode, unitSizes);
 	
 	// Verwachte resultaten
-    int smallPerc = ((2 + 3) * 100) / sysLinesOfCode;
-    int mediumPerc = ((6 + 8) * 100) / sysLinesOfCode;
-    int largePerc = ((21 + 23) * 100) / sysLinesOfCode;
-    int veryLargePerc = (30 * 100) / sysLinesOfCode;
+    int smallPerc = ((1 + 15) * 100) / sysLinesOfCode;
+    int mediumPerc = ((16 + 50) * 100) / sysLinesOfCode;
+    int largePerc = ((51 + 100) * 100) / sysLinesOfCode;
+    int veryLargePerc = ((101 + 250) * 100) / sysLinesOfCode;
+    int insanePerc = (251 * 100) / sysLinesOfCode;
 
 	// Controleer resultaat
     bool result = true;
@@ -65,6 +67,7 @@ test bool testGetUnitSizeDistribution() {
     result = result && assertUnitSizeDist(usdMap, mediumPerc, "Medium", "Unexpected % for Medium category.");
     result = result && assertUnitSizeDist(usdMap, largePerc, "Large", "Unexpected % for Large category.");
     result = result && assertUnitSizeDist(usdMap, veryLargePerc, "Very large", "Unexpected % for Very large category.");
+    result = result && assertUnitSizeDist(usdMap, insanePerc, "Insane", "Unexpected % for Insane category.");
     return result;
 } 
 
@@ -72,21 +75,25 @@ test bool testGetUnitSizeDistribution() {
 test bool testGetTupUnitSizeCategory() {
 	bool result = true;
 	TupUnitSizeCategory cat;
-	for (lines <- [1..3]) {
+	for (lines <- [1..15]) {
 		cat = getTupUnitSizeCategory(lines);
 		result = result && assertEqual(cat.categoryName, "Small", "Unexpected unit size category.");
 	}
-	for (lines <- [4..15]) {
+	for (lines <- [16..50]) {
 		cat = getTupUnitSizeCategory(lines);
 		result = result && assertEqual(cat.categoryName, "Medium", "Unexpected unit size category.");
 	}
-	for (lines <- [16..25]) {
+	for (lines <- [51..100]) {
 		cat = getTupUnitSizeCategory(lines);
 		result = result && assertEqual(cat.categoryName, "Large", "Unexpected unit size category.");
 	}
-	for (lines <- [26..30]) {
+	for (lines <- [101..250]) {
 		cat = getTupUnitSizeCategory(lines);
 		result = result && assertEqual(cat.categoryName, "Very large", "Unexpected unit size category.");
+	}
+	for (lines <- [251..260]) {
+		cat = getTupUnitSizeCategory(lines);
+		result = result && assertEqual(cat.categoryName, "Insane", "Unexpected unit size category.");
 	}
 	return result;
 }
@@ -97,18 +104,22 @@ test bool testGetTupUnitSizeCategoryByCategoryName() {
 
 	TupUnitSizeCategory cat = getTupUnitSizeCategoryByCategoryName("Small");
 	result = result && assertEqual(0, cat.minLines, "Unexpected unit size category.minLines.");
-	result = result && assertEqual(3, cat.maxLines, "Unexpected unit size category.maxLines.");
-
-	cat = getTupUnitSizeCategoryByCategoryName("Medium");
-	result = result && assertEqual(4, cat.minLines, "Unexpected unit size category.minLines.");
 	result = result && assertEqual(15, cat.maxLines, "Unexpected unit size category.maxLines.");
 
-	cat = getTupUnitSizeCategoryByCategoryName("Large");
+	cat = getTupUnitSizeCategoryByCategoryName("Medium");
 	result = result && assertEqual(16, cat.minLines, "Unexpected unit size category.minLines.");
-	result = result && assertEqual(25, cat.maxLines, "Unexpected unit size category.maxLines.");
+	result = result && assertEqual(50, cat.maxLines, "Unexpected unit size category.maxLines.");
+
+	cat = getTupUnitSizeCategoryByCategoryName("Large");
+	result = result && assertEqual(51, cat.minLines, "Unexpected unit size category.minLines.");
+	result = result && assertEqual(100, cat.maxLines, "Unexpected unit size category.maxLines.");
 
 	cat = getTupUnitSizeCategoryByCategoryName("Very large");
-	result = result && assertEqual(26, cat.minLines, "Unexpected unit size category.minLines.");
+	result = result && assertEqual(101, cat.minLines, "Unexpected unit size category.minLines.");
+	result = result && assertEqual(250, cat.maxLines, "Unexpected unit size category.maxLines.");
+
+	cat = getTupUnitSizeCategoryByCategoryName("Insane");
+	result = result && assertEqual(251, cat.minLines, "Unexpected unit size category.minLines.");
 	result = result && assertEqual(-1, cat.maxLines, "Unexpected unit size category.maxLines.");
 
 	return result;
