@@ -19,8 +19,7 @@ public alias LstUnitSizeCategories = list[TupUnitSizeCategory];
 
 // Categorieen voor de grootte van units (methoden en constructoren)
 public LstUnitSizeCategories unitSizeCategories = [
-	<"Not implemented", "Unimplemented units (0-0)", 0, 0>,
-	<"Small", "Small units (0-3)", 1, 3>,
+	<"Small", "Small units (0-3)", 0, 3>,
 	<"Medium", "Medium size units (4-15)", 4, 15>,
 	<"Large", "Large units (16-25)", 16, 25>,
 	<"Very large", "Untestable, very large units (\>26)", 26, -1>
