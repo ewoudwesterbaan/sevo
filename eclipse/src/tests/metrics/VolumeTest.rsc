@@ -29,7 +29,7 @@ test bool testVolumeCommentLinesMetrics() {
 // Test de methode metrics::Volume::volumeMetrics
 // Totaal aantal echte coderegels
 test bool testVolumeCodeLinesMetrics() {
-	int expected = 187;
+	int expected = 185;
 	int actual = sum(volumeMetrics(project).codeLines);
 	return assertEqual(expected, actual, "Onverwacht aantal code lines in project.");
 }
