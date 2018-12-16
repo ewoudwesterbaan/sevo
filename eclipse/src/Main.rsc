@@ -66,9 +66,10 @@ public void main() {
 	};
 
 	println("- Aantal regels gedupliceerd: <totalDupLines>");
-	
+
 	num duplicationPercentage = (totalDupLines * 100) / sumOfUnitSizes.codeLines;
 	println("- Duplicatepercentage: <duplicationPercentage>%");
+
 
 	println("\nProgramma beëindigd");
 }

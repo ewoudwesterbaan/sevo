@@ -70,6 +70,7 @@ test bool testGetUnitSizeDistribution() {
     return result;
 } 
 
+// Test de methode metrics::Aggregate::getTupUnitSizeCategory
 test bool testGetTupUnitSizeCategory() {
 	bool result = true;
 	TupUnitSizeCategory cat = getTupUnitSizeCategory(0);
@@ -93,6 +94,7 @@ test bool testGetTupUnitSizeCategory() {
 	return result;
 }
 
+// Test de methode metrics::Aggregate::getTupUnitSizeCategoryByCategoryName
 test bool testGetTupUnitSizeCategoryByCategoryName() {
 	bool result = true;
 

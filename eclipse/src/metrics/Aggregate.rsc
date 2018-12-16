@@ -98,7 +98,7 @@ public UnitSizeDistributionMap getUnitSizeDistribution(int sysLinesOfCode, RelLi
 }
 
 // Zoekt de categorie bij een aantal regels per unit.
-private TupUnitSizeCategory getTupUnitSizeCategory(int linesOfCode) {
+public TupUnitSizeCategory getTupUnitSizeCategory(int linesOfCode) {
 	return head([cat | cat <- unitSizeCategories, 
 		linesOfCode >= cat.minLines && (cat.maxLines == -1 || linesOfCode <= cat.maxLines)
 	]);	
