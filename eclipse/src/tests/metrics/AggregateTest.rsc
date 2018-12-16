@@ -66,6 +66,28 @@ test bool testGetUnitSizeDistribution() {
     return result;
 } 
 
+test bool testGetTupUnitSizeCategoryByCategoryName() {
+	bool result = true;
+
+	TupUnitSizeCategory cat = getTupUnitSizeCategoryByCategoryName("Small");
+	result = result && assertEqual(0, cat.minLines, "Unexpected unit size category.minLines.");
+	result = result && assertEqual(5, cat.maxLines, "Unexpected unit size category.maxLines.");
+
+	cat = getTupUnitSizeCategoryByCategoryName("Medium");
+	result = result && assertEqual(6, cat.minLines, "Unexpected unit size category.minLines.");
+	result = result && assertEqual(15, cat.maxLines, "Unexpected unit size category.maxLines.");
+
+	cat = getTupUnitSizeCategoryByCategoryName("Large");
+	result = result && assertEqual(16, cat.minLines, "Unexpected unit size category.minLines.");
+	result = result && assertEqual(25, cat.maxLines, "Unexpected unit size category.maxLines.");
+
+	cat = getTupUnitSizeCategoryByCategoryName("Very large");
+	result = result && assertEqual(26, cat.minLines, "Unexpected unit size category.minLines.");
+	result = result && assertEqual(-1, cat.maxLines, "Unexpected unit size category.maxLines.");
+
+	return result;
+}
+
 private bool assertComplexityDist(ComplexityDistributionMap cdMap, int perc, str categoryName, str msg) {
 	TupComplexityRiskCategory cat = getTupRiskCategoryByCategoryName(categoryName);
 	return assertEqual(perc, cdMap[cat], msg);

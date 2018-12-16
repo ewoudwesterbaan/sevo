@@ -78,7 +78,7 @@ public UnitSizeDistributionMap getUnitSizeDistribution(int sysLinesOfCode, RelLi
 	// Een map waarin we het totaal aantal LOC van alle units per groottecategorie bijhouden
 	UnitSizeDistributionMap distributionMap = (rc : 0 | rc <- unitSizeCategories);
 
-	// Bepaal het (absolute) aantal regels unitcode per categorie TODO .....
+	// Bepaal het (absolute) aantal regels unitcode per categorie
 	for (TupLinesOfCode tloc <- unitSizes) {
 		// Werk de map bij: hoog het aantal regels bij de relevante categorie op met het aantal 
 		// regels in de huidige unit
@@ -101,4 +101,9 @@ private TupUnitSizeCategory getTupUnitSizeCategory(int linesOfCode) {
 	return head([cat | cat <- unitSizeCategories, 
 		linesOfCode >= cat.minLines && (cat.maxLines == -1 || linesOfCode <= cat.maxLines)
 	]);	
+}
+
+// Geeft een tupel met unit size gegevens terug op basis van de categorienaam
+public TupUnitSizeCategory getTupUnitSizeCategoryByCategoryName(str name) {
+	return head([cat | cat <- unitSizeCategories, name == cat.categoryName]);	
 }

@@ -13,7 +13,21 @@ public alias TupComplexityRankCategory = tuple[Rank rank, int maxRelativeLOCMode
 public alias LstComplexityRankCategories = list[TupComplexityRankCategory];
 
 // Ranking categorieen
-public LstComplexityRankCategories rankCategories = [
+public LstComplexityRankCategories riskRankCategories = [
+	<"++", 25, 0, 0>,
+	<"+", 30, 5, 0>,
+	<"0", 40, 10, 0>,
+	<"-", 50, 15, 5>,
+	<"--", 100, 100, 100>
+];
+
+// Tuple voor ranking obv de complexiteit
+public alias TupUnitSizeRankCategory = tuple[Rank rank, int maxRelativeLOCMedium, int maxRelativeLOCLarge, int maxRelativeLOCVeryLarge];
+// Lijst van de bovenstaande tupels
+public alias LstUnitSizeRankCategories = list[TupUnitSizeRankCategory];
+
+// Ranking categorieen voor de unit size
+public LstUnitSizeRankCategories unitSizeRankCategories = [
 	<"++", 25, 0, 0>,
 	<"+", 30, 5, 0>,
 	<"0", 40, 10, 0>,
@@ -26,5 +40,13 @@ public Rank getComplexityRank(ComplexityDistributionMap cdMap) {
 	int percComplex = cdMap[getTupRiskCategoryByCategoryName("Complex")];
 	int percUntestable = cdMap[getTupRiskCategoryByCategoryName("Untestable")];
 	
-	return head([rc.rank | rc <- rankCategories, percModerate <= rc.maxRelativeLOCModerate && percComplex <= rc.maxRelativeLOCComplex && percUntestable <= rc.maxRelativeLOCUntestable]);
+	return head([rc.rank | rc <- riskRankCategories, percModerate <= rc.maxRelativeLOCModerate && percComplex <= rc.maxRelativeLOCComplex && percUntestable <= rc.maxRelativeLOCUntestable]);
+}
+
+public Rank getUnitSizeRank(UnitSizeDistributionMap usdMap) {
+	int percMedium = usdMap[getTupUnitSizeCategoryByCategoryName("Medium")];
+	int percLarge = usdMap[getTupUnitSizeCategoryByCategoryName("Large")];
+	int percVeryLarge = usdMap[getTupUnitSizeCategoryByCategoryName("Very large")];
+	
+	return head([rc.rank | rc <- unitSizeRankCategories, percMedium <= rc.maxRelativeLOCMedium && percLarge <= rc.maxRelativeLOCLarge && percVeryLarge <= rc.maxRelativeLOCVeryLarge]);
 }
