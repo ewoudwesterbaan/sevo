@@ -26,14 +26,21 @@ public void main() {
 	
 	
 	println("\nUnit size berekenen ...");
-	RelLinesOfCode unitSize = unitSizeMetrics(project);
+	RelLinesOfCode unitSizes = unitSizeMetrics(project);
 
 	TupLinesOfCode sumOfUnitSizes = sumOfUnitSizeMetrics(project);
-	println("Aantal gevonden units (methodes en constructoren): <size(unitSize)>");
+	println("Aantal gevonden units (methodes en constructoren): <size(unitSizes)>");
 	println("Som van de aantallen regels per methode/constructor: ");
 	println("- totaal aantal regels (incl lege regels binnen de units): <sumOfUnitSizes.totalLines>");
 	println("- commentaarregels: <sumOfUnitSizes.commentLines>");
 	println("- coderegels: <sumOfUnitSizes.codeLines>");
+	
+	println("\nAggregeren gegevens (unit size t.o.v. volume) ...");
+	UnitSizeDistributionMap usdMap = getUnitSizeDistribution(sumOfUnitSizes.codeLines, unitSizes);
+	for (entry <- usdMap) {
+		println("- Categorie <entry.categoryName> (<entry.description>): <usdMap[entry]>%");
+	}
+	println("- Rank op basis van aggregatie: TODO");
 	
 	println("\nBerekenen cyclomatische complexiteit ...");
 	RelComplexities complexities = cyclomaticComplexity(project);
@@ -47,9 +54,9 @@ public void main() {
 
 
 	println("\nBerekenen duplicatie ...");
-	methodsForDuplication = { <m, cod> | <m, tot, com, cod> <- unitSize, cod >= 6 }; 
+	methodsForDuplication = { <m, cod> | <m, tot, com, cod> <- unitSizes, cod >= 6 }; 
 	RelDuplications duplicationResult = duplication(methodsForDuplication);
-	// duplicatie wordt alleen bekeken in de methodes en constructors. De verhouding duplicates is dan ook ten opzichte van de som van de unitsize
+	// duplicatie wordt alleen bekeken in de methodes en constructors. De verhouding duplicates is dan ook ten opzichte van de som van de unitsizes
 	println("- Aantal duplicaties: <size(duplicationResult)>");
 	
 	num totalDupLines = 0;	
