@@ -35,18 +35,18 @@ public LstUnitSizeRankCategories unitSizeRankCategories = [
 	<"--", 100, 100, 100>
 ];
 
+// Bepaalt de rank van de software op basis van de complexiteit
 public Rank getComplexityRank(ComplexityDistributionMap cdMap) {
 	int percModerate = cdMap[getTupRiskCategoryByCategoryName("Moderate")];
 	int percComplex = cdMap[getTupRiskCategoryByCategoryName("Complex")];
 	int percUntestable = cdMap[getTupRiskCategoryByCategoryName("Untestable")];
-	
 	return head([rc.rank | rc <- riskRankCategories, percModerate <= rc.maxRelativeLOCModerate && percComplex <= rc.maxRelativeLOCComplex && percUntestable <= rc.maxRelativeLOCUntestable]);
 }
 
+// Bepaalt de rank van de applicatie op basis van de unit sizes
 public Rank getUnitSizeRank(UnitSizeDistributionMap usdMap) {
 	int percMedium = usdMap[getTupUnitSizeCategoryByCategoryName("Medium")];
 	int percLarge = usdMap[getTupUnitSizeCategoryByCategoryName("Large")];
 	int percVeryLarge = usdMap[getTupUnitSizeCategoryByCategoryName("Very large")];
-	
 	return head([rc.rank | rc <- unitSizeRankCategories, percMedium <= rc.maxRelativeLOCMedium && percLarge <= rc.maxRelativeLOCLarge && percVeryLarge <= rc.maxRelativeLOCVeryLarge]);
 }
