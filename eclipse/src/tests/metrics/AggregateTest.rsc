@@ -22,16 +22,59 @@ test bool testGetComplexityRating() {
     int untestablePerc =  (53 * 100) / 161;
     
     bool result = true;
-    result = result && assertDistribution(cdMap, simplePerc, "Simple", "Unexpected % for Simple category.");
-    result = result && assertDistribution(cdMap, moderatePerc, "Moderate", "Unexpected % for Moderate category.");
-    result = result && assertDistribution(cdMap, complexPerc, "Complex", "Unexpected % for Complex category.");
-    result = result && assertDistribution(cdMap, untestablePerc, "Untestable", "Unexpected % for Untestable category.");
+    result = result && assertComplexityDist(cdMap, simplePerc, "Simple", "Unexpected % for Simple category.");
+    result = result && assertComplexityDist(cdMap, moderatePerc, "Moderate", "Unexpected % for Moderate category.");
+    result = result && assertComplexityDist(cdMap, complexPerc, "Complex", "Unexpected % for Complex category.");
+    result = result && assertComplexityDist(cdMap, untestablePerc, "Untestable", "Unexpected % for Untestable category.");
     return result;
 }
 
-private bool assertDistribution(ComplexityDistributionMap cdMap, int perc, str categoryName, str msg) {
-	TupComplexityRiskCategory riskCategory = getTupRiskCategoryByCategoryName(categoryName);
-	return assertEqual(perc, cdMap[riskCategory], msg);
+// Test de methode metrics::Aggregate::getUnitSizeDistribution
+test bool testGetUnitSizeDistribution() {
+
+	// Statische testdata
+	int sysLinesOfCode = 500;
+	RelLinesOfCode unitSizes = {
+		// small
+		<|project://unit1|, 12, 10, 2>,
+		<|project://unit2|, 10, 7, 3>,
+		// medium
+		<|project://unit3|, 16, 10, 6>,
+		<|project://unit4|, 18, 10, 8>,
+		// large
+		<|project://unit5|, 20, 9, 11>,
+		<|project://unit6|, 20, 7, 13>,
+		// very large
+		<|project://unit7|, 35, 5, 30>
+	};
+
+	// Roep de te testen methode aan
+	UnitSizeDistributionMap usdMap = getUnitSizeDistribution(sysLinesOfCode, unitSizes);
+	
+	// Verwachte resultaten
+    int smallPerc = ((2 + 3) * 100) / sysLinesOfCode;
+    int mediumPerc = ((6 + 8) * 100) / sysLinesOfCode;
+    int largePerc = ((11+13) * 100) / sysLinesOfCode;
+    int veryLargePerc = (30 * 100) / sysLinesOfCode;
+
+	// Controleer resultaat
+    bool result = true;
+    result = result && assertUnitSizeDist(usdMap, smallPerc, "Small", "Unexpected % for Small category.");
+    result = result && assertUnitSizeDist(usdMap, mediumPerc, "Medium", "Unexpected % for Medium category.");
+    result = result && assertUnitSizeDist(usdMap, largePerc, "Large", "Unexpected % for Large category.");
+    result = result && assertUnitSizeDist(usdMap, veryLargePerc, "Very large", "Unexpected % for Very large category.");
+    return result;
+} 
+
+private bool assertComplexityDist(ComplexityDistributionMap cdMap, int perc, str categoryName, str msg) {
+	TupComplexityRiskCategory cat = getTupRiskCategoryByCategoryName(categoryName);
+	return assertEqual(perc, cdMap[cat], msg);
+}
+
+private bool assertUnitSizeDist(UnitSizeDistributionMap usdMap, int perc, str categoryName, str msg) {
+	return true;
+//	TupUnitSizeCategory cat = getTupRiskCategoryByCategoryName(categoryName);
+//	return assertEqual(perc, cdMap[riskCategory], msg);
 }
 
 
