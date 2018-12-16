@@ -23,55 +23,55 @@ test bool testUnitSizeMetrics() {
 	loc unitLocOfComplexityOne = |project://ComplexityTest/src/ComplexityTestClass.java|(123,48,<5,32>,<8,5>);
     result = result && assertTotalLines(4, rloc, unitLocOfComplexityOne);
     result = result && assertCommentLines(0, rloc, unitLocOfComplexityOne);
-    result = result && assertCodeLines(3, rloc, unitLocOfComplexityOne);
+    result = result && assertCodeLines(1, rloc, unitLocOfComplexityOne);
 
 	// Test resultaten voor ComplexityTestClass#complexityTwo
 	loc unitLocOfComplexityTwo = |project://ComplexityTest/src/ComplexityTestClass.java|(222,68,<10,45>,<14,5>);
     result = result && assertTotalLines(5, rloc, unitLocOfComplexityTwo);
     result = result && assertCommentLines(0, rloc, unitLocOfComplexityTwo);
-    result = result && assertCodeLines(5, rloc, unitLocOfComplexityTwo);
+    result = result && assertCodeLines(3, rloc, unitLocOfComplexityTwo);
 
 	// Test resultaten voor ComplexityTestClass#complexityThree
 	loc unitLocOfComplexityThree = |project://ComplexityTest/src/ComplexityTestClass.java|(335,272,<16,39>,<29,5>);
     result = result && assertTotalLines(14, rloc, unitLocOfComplexityThree);
     result = result && assertCommentLines(1, rloc, unitLocOfComplexityThree);
-    result = result && assertCodeLines(13, rloc, unitLocOfComplexityThree);
+    result = result && assertCodeLines(11, rloc, unitLocOfComplexityThree);
 
 	// Test resultaten voor ComplexityTestClass#complexityFour
 	loc unitLocOfComplexityFour = |project://ComplexityTest/src/ComplexityTestClass.java|(642,107,<31,33>,<39,5>);
     result = result && assertTotalLines(9, rloc, unitLocOfComplexityFour);
     result = result && assertCommentLines(0, rloc, unitLocOfComplexityFour);
-    result = result && assertCodeLines(9, rloc, unitLocOfComplexityFour);
+    result = result && assertCodeLines(7, rloc, unitLocOfComplexityFour);
 
 	// Test resultaten voor ComplexityTestClass#complexityFive
 	loc unitLocOfComplexityFive = |project://ComplexityTest/src/ComplexityTestClass.java|(802,152,<41,47>,<48,5>);
     result = result && assertTotalLines(8, rloc, unitLocOfComplexityFive);
     result = result && assertCommentLines(0, rloc, unitLocOfComplexityFive);
-    result = result && assertCodeLines(8, rloc, unitLocOfComplexityFive);
+    result = result && assertCodeLines(6, rloc, unitLocOfComplexityFive);
 
 	// Test resultaten voor ComplexityTestClass#complexitySix
 	loc unitLocOfComplexitySix = |project://ComplexityTest/src/ComplexityTestClass.java|(1009,162,<50,53>,<57,5>);
     result = result && assertTotalLines(8, rloc, unitLocOfComplexitySix);
     result = result && assertCommentLines(0, rloc, unitLocOfComplexitySix);
-    result = result && assertCodeLines(8, rloc, unitLocOfComplexitySix);
+    result = result && assertCodeLines(6, rloc, unitLocOfComplexitySix);
 
 	// Test resultaten voor ComplexityTestClass#complexityTwenty
 	loc unitLocOfComplexityTwenty = |project://ComplexityTest/src/ComplexityTestClass.java|(1217,475,<59,40>,<85,5>);
     result = result && assertTotalLines(27, rloc, unitLocOfComplexityTwenty);
     result = result && assertCommentLines(3, rloc, unitLocOfComplexityTwenty);
-    result = result && assertCodeLines(24, rloc, unitLocOfComplexityTwenty);
+    result = result && assertCodeLines(22, rloc, unitLocOfComplexityTwenty);
 
 	// Test resultaten voor ComplexityTestClass#complexityTwentyOne
 	loc unitLocOfComplexityTwentyOne = |project://ComplexityTest/src/ComplexityTestClass.java|(1737,1161,<87,43>,<143,5>);
     result = result && assertTotalLines(57, rloc, unitLocOfComplexityTwentyOne);
     result = result && assertCommentLines(2, rloc, unitLocOfComplexityTwentyOne);
-    result = result && assertCodeLines(54, rloc, unitLocOfComplexityTwentyOne);
+    result = result && assertCodeLines(52, rloc, unitLocOfComplexityTwentyOne);
 
 	// Test resultaten voor ComplexityTestClass#complexityFiftyOne
 	loc unitLocOfComplexityFiftyOne = |project://ComplexityTest/src/ComplexityTestClass.java|(2942,1093,<145,42>,<199,5>);
     result = result && assertTotalLines(55, rloc, unitLocOfComplexityFiftyOne);
     result = result && assertCommentLines(0, rloc, unitLocOfComplexityFiftyOne);
-    result = result && assertCodeLines(55, rloc, unitLocOfComplexityFiftyOne);
+    result = result && assertCodeLines(53, rloc, unitLocOfComplexityFiftyOne);
 
     return result;
 }
@@ -88,7 +88,7 @@ test bool testSumOfUnitSizeMetrics() {
 	bool result = true;
     result = result && assertEqual(187, sumTotalLines, "Unexpected sum of totalLines (all units)."); 
     result = result && assertEqual(6, sumCommentLines, "Unexpected sum of commentLines (all units)."); 
-    result = result && assertEqual(179, sumCodeLines, "Unexpected sum of codeLines (all units).");
+    result = result && assertEqual(161, sumCodeLines, "Unexpected sum of codeLines (all units).");
     return result; 
 }
 
