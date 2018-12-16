@@ -50,3 +50,12 @@ public Rank getUnitSizeRank(UnitSizeDistributionMap usdMap) {
 	int percVeryLarge = usdMap[getTupUnitSizeCategoryByCategoryName("Very large")];
 	return head([rc.rank | rc <- unitSizeRankCategories, percMedium <= rc.maxRelativeLOCMedium && percLarge <= rc.maxRelativeLOCLarge && percVeryLarge <= rc.maxRelativeLOCVeryLarge]);
 }
+
+// Bepaalt de rank van de applicatie, gegeven de duplicatiepercentage
+public str getDuplicationRank(num percentage) {
+	if (percentage < 3) return "++";
+	if (percentage < 5) return  "+";
+	if (percentage < 10) return "o";
+	if (percentage < 20) return "-";
+	else return "--";
+}

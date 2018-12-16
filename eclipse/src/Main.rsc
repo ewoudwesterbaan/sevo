@@ -69,6 +69,7 @@ public void main() {
 
 	num duplicationPercentage = (totalDupLines * 100) / sumOfUnitSizes.codeLines;
 	println("- Duplicatepercentage: <duplicationPercentage>%");
+	println("- Rank op basis van duplicatie: <getDuplicationRank(duplicationPercentage)>");
 
 
 	println("\nProgramma beëindigd");
