@@ -57,49 +57,54 @@ technische probleempjes optraden.
 
 \section{Aannames}
 \subsection{Duplicaten}
-In onze oplossing vergelijken we de content van methodes en constructoren met elkaar, maar dit gebeurt in één richting. Als methode A wordt vergeleken met methode B, wordt methode B niet meer vergeleken met methode A. Stel dat het aantal opeenvolgende regels dat identiek is, 6 is. Dan is de duplicatiewaarde over de oplossing dus 6 / 12, dus 50\%. Als we dan drie methodes gebruiken, dan wordt methode A met methode B vergeleken, methode A met methode C én methode B en methode C. Het aantal duplicate regels is dan 18, wat gelijk is aan het totaal van aantal regels. In figuur \ref{fig:DuplicatenDetectie} hebben we dit doorgetrokken. op de x as staan het aantal methodes dat dezelfde code bevat. De blauwe lijn geeft het totaal aantal regels code in de oplossing aan, en de rode lijn het aantal gedetecteerde duplicate regels. Het is dus mogelijk dat het duplicatiepercentage boven de 100\% komt.
+In onze oplossing vergelijken we de content van methodes en constructoren met elkaar, maar dit gebeurt in één richting. Als methode A wordt vergeleken met methode B, wordt methode B niet meer vergeleken met methode A. Stel dat het aantal opeenvolgende regels dat identiek is, 6 is. Dan is de duplicatiewaarde over de oplossing dus 6 / 12, dus 50\%. Als we dan drie methodes gebruiken, dan wordt methode A met methode B vergeleken, methode A met methode C én methode B en methode C. Het aantal duplicate regels is dan 18, wat gelijk is aan het totaal van aantal regels. In figuur \ref{fig:DuplicatenDetectie} hebben we dit doorgetrokken. op de x as staan het aantal methodes dat dezelfde code bevat. De blauwe lijn geeft het totaal aantal regels code in de oplossing aan, en de rode lijn het aantal gedetecteerde duplicate regels. Het aantal duplicate regels loopt dus exponentieel.
 \begin{figure}[htbp]
 \caption{Oplopen van detectieregels bij meerdere methodes}
 \centering
 \includegraphics[width=0.8 \textwidth]{DuplicatenDetectie.png}
 \label{fig:DuplicatenDetectie}
 \end{figure}
-Wij hebben dit dus anders aangepakt. 
+
+Wat wij hebben gedaan om volgens het artikel de juiste waardes te krijgen,  is de set van unitparen verdelen over sets gegeven het aantal duplicate regels. Van deze set een set van 2-tuples maken waarbij we de locatie en het startnummer binnen de content concateneren. Vervolgens beschouwen we deze nieuwe relatie als een graaf waarbij we het aantal units vermenigvuldigen met het aantal duplicate regels.
+
+Laten we aannemen dat we 4 gelijke methodes hebben van 6 regels code. Als we voorheen de duplicatie berekende, kregen we 6 onderlinge verbindingen maal 6 regels duplicate code is 36 regels (van de 24 in totaal). Met de bovenbeschreven methode krijgen we dan een groep van 4 elementen. Dit maal 6 regels duplicate code levert 24 op.
+
+Op deze manier zal ook een enkele duplicaat (dus 2 units dat dezelfde code bevatten) geen 50\% score opleveren, maar 100\%. Dat zagen we ook terug in het draaien met de verschillende vormen over het testobject (SmallSQL); voorheen hadden we een score van 4,5\%, maar met de laatste vorm een score van ongeveer 12\%. Dit is te verklaren doordat het aantal stukken code dat in 2 units voorkomt.
 
 \subsection{Unitsize versus volume}
 We zien een verschil in de dom van de unitsize ten opzicht an het volume. Wij beschouwen het volume als alle regels code in een java file, zonder commentaar en zonder de lege ruimtes. \texttt{Import} statements en field definitions beschouwen wij als ook onderdeel van het volume. De som van de regels code daarentegen, is de som van de inhoud van de methodes en contructoren. Omdat de complexiteit en duplicaten berekend worden over de inhoud van de methodes en constructoren, gebruiken wij deze metriek om het duplicaat en de complexiteit percentages te berekenen.
 
-
 \subsection{Lines of code}
-Dit is van belang voor de metrieken volume en unitsize. Beiden
+Gedurende het project zijn we 
+overgestapt naar een andere
+signature van methode locaties. 
+In het begin van het project was
+een locatie bijvoorbeeld
+\begin{lstlisting}
+|java+method:///DuplicationTestClass/duplicationTestLastPartEquals_ExpectTrue()|
+\end{lstlisting}
+later is dit veranderd naar
+\begin{lstlisting}
+|project://DuplicationTest/src/DuplicationTestClass.java|(1085,260,<42,49>,<51,2>)
+\end{lstlisting}
+Dit had invloed op de content die met elkaar vergeleken werd.
+Deze locaties zijn te krijgen door de \texttt{getUnits()} aan te
+roepen in de module \texttt{utils::Utils}. Met de eerste
+locatie, was de content die eruit gehaald werd inclusief de
+method (of constructor) signature (bijvoorbeeld: \texttt{public
+int getNumber()}). Op de tweede manier begint de content die
+opgehaald worden met de accolade (\texttt{\{}) achter de method
+signature. Met de regressie testen van de duplicaten, blijkt dus
+dat het aantal gelijke regels overal met 1 was toegenomen. De vraag die nu opspeelt is: moeten we de methode signatures ook zien als code dat vergeleken moet worden. In het artikel wordt aangegeven dat duplicatie gaat over code in de code-blocks. Wij besluiten daarom dat de method signature daar niet onder valt. De accolades waarmee de methode start en eind moeten dus ook verwijderd worden bij het schoonmaken (trimmen van de content en het verwijderen van commentaar).
+
+De versie van locatie waar we naar overgestapt zijn, had grote invloed op onze unittests. Deze waren heel gevoelig voor wijzigingen omdat deze op character niveau keken naar de locatie.
+
+De lines of code zijn belangrijk voor de metrieken volume en unitsize. Beiden
 maken gebruik van regels code die geen commentaar zijn. Omdat
 dit een gemeenschappelijke logica is, is deze gedefinieerd in de
 \texttt{utils::Utils} module.
 Regels code worden nu beschouwd als alle niet lege regels minus
-de commentaar regels.
-
-We beschouwen een regel commentaar als deze begint met
-\lstinline{//}. Voor blokcommentaar is de eerste gedacht om zo
-ook regeles die starten met \lstinline{/*}, \lstinline{*} of
-\lstinline{*/} te beschouwen als commentaar. Dit gaat alleen
-niet helemaal op. Als voorbeeld nemen we Listing
-\ref{lst:asterixcmt}. Dit is valide java code en regel 2 begint
-met een \lstinline{*}.
-
-\begin{lstlisting}[caption={* als commentaar
-beschouwen},label={lst:asterixcmt},escapechar=|, frame = single]
-int i = 1
-* 2;
-\end{lstlisting}
-
-We zouden kunnen zeggen dat de volume het aantal LOC van de
-methodes is. Maar dan missen we de velden en de Instance
-Initialization Blocks (wat geen constructors zijn).
-
-\subsection{Volume}
-De volume metric maakt volledig gebruik van de Utils module. De
-hoeveelheid regels code per java bestand wordt bepaald. Om de
-regels code te tellen, verwijderen we het blockcommentaar en
+de commentaar regels. Dit `schoonmaken' van de inhoud van een unit wordt ook gebruikt voor controle op duplicaten.
 
 \subsection{Complexity}
 De complexiteitsmaat heeft betrekking op het aantal paden die in
@@ -154,28 +159,7 @@ complexiteitsmaat wederom met 1, omdat het al dan niet
 \texttt{true} zijn van de linker-conditie bepaald of de tweede
 conditie wordt bepaald.
 
-\subsection{Duplicaten}
-Gedurende het project zijn we 
-overgestapt naar een andere
-signature van methode locaties. 
-In het begin van het project was
-een locatie bijvoorbeeld
-%\begin{lstlisting}
-%|java+method:///DuplicationTestClass/duplicationTestLastPartEquals_ExpectTrue()|
-%\end{listing}
-later is dit veranderd naar
-%\begin{lstlisting}
-%|project://DuplicationTest/src/DuplicationTestClass.java|(1085,260,<42,49>,<51,2>)
-%\end{listing}
-Dit had invloed op de content die met elkaar vergeleken werd.
-Deze locaties zijn te krijgen door de \texttt{getUnits()} aan te
-roepen in de module \texttt{utils::Utils}. Met de eerste
-locatie, was de content die eruit gehaald werd inclusief de
-method (of constructor) signature (bijvoorbeeld: \texttt{public
-int getNumber()}). Op de tweede manier begint de content die
-opgehaald worden met de accolade (\texttt{\{}) achter de method
-signature. Met de regressie testen van de duplicaten, blijkt dus
-dat het aantal gelijke regels overal met 1 was toegenomen. De vraag die nu opspeelt is: moeten we de methode signatures ook zien als code dat vergeleken moet worden. In het artikel wordt aangegeven dat duplicatie gaat over code in de code-blocks. We beschouwen de method signature daar niet onder. De accolades waarmee de methode start en eind moeten dus ook verwijderd worden bij het schoonmaken (trimmen van de content en het verwijderen van commentaar).
+
 
 \section{Resultaten}
 In Listing \ref{lst:output} is de output van het geschreven programma te zien. 
