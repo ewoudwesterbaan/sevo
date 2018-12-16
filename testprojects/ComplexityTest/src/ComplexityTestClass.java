@@ -1,6 +1,6 @@
 class ComplexityTestClass implements ComplexityTestInterface {
 
-	private String aString;
+    private String aString;
 	
     public void complexityOne() {
         this.aString = "hello";

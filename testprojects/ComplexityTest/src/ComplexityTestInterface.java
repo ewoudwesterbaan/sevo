@@ -1,4 +1,4 @@
-interface ComplexityTestInterface {
+interface ComplexityTestInterface { 
 
     void complexityOne();
     void complexityTwo(boolean hello);
