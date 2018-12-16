@@ -130,6 +130,3 @@ test bool testGetComplexityRank_MinusMinus2() {
 	);
 	return assertEqual("--", getComplexityRank(cdMap), "Unexpected rank.");
 }
-
-
-
