@@ -19,8 +19,8 @@
 \section*{Studentgegevens}
 \begin{description}
 	\item [Cursuscode] IM0202
-	\item [Naam] \todo{invullen}
-	\item [Studentnummer] \todo{invullen}
+	\item [Naam] Ewoud Westerbaan
+	\item [Studentnummer] 852069942
 	\item [Naam] Martin de Boer
 	\item [Studentnummer] 837372832
 \end{description}
@@ -64,15 +64,14 @@ In onze oplossing vergelijken we de content van methodes en constructoren met el
 \includegraphics[width=0.8 \textwidth]{DuplicatenDetectie.png}
 \label{fig:DuplicatenDetectie}
 \end{figure}
+Onze aanname is dat het aantal duplicate regels het totaal van regels is dat meerdere keren in de applicatie voorkomt. Dit hebben wij geimplementeerd door de set van unitparen te verdelen over sets gegeven het aantal duplicate regels. Van deze set maken wij een set van 2-tuples waarbij we de locatie en het startnummer binnen de content concateneren. Vervolgens beschouwen we deze nieuwe relatie als een graaf waarbij we het aantal units vermenigvuldigen met het aantal duplicate regels.
 
-Wat wij hebben gedaan om volgens het artikel de juiste waardes te krijgen,  is de set van unitparen verdelen over sets gegeven het aantal duplicate regels. Van deze set een set van 2-tuples maken waarbij we de locatie en het startnummer binnen de content concateneren. Vervolgens beschouwen we deze nieuwe relatie als een graaf waarbij we het aantal units vermenigvuldigen met het aantal duplicate regels.
+Ter verduidelijking: laten we aannemen dat we 4 gelijke methodes hebben van 6 regels code. Als we voorheen de duplicatie berekende, kregen we 6 onderlinge verbindingen maal 6 regels duplicate code is 36 regels (van de 24 in totaal). Met de bovenbeschreven methode krijgen we dan een groep van 4 elementen. Dit maal 6 regels duplicate code levert 24 op.
 
-Laten we aannemen dat we 4 gelijke methodes hebben van 6 regels code. Als we voorheen de duplicatie berekende, kregen we 6 onderlinge verbindingen maal 6 regels duplicate code is 36 regels (van de 24 in totaal). Met de bovenbeschreven methode krijgen we dan een groep van 4 elementen. Dit maal 6 regels duplicate code levert 24 op.
-
-Op deze manier zal ook een enkele duplicaat (dus 2 units dat dezelfde code bevatten) geen 50\% score opleveren, maar 100\%. Dat zagen we ook terug in het draaien met de verschillende vormen over het testobject (SmallSQL); voorheen hadden we een score van 4,5\%, maar met de laatste vorm een score van ongeveer 12\%. Dit is te verklaren doordat het aantal stukken code dat in 2 units voorkomt.
+Op deze manier zal ook een enkele duplicaat (dus 2 units dat dezelfde code bevatten) geen 50\% score opleveren, maar 100\%. Dat zagen we ook terug in het draaien met de verschillende vormen over het testobject (SmallSQL); voorheen hadden we een score van 4,5\%, maar met de laatste vorm een score van ongeveer 12\%.
 
 \subsection{Unitsize versus volume}
-We zien een verschil in de dom van de unitsize ten opzicht an het volume. Wij beschouwen het volume als alle regels code in een java file, zonder commentaar en zonder de lege ruimtes. \texttt{Import} statements en field definitions beschouwen wij als ook onderdeel van het volume. De som van de regels code daarentegen, is de som van de inhoud van de methodes en contructoren. Omdat de complexiteit en duplicaten berekend worden over de inhoud van de methodes en constructoren, gebruiken wij deze metriek om het duplicaat en de complexiteit percentages te berekenen.
+We zien een verschil in de som van de unitsize ten opzicht van het volume. Wij beschouwen het volume als alle regels code in een java file, zonder commentaar en zonder de lege ruimtes, zoals ook in \cite{A}. \texttt{Import} statements en field definitions beschouwen wij als ook onderdeel van het volume. De som van de regels code daarentegen, is de som van de inhoud van de methodes en contructoren (de units). Omdat de complexiteit en duplicaten berekend worden over de inhoud van de units, gebruiken wij deze metriek om het duplicaat en de complexiteit percentage te berekenen.
 
 \subsection{Lines of code}
 Gedurende het project zijn we 
@@ -95,7 +94,7 @@ method (of constructor) signature (bijvoorbeeld: \texttt{public
 int getNumber()}). Op de tweede manier begint de content die
 opgehaald worden met de accolade (\texttt{\{}) achter de method
 signature. Met de regressie testen van de duplicaten, blijkt dus
-dat het aantal gelijke regels overal met 1 was toegenomen. De vraag die nu opspeelt is: moeten we de methode signatures ook zien als code dat vergeleken moet worden. In het artikel wordt aangegeven dat duplicatie gaat over code in de code-blocks. Wij besluiten daarom dat de method signature daar niet onder valt. De accolades waarmee de methode start en eind moeten dus ook verwijderd worden bij het schoonmaken (trimmen van de content en het verwijderen van commentaar).
+dat het aantal gelijke regels overal met 1 was toegenomen. De vraag die nu opspeelt is: moeten we de methode signatures ook zien als code dat vergeleken moet worden. Echter, duplicatie gaat over code in de code-blocks \cite{A}. Wij besluiten daarom dat de method signature daar niet onder valt. De accolades waarmee de methode start en eind moeten dus verwijderd worden bij het schoonmaken van de content (trimmen van de content en het verwijderen van commentaar).
 
 De versie van locatie waar we naar overgestapt zijn, had grote invloed op onze unittests. Deze waren heel gevoelig voor wijzigingen omdat deze op character niveau keken naar de locatie.
 
@@ -162,9 +161,9 @@ conditie wordt bepaald.
 
 
 \section{Resultaten}
-In Listing \ref{lst:output} is de output van het geschreven programma te zien. 
+In Listing \ref{lst:output} is de output van het geschreven programma te zien over SmallSQL. 
 
-\begin{lstlisting}[caption={Programma output},label={lst:output},frame = single]
+\begin{lstlisting}[caption={Programma output SmallSQL},label={lst:output},frame = single]
 Volume berekenen ...
 Berekend volume: 
 - totaal aantal regels (incl. lege regels): 35271
@@ -230,26 +229,71 @@ Test report for tests::metrics::ComplexityTest
 bool: true
 \end{lstlisting}
 \section{Interpretatie}
-Als we de output van \ref{lst:output} nemen en deze tegen het artikel aanhouden, kunnen we een soortgelijk tabel invullen. Omdat wij unittesting niet gemeten hebben, laten we deze buiten beschouwing.
+Als we de output van \ref{lst:output} nemen en deze tegen de referentie tabellen aanhouden als in \cite{A}, kunnen we een soortgelijk resultatentabel invullen. Omdat wij unittesting niet gemeten hebben, laten we deze buiten beschouwing.
 
-De output van het programma (Listing \ref{lst:output}) geeft voor volume 22192 code regels. Als we dit aanhouden tegen de tabel in het artikel, dan heeft dit een rank van ++.
+De output van het programma (Listing \ref{lst:output}) geeft voor volume 22192 code regels. Dit geeft een rank van ++.
 
 Voor de complexity hebben we het percentage berekent per categorie. Als we de rank hiervan opzoeken, komen we op - - (2x -).
 
-Het duplicatiepercentage is 12.04\%. Dat kunnen we vertalen met het rating schema uit het artikel naar een enkele -.
+Het duplicatiepercentage is 12.04\%. Dat kunnen we vertalen met het rating schema naar een enkele -.
+
+Voor de interpretatie van de unitsizes zijn door \cite{A} geen strikte waardes gegeven, daarom dienen wij hier zelf een methode voor te bedenken.
+Eerst classificeren wij de units door middel van Tabel \ref{tbl:UnitSizeClassificatie}.
 
 \begin{table}[h]
-\begin{tabular}{llllllll}
-                          &                                                      &                                    & \multicolumn{4}{l}{source code properties}                                                                                                 &                         \\ \cline{4-7}
-                          &                                                      & \multicolumn{1}{l|}{}              & \multicolumn{1}{l|}{\rotatebox[origin=c]{90}{volume}} & \multicolumn{1}{l|}{\rotatebox[origin=c]{90}{complexity per unit}} & \multicolumn{1}{l|}{\rotatebox[origin=c]{90}{duplication}} & \multicolumn{1}{l|}{\rotatebox[origin=c]{90}{unit size}} &                         \\ \cline{4-7}
-                          &                                                      & \multicolumn{1}{l|}{}              & \multicolumn{1}{l|}{}       & \multicolumn{1}{l|}{}                    & \multicolumn{1}{l|}{}            & \multicolumn{1}{l|}{}          &                         \\ \cline{3-8} 
-\multirow{4}{*}{\rotatebox[origin=c]{90}{ISO 9128}} & \multicolumn{1}{l|}{\multirow{4}{*}{\rotatebox[origin=c]{90}{maintainablity}}} & \multicolumn{1}{l|}{analysability} & \multicolumn{1}{l|}{X}      & \multicolumn{1}{l|}{}                    & \multicolumn{1}{l|}{X}           & \multicolumn{1}{l|}{X}         & \multicolumn{1}{l|}{--} \\ \cline{3-8} 
-                          & \multicolumn{1}{l|}{}                                & \multicolumn{1}{l|}{changeability} & \multicolumn{1}{l|}{}       & \multicolumn{1}{l|}{X}                   & \multicolumn{1}{l|}{X}           & \multicolumn{1}{l|}{}          & \multicolumn{1}{l|}{--} \\ \cline{3-8} 
-                          & \multicolumn{1}{l|}{}                                & \multicolumn{1}{l|}{stability}     & \multicolumn{1}{l|}{}       & \multicolumn{1}{l|}{}                    & \multicolumn{1}{l|}{}            & \multicolumn{1}{l|}{}          & \multicolumn{1}{l|}{--} \\ \cline{3-8} 
-                          & \multicolumn{1}{l|}{}                                & \multicolumn{1}{l|}{testability}   & \multicolumn{1}{l|}{}       & \multicolumn{1}{l|}{X}                   & \multicolumn{1}{l|}{}            & \multicolumn{1}{l|}{}          & \multicolumn{1}{l|}{--} \\ \cline{3-8} 
+\caption{Unitsize classificatie}
+\label{tbl:UnitSizeClassificatie}
+\begin{tabular}{|l|l|}
+\hline
+Unitsize         & Classificatie      \\ \hline
+1-5              & small units        \\
+6-15             & medium sized units \\
+16-25            & large units        \\
+\textgreater{}25 & very large units   \\ \hline
 \end{tabular}
 \end{table}
 
+Met de relatieve aantallen ten opzichte van het toaal aantal units, geven we de applicatie een ranking, zoals we deze in Tabel \ref{tbl:UnitsizeRanking} hebben weergegeven.
 
+\begin{table}[h]
+\caption{Unitsize ranking}
+\label{tbl:UnitsizeRanking}
+\begin{tabular}{cl|lll|}
+\cline{3-5}
+\multicolumn{1}{l}{}       &  & \multicolumn{3}{c|}{maximum relative units}                                              \\ \hline
+\multicolumn{1}{|c|}{rank} &  & \multicolumn{1}{c}{moderate} & \multicolumn{1}{c}{high} & \multicolumn{1}{c|}{very high} \\ \hline
+\multicolumn{1}{|c|}{++}   &  & \multicolumn{1}{c}{20\%}     & \multicolumn{1}{c}{0\%}  & \multicolumn{1}{c|}{0\%}       \\
+\multicolumn{1}{|c|}{+}    &  & \multicolumn{1}{c}{30\%}     & \multicolumn{1}{c}{5\%}  & \multicolumn{1}{c|}{0\%}       \\
+\multicolumn{1}{|c|}{o}    &  & \multicolumn{1}{c}{40\%}     & \multicolumn{1}{c}{10\%} & \multicolumn{1}{c|}{0\%}       \\
+\multicolumn{1}{|c|}{-}    &  & \multicolumn{1}{c}{50\%}     & \multicolumn{1}{c}{15\%} & \multicolumn{1}{c|}{5\%}       \\
+\multicolumn{1}{|c|}{--}   &  & \multicolumn{1}{c}{-}        & \multicolumn{1}{c}{-}    & \multicolumn{1}{c|}{-}         \\ \hline
+\end{tabular}
+\end{table}
+
+Het resulaat is dat unitsize van ons een score krijgt van \todo{waarde invullen}.
+
+Als we alle waardes in de tabel zetten zoals in \cite{A}, komen we uit op Tabel \ref{tbl:ResultaatSmallSQL}. De laatste kolom hiervan lichten we toe.
+\begin{description}
+\item[Analysability] \todo{blablabla}
+\item[Changeability] Omdat de complexity per unit zeer hoog is, en de hoeveelheid duplicatie ook vrij hoog is, geven we changeability de score -.
+\item[Stability] We hebben de waarde van de unit testing niet gemeten. Hierdoor kunnen we niets zeggen over de stability en krijgt deze de neutrale waarde `o'.
+\item[Testability] Omdat we unit testing niet hebben gemeten, is de testability volledig afhankelijk van de complexity per unit. Deze is voor SmallSQL zeer hoog en daarom geven we testability de gelijke waarde als complexity per unit: - -.
+\end{description}
+\begin{table}[h]
+\caption{Resultaat SmallSQL}
+\label{tbl:ResultaatSmallSQL}
+\begin{tabular}{llllllll}
+                          &                                                      &                                    & \multicolumn{5}{l}{source code properties}                                                                                                                           \\ \cline{4-7}
+                          &                                                      & \multicolumn{1}{l|}{}              & \multicolumn{1}{c|}{\rotatebox[origin=c]{90}{volume}} & \multicolumn{1}{c|}{\rotatebox[origin=c]{90}{ complexity per unit }} & \multicolumn{1}{c|}{\rotatebox[origin=c]{90}{duplication}} & \multicolumn{1}{c|}{\rotatebox[origin=c]{90}{unit size}} &                         \\ \cline{4-7}
+                          &                                                      & \multicolumn{1}{l|}{}              & \multicolumn{1}{c|}{++}       & \multicolumn{1}{c|}{- -}                    & \multicolumn{1}{c|}{-}            & \multicolumn{1}{l|}{}          &                         \\ \cline{3-8} 
+\multirow{4}{*}{\rotatebox[origin=c]{90}{ISO 9128}} & \multicolumn{1}{l|}{\multirow{4}{*}{\rotatebox[origin=c]{90}{maintainablity}}} & \multicolumn{1}{l|}{analysability} & \multicolumn{1}{c|}{X}      & \multicolumn{1}{l|}{}                    & \multicolumn{1}{c|}{X}           & \multicolumn{1}{c|}{X}         & \multicolumn{1}{c|}{???} \\ \cline{3-8} 
+                          & \multicolumn{1}{l|}{}                                & \multicolumn{1}{l|}{changeability} & \multicolumn{1}{l|}{}       & \multicolumn{1}{c|}{X}                   & \multicolumn{1}{c|}{X}           & \multicolumn{1}{l|}{}          & \multicolumn{1}{c|}{- -} \\ \cline{3-8} 
+                          & \multicolumn{1}{l|}{}                                & \multicolumn{1}{l|}{stability}     & \multicolumn{1}{l|}{}       & \multicolumn{1}{c|}{}                    & \multicolumn{1}{l|}{}            & \multicolumn{1}{l|}{}          & \multicolumn{1}{c|}{0} \\ \cline{3-8} 
+                          & \multicolumn{1}{l|}{}                                & \multicolumn{1}{l|}{testability}   & \multicolumn{1}{l|}{}       & \multicolumn{1}{c|}{X}                   & \multicolumn{1}{l|}{}            & \multicolumn{1}{l|}{}          & \multicolumn{1}{c|}{- -} \\ \cline{3-8} 
+\end{tabular}
+\end{table}
+
+\bibliographystyle{abbrv}
+\bibliography{verslag_assignment1}
 
 \end{document}
