@@ -12,6 +12,7 @@ import IO;
 //   actual - de feitelijke waarde
 //   msg - de foutmelding die moet worden afgedrukt wanneer de controle faalt
 public bool assertEqual(int expected, int actual, str msg) {
+	msg = /.*\./ := msg ? msg : msg + ".";
     if (expected != actual) {
         println("Test failed. Msg: <msg> Expected = <expected>, actual = <actual>");
     }
@@ -23,6 +24,7 @@ public bool assertEqual(int expected, int actual, str msg) {
 //   actual - de feitelijke waarde
 //   msg - de foutmelding die moet worden afgedrukt wanneer de controle faalt
 public bool assertEqual(str expected, str actual, str msg) {
+	msg = /.*\./ := msg ? msg : msg + ".";
     if (expected != actual) {
         println("Test failed. Msg: <msg> Expected = <expected>, actual = <actual>");
     }

@@ -4,7 +4,9 @@
 \usepackage{fancyheadings}
 \usepackage{listings}
 \usepackage{graphicx}
-
+\usepackage[utf8]{inputenc}
+\usepackage{multirow}
+\lstset{frameround=fttt,numbers=left,breaklines=true, extendedchars=true}
 
 \newcommand{\todo}[1]{\textcolor{red}{[#1]}}
 \lhead{Open Universiteit}
@@ -59,7 +61,7 @@ In onze oplossing vergelijken we de content van methodes en constructoren met el
 \begin{figure}[htbp]
 \caption{Oplopen van detectieregels bij meerdere methodes}
 \centering
-\includegraphics[width=0.8 \textwidth]{DuplicatenDetectie.PNG}
+\includegraphics[width=0.8 \textwidth]{DuplicatenDetectie.png}
 \label{fig:DuplicatenDetectie}
 \end{figure}
 Wij hebben dit dus anders aangepakt. 
@@ -153,12 +155,18 @@ complexiteitsmaat wederom met 1, omdat het al dan niet
 conditie wordt bepaald.
 
 \subsection{Duplicaten}
-Gedurende het project zijn we overgestapt naar een andere
-signature van methode locaties. In het begin van het project was
+Gedurende het project zijn we 
+overgestapt naar een andere
+signature van methode locaties. 
+In het begin van het project was
 een locatie bijvoorbeeld
-\lstinline{|java+method:///DuplicationTestClass/duplicationTestLastPartEquals_ExpectTrue()|},
+%\begin{lstlisting}
+%|java+method:///DuplicationTestClass/duplicationTestLastPartEquals_ExpectTrue()|
+%\end{listing}
 later is dit veranderd naar
-\texttt{|project://DuplicationTest/src/DuplicationTestClass.java|(1085,260,<42,49>,<51,2>)}.
+%\begin{lstlisting}
+%|project://DuplicationTest/src/DuplicationTestClass.java|(1085,260,<42,49>,<51,2>)
+%\end{listing}
 Dit had invloed op de content die met elkaar vergeleken werd.
 Deze locaties zijn te krijgen door de \texttt{getUnits()} aan te
 roepen in de module \texttt{utils::Utils}. Met de eerste
@@ -169,10 +177,67 @@ opgehaald worden met de accolade (\texttt{\{}) achter de method
 signature. Met de regressie testen van de duplicaten, blijkt dus
 dat het aantal gelijke regels overal met 1 was toegenomen. De vraag die nu opspeelt is: moeten we de methode signatures ook zien als code dat vergeleken moet worden. In het artikel wordt aangegeven dat duplicatie gaat over code in de code-blocks. We beschouwen de method signature daar niet onder. De accolades waarmee de methode start en eind moeten dus ook verwijderd worden bij het schoonmaken (trimmen van de content en het verwijderen van commentaar).
 
+\section{Resultaten}
+In Listing \ref{lst:output} is de output van het geschreven programma te zien. 
+
+\begin{lstlisting}[caption={Programma output},label={lst:output},frame = single]
+Volume berekenen ...
+Berekend volume: 
+- totaal aantal regels (incl. lege regels): 35271
+- commentaarregels: 4102
+- coderegels: 22192
+
+Unit size berekenen ...
+Aantal gevonden units (methodes en constructoren): 2494
+Som van de aantallen regels per methode/constructor:
+- totaal aantal regels (incl lege regels binnen de units): 22730
+- commentaarregels: 628
+- coderegels: 16401
+
+Berekenen cyclomatische complexiteit ...
+
+Aggregeren gegevens (unit size and complexity) ...
+- Categorie Simple (Without much risk): 67%
+- Categorie Moderate (With moderate risk): 10%
+- Categorie Untestable (Untestable, very high risk): 7%
+- Categorie Complex (Complex, with high risk): 14%
+- Rank op basis van aggregatie: --
+
+Berekenen duplicatie ...
+size of pairs to check: 203203
+- Aantal duplicaties: 188
+- Aantal regels gedupliceerd: 1976
+- Duplicatepercentage: 12.04804585%
+
+Programma beeindigd
+\end{lstlisting}
+ 
 \section{Betrouwbaarheid}
-De betrouwbaaheid en de juistheid van de oplossing kunnen we waarborgen door het gebruik van unittests. We hebben meerdere `dummy'-projecten gemaakt die dienen als referentieproject bij het draaien van deze tests. Door dat we zelf deze projecten maken, welke klein en overzichtelijk zijn, kunnen we vrij specifiek meten, testen en de juistheid valideren van de opgeleverde code.
+De betrouwbaaheid en de juistheid van de oplossing kunnen we waarborgen door het gebruik van unittests. 
+We hebben meerdere `dummy'-projecten gemaakt die dienen als referentieproject bij het draaien van deze tests. 
+Door dat we zelf deze projecten maken, welke klein en overzichtelijk zijn, kunnen we vrij specifiek meten, testen en de juistheid valideren van de opgeleverde code.
 
 \section{Interpretatie}
+Als we de output van \ref{lst:output} nemen en deze tegen het artikel aanhouden, kunnen we een soortgelijk tabel invullen. Omdat wij unittesting niet gemeten hebben, laten we deze buiten beschouwing.
+
+De output van het programma (Listing \ref{lst:output}) geeft voor volume 22192 code regels. Als we dit aanhouden tegen de tabel in het artikel, dan heeft dit een rank van ++.
+
+Voor de complexity hebben we het percentage berekent per categorie. Als we de rank hiervan opzoeken, komen we op - - (2x -).
+
+Het duplicatiepercentage is 12.04\%. Dat kunnen we vertalen met het rating schema uit het artikel naar een enkele -.
+
+\begin{table}[h]
+\begin{tabular}{llllllll}
+                          &                                                      &                                    & \multicolumn{4}{l}{source code properties}                                                                                                 &                         \\ \cline{4-7}
+                          &                                                      & \multicolumn{1}{l|}{}              & \multicolumn{1}{l|}{\rotatebox[origin=c]{90}{volume}} & \multicolumn{1}{l|}{\rotatebox[origin=c]{90}{complexity per unit}} & \multicolumn{1}{l|}{\rotatebox[origin=c]{90}{duplication}} & \multicolumn{1}{l|}{\rotatebox[origin=c]{90}{unit size}} &                         \\ \cline{4-7}
+                          &                                                      & \multicolumn{1}{l|}{}              & \multicolumn{1}{l|}{}       & \multicolumn{1}{l|}{}                    & \multicolumn{1}{l|}{}            & \multicolumn{1}{l|}{}          &                         \\ \cline{3-8} 
+\multirow{4}{*}{\rotatebox[origin=c]{90}{ISO 9128}} & \multicolumn{1}{l|}{\multirow{4}{*}{\rotatebox[origin=c]{90}{maintainablity}}} & \multicolumn{1}{l|}{analysability} & \multicolumn{1}{l|}{X}      & \multicolumn{1}{l|}{}                    & \multicolumn{1}{l|}{X}           & \multicolumn{1}{l|}{X}         & \multicolumn{1}{l|}{--} \\ \cline{3-8} 
+                          & \multicolumn{1}{l|}{}                                & \multicolumn{1}{l|}{changeability} & \multicolumn{1}{l|}{}       & \multicolumn{1}{l|}{X}                   & \multicolumn{1}{l|}{X}           & \multicolumn{1}{l|}{}          & \multicolumn{1}{l|}{--} \\ \cline{3-8} 
+                          & \multicolumn{1}{l|}{}                                & \multicolumn{1}{l|}{stability}     & \multicolumn{1}{l|}{}       & \multicolumn{1}{l|}{}                    & \multicolumn{1}{l|}{}            & \multicolumn{1}{l|}{}          & \multicolumn{1}{l|}{--} \\ \cline{3-8} 
+                          & \multicolumn{1}{l|}{}                                & \multicolumn{1}{l|}{testability}   & \multicolumn{1}{l|}{}       & \multicolumn{1}{l|}{X}                   & \multicolumn{1}{l|}{}            & \multicolumn{1}{l|}{}          & \multicolumn{1}{l|}{--} \\ \cline{3-8} 
+\end{tabular}
+\end{table}
+
 
 
 \end{document}
