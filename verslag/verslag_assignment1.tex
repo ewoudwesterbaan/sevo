@@ -199,8 +199,36 @@ Programma beeindigd
 \section{Betrouwbaarheid}
 De betrouwbaaheid en de juistheid van de oplossing kunnen we waarborgen door het gebruik van unittests. 
 We hebben meerdere `dummy'-projecten gemaakt die dienen als referentieproject bij het draaien van deze tests. 
-Door dat we zelf deze projecten maken, welke klein en overzichtelijk zijn, kunnen we vrij specifiek meten, testen en de juistheid valideren van de opgeleverde code.
-
+Door dat we zelf deze projecten maken, welke klein en overzichtelijk zijn, kunnen we vrij specifiek meten, testen en de juistheid valideren van de opgeleverde code. In Listing \ref{lst:testoutput} is de output weergegeven van onze unittests.
+\begin{lstlisting}[caption={Unit test output},label={lst:testoutput},frame = single]
+Running tests for tests::metrics::DuplicationTest
+Test report for tests::metrics::DuplicationTest
+        all 13/13 tests succeeded
+Running tests for tests::metrics::VolumeTest
+Test report for tests::metrics::VolumeTest
+        all 3/3 tests succeeded
+Running tests for tests::metrics::UnitSizeTest
+Test report for tests::metrics::UnitSizeTest
+        all 2/2 tests succeeded
+Running tests for tests::metrics::AggregateTest
+Test report for tests::metrics::AggregateTest
+        all 1/1 tests succeeded
+Running tests for tests::utils::TestUtilsTest
+| testing 0/5 Test failed. Msg: ** No worries! This test should fail **. Expected = blabla, actual = bla
+Test failed. Msg: ** No worries! This test should fail **. Expected = 1, actual = 2
+Test report for tests::utils::TestUtilsTest
+        all 5/5 tests succeeded
+Running tests for tests::metrics::RateTest
+Test report for tests::metrics::RateTest
+        all 11/11 tests succeeded
+Running tests for tests::utils::UtilsTest
+Test report for tests::utils::UtilsTest
+        all 18/18 tests succeeded
+Running tests for tests::metrics::ComplexityTest
+Test report for tests::metrics::ComplexityTest
+        all 2/2 tests succeeded
+bool: true
+\end{lstlisting}
 \section{Interpretatie}
 Als we de output van \ref{lst:output} nemen en deze tegen het artikel aanhouden, kunnen we een soortgelijk tabel invullen. Omdat wij unittesting niet gemeten hebben, laten we deze buiten beschouwing.
 
