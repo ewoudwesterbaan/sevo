@@ -39,7 +39,6 @@ public void main() {
 	for (entry <- usdMap) {
 		println("- Categorie <entry.categoryName> (<entry.description>): <usdMap[entry]>%");
 	}
-	println("- Rank op basis van aggregatie: <getUnitSizeRank(usdMap)>");
 	
 	println("\nBerekenen cyclomatische complexiteit ...");
 	RelComplexities complexities = cyclomaticComplexity(project);
