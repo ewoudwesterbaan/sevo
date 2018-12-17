@@ -26,35 +26,20 @@
 \end{description}
 
 \section*{Samenwerking}
-Nadat Ewoud een git repository had aangemaakt voor het rascal
-project, zijn we beide begonnen aan een eigen module. De modules
-zijn parallel aan elkaar ontwikkeld, zodat er redelijk
-zelfstandig kon worden gewerkt. In grote lijnen heeft Ewoud de
-modules \texttt{metrics::Volume.rsc} en
-\texttt{metrics::Duplicates.rsc} voor zijn rekening genomen, en
-Martin de modules \texttt{metrics::UnitSize.rsc} en
-\texttt{metrics::Complexity.rsc}.
+Bij de start van het practicum zijn we parallel aan elkaar aan onze "eigen" modules begonnen: Main.rsc, Volume.rsc en Duplicates.rsc door Ewoud, en UnitSize.rsc, Complexity.rsc, Aggregate.rsc en Rate.rsc door Martin. Gaandeweg het project zijn we intensiever gaan samenwerken: Ewoud heeft Utils.rsc gemaakt waarin code is opgenomen die door meerdere modules wordt aangeroepen, en Martin heeft een opzet gemaakt voor de unittesten. Tijdens het bugfixen hebben we ook elkaars modules verder verbeterd. De diverse modules worden hieronder kort toegelicht.
 
-De module \texttt{metrics::Volume.rsc} berekent het aantal lines
-of code (LOC). \texttt{metrics::UnitSize.rsc} doet hetzelfde
-voor de units (methodes en constructoren) in het project. De
-module \texttt{metrics::Duplicates.rsc} zoekt naar dubbele code
-in het project. En de module \texttt{metrics::Complexity.rsc},
-tenslotte, bepaalt per unit (methode/constructor) de complexity
-measure.
-
-Bepaalde code leende zich voor hergebruik, en daarvoor is in
-samenspraak een module \texttt{utils::Utils} in het leven
-geroepen, waaraan beide auteurs hebben gewerkt.
-
-Martin heeft tijdens het ontwikkelen van de modules een eerste
-opzet gemaakt voor het unittesten van de modules. Het
-inhoudelijk schrijven van de testcode is op dezelfde wijze
-verdeeld als de modules zelf: beide auteurs hebben de testcode
-voor hun eigen modules geschreven. Voor het testen is er wat
-intensiever samengewerkt, ook omdat daarbij aanvankelijk wat
-technische probleempjes optraden.
-
+\section{Structuur}
+De volgende modules zijn in het Rascal project opgenomen:
+\begin{description}
+\item[Main.rsc] De hoofdmodule. Van hieruit worden de andere modules aangeroepen en wordt de uitvoer gegenereerd.
+\item[metrics::Volume.rsc] Berekent het volume (LOC) van de SmallSQL aplicatie.
+\item[metrics::UnitSize.rsc] Berekent het aantal regels code per unit (methode/constructor). Er zijn verschillen in de som van de unitsize ten opzicht van het volume. Wij beschouwen het volume als alle regels code in een java file, zonder commentaar en zonder de lege ruimtes, zoals ook in \cite{A}, maar inclusief velddefinities, constantendefinities, import statements e.d. De som van de coderegels in units is de som van de inhoud (!) van de methodes en constructoren.
+\item[metrics::Complexity.rsc] Bepaalt de complexiteit per unit. We gaan er vanuit dat de standaard complexiteitsmaat de waarde 1 heeft, en dat er voor een aantal taalconstructies reden is om deze met 1 te verhogen. Deze taalconstructies blijken duidelijk uit listing 1.
+\item[metrics::Duplicate.rsc] Zoekt de dubbele code in de sources van SmallSQL
+\item[metrics::Aggregate.rsc] Aggregeert de gegevens van de bovenstaande modules, en bepaalt de percentages t.b.v. de rating. Hierbij wordt rekening gehouden met de som van de unit sizes (en niet het totale volume, zie boven).
+\item[metrics::Rate.rsc] Bepaalt de rating van SmallSQL per onderdeel (unit size, complexiteit en duplicaten).
+\item[utils::Utils] Bevat een aantal utility functies.
+\end{description}
 \section{Aannames}
 \subsection{Duplicaten}
 In onze oplossing vergelijken we de content van methodes en constructoren met elkaar, maar dit gebeurt in één richting. Als methode A wordt vergeleken met methode B, wordt methode B niet meer vergeleken met methode A. Stel dat het aantal opeenvolgende regels dat identiek is, 6 is. Dan is de duplicatiewaarde over de oplossing dus 6 / 12, dus 50\%. Als we dan drie methodes gebruiken, dan wordt methode A met methode B vergeleken, methode A met methode C én methode B en methode C. Het aantal duplicate regels is dan 18, wat gelijk is aan het totaal van aantal regels. In figuur \ref{fig:DuplicatenDetectie} hebben we dit doorgetrokken. op de x as staan het aantal methodes dat dezelfde code bevat. De blauwe lijn geeft het totaal aantal regels code in de oplossing aan, en de rode lijn het aantal gedetecteerde duplicate regels. Het aantal duplicate regels loopt dus exponentieel.
@@ -69,41 +54,6 @@ Onze aanname is dat het aantal duplicate regels het totaal van regels is dat mee
 Ter verduidelijking: laten we aannemen dat we 4 gelijke methodes hebben van 6 regels code. Als we voorheen de duplicatie berekende, kregen we 6 onderlinge verbindingen maal 6 regels duplicate code is 36 regels (van de 24 in totaal). Met de bovenbeschreven methode krijgen we dan een groep van 4 elementen. Dit maal 6 regels duplicate code levert 24 op.
 
 Op deze manier zal ook een enkele duplicaat (dus 2 units dat dezelfde code bevatten) geen 50\% score opleveren, maar 100\%. Dat zagen we ook terug in het draaien met de verschillende vormen over het testobject (SmallSQL); voorheen hadden we een score van 4,5\%, maar met de laatste vorm een score van ongeveer 12\%.
-
-\subsection{Unitsize versus volume}
-We zien een verschil in de som van de unitsize ten opzicht van het volume. Wij beschouwen het volume als alle regels code in een java file, zonder commentaar en zonder de lege ruimtes, zoals ook in \cite{A}. \texttt{Import} statements en field definitions beschouwen wij als ook onderdeel van het volume. De som van de regels code daarentegen, is de som van de inhoud van de methodes en contructoren (de units). Omdat de complexiteit en duplicaten berekend worden over de inhoud van de units, gebruiken wij deze metriek om het duplicaat en de complexiteit percentage te berekenen.
-
-\subsection{Lines of code}
-Gedurende het project zijn we 
-overgestapt naar een andere
-signature van methode locaties. 
-In het begin van het project was
-een locatie bijvoorbeeld
-\begin{lstlisting}
-|java+method:///DuplicationTestClass/duplicationTestLastPartEquals_ExpectTrue()|
-\end{lstlisting}
-later is dit veranderd naar
-\begin{lstlisting}
-|project://DuplicationTest/src/DuplicationTestClass.java|(1085,260,<42,49>,<51,2>)
-\end{lstlisting}
-Dit had invloed op de content die met elkaar vergeleken werd.
-Deze locaties zijn te krijgen door de \texttt{getUnits()} aan te
-roepen in de module \texttt{utils::Utils}. Met de eerste
-locatie, was de content die eruit gehaald werd inclusief de
-method (of constructor) signature (bijvoorbeeld: \texttt{public
-int getNumber()}). Op de tweede manier begint de content die
-opgehaald worden met de accolade (\texttt{\{}) achter de method
-signature. Met de regressie testen van de duplicaten, blijkt dus
-dat het aantal gelijke regels overal met 1 was toegenomen. De vraag die nu opspeelt is: moeten we de methode signatures ook zien als code dat vergeleken moet worden. Echter, duplicatie gaat over code in de code-blocks \cite{A}. Wij besluiten daarom dat de method signature daar niet onder valt. De accolades waarmee de methode start en eind moeten dus verwijderd worden bij het schoonmaken van de content (trimmen van de content en het verwijderen van commentaar).
-
-De versie van locatie waar we naar overgestapt zijn, had grote invloed op onze unittests. Deze waren heel gevoelig voor wijzigingen omdat deze op character niveau keken naar de locatie.
-
-De lines of code zijn belangrijk voor de metrieken volume en unitsize. Beiden
-maken gebruik van regels code die geen commentaar zijn. Omdat
-dit een gemeenschappelijke logica is, is deze gedefinieerd in de
-\texttt{utils::Utils} module.
-Regels code worden nu beschouwd als alle niet lege regels minus
-de commentaar regels. Dit `schoonmaken' van de inhoud van een unit wordt ook gebruikt voor controle op duplicaten.
 
 \subsection{Complexity}
 De complexiteitsmaat heeft betrekking op het aantal paden die in
@@ -158,9 +108,39 @@ complexiteitsmaat wederom met 1, omdat het al dan niet
 \texttt{true} zijn van de linker-conditie bepaald of de tweede
 conditie wordt bepaald.
 
-
-
-\section{Resultaten}
+\section{Betrouwbaarheid}
+De betrouwbaaheid en de juistheid van de oplossing kunnen we waarborgen door het gebruik van unittests. 
+We hebben meerdere `dummy'-projecten gemaakt die dienen als referentieproject bij het draaien van deze tests. 
+Door dat we zelf deze projecten maken, welke klein en overzichtelijk zijn, kunnen we vrij specifiek meten, testen en de juistheid valideren van de opgeleverde code. In Listing \ref{lst:testoutput} is de output weergegeven van onze unittests.
+\begin{lstlisting}[caption={Unit test output},label={lst:testoutput},frame = single]
+Running tests for tests::metrics::VolumeTest
+Test report for tests::metrics::VolumeTest                                                
+        all 3/3 tests succeeded
+Running tests for tests::metrics::AggregateTest
+Test report for tests::metrics::AggregateTest                                             
+        all 4/4 tests succeeded
+Running tests for tests::utils::TestUtilsTest
+Test failed. Msg: ** No worries! This test should fail **. Expected = 1, actual = 2       
+Test failed. Msg: ** No worries! This test should fail **. Expected = blabla, actual = bla
+Test report for tests::utils::TestUtilsTest                                 
+        all 5/5 tests succeeded
+Running tests for tests::utils::UtilsTest
+Test report for tests::utils::UtilsTest                                                     
+        all 18/18 tests succeeded
+Running tests for tests::metrics::UnitSizeTest
+Test report for tests::metrics::UnitSizeTest                                              
+        all 2/2 tests succeeded
+Running tests for tests::metrics::DuplicationTest
+Test report for tests::metrics::DuplicationTest                                             
+        all 13/13 tests succeeded
+Running tests for tests::metrics::ComplexityTest
+Test report for tests::metrics::ComplexityTest                                            
+        all 2/2 tests succeeded
+Running tests for tests::metrics::RateTest
+Test report for tests::metrics::RateTest                                                    
+        all 11/11 tests succeeded
+\end{lstlisting}
+\section{Resultaten en interpretatie}
 In Listing \ref{lst:output} is de output van het geschreven programma te zien over SmallSQL. 
 
 \begin{lstlisting}[caption={Programma output SmallSQL},label={lst:output},frame = single]
@@ -194,48 +174,7 @@ size of pairs to check: 203203
 
 Programma beeindigd
 \end{lstlisting}
- 
-\section{Betrouwbaarheid}
-De betrouwbaaheid en de juistheid van de oplossing kunnen we waarborgen door het gebruik van unittests. 
-We hebben meerdere `dummy'-projecten gemaakt die dienen als referentieproject bij het draaien van deze tests. 
-Door dat we zelf deze projecten maken, welke klein en overzichtelijk zijn, kunnen we vrij specifiek meten, testen en de juistheid valideren van de opgeleverde code. In Listing \ref{lst:testoutput} is de output weergegeven van onze unittests.
-\begin{lstlisting}[caption={Unit test output},label={lst:testoutput},frame = single]
-Running tests for tests::metrics::VolumeTest
-Test report for tests::metrics::VolumeTest                                                
-        all 3/3 tests succeeded
-Running tests for tests::metrics::AggregateTest
-Test report for tests::metrics::AggregateTest                                             
-        all 4/4 tests succeeded
-Running tests for tests::utils::TestUtilsTest
-Test failed. Msg: ** No worries! This test should fail **. Expected = 1, actual = 2       
-Test failed. Msg: ** No worries! This test should fail **. Expected = blabla, actual = bla
-Test report for tests::utils::TestUtilsTest                                 
-        all 5/5 tests succeeded
-Running tests for tests::utils::UtilsTest
-Test report for tests::utils::UtilsTest                                                     
-        all 18/18 tests succeeded
-Running tests for tests::metrics::UnitSizeTest
-Test report for tests::metrics::UnitSizeTest                                              
-        all 2/2 tests succeeded
-Running tests for tests::metrics::DuplicationTest
-Test report for tests::metrics::DuplicationTest                                             
-        all 13/13 tests succeeded
-Running tests for tests::metrics::ComplexityTest
-Test report for tests::metrics::ComplexityTest                                            
-        all 2/2 tests succeeded
-Running tests for tests::metrics::RateTest
-Test report for tests::metrics::RateTest                                                    
-        all 11/11 tests succeeded
-\end{lstlisting}
-\section{Interpretatie}
 Als we de output van \ref{lst:output} nemen en deze tegen de referentie tabellen aanhouden als in \cite{A}, kunnen we een soortgelijk resultatentabel invullen. Omdat wij unittesting niet gemeten hebben, laten we deze buiten beschouwing.
-
-De output van het programma (Listing \ref{lst:output}) geeft voor volume 22192 code regels. Dit geeft een rank van ++.
-
-Voor de complexity hebben we het percentage berekent per categorie. Als we de rank hiervan opzoeken, komen we op - - (2x -).
-
-Het duplicatiepercentage is 12.04\%. Dat kunnen we vertalen met het rating schema naar een enkele -.
-
 
 Voor de interpretatie van de unitsizes zijn door \cite{A} geen strikte waardes gegeven, daarom dienen wij hier zelf een methode voor te bedenken.
 Wij kiezen ervoor om de verdeling aan te houden als in \cite{B}, zodat we de uitkomst kunnen vergelijken met de gemiddelde.
