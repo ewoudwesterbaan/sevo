@@ -238,16 +238,7 @@ Het duplicatiepercentage is 12.04\%. Dat kunnen we vertalen met het rating schem
 
 
 Voor de interpretatie van de unitsizes zijn door \cite{A} geen strikte waardes gegeven, daarom dienen wij hier zelf een methode voor te bedenken.
-Wij hebben dit aangepakt door eerst een verdeling op te stellen van de unitsize. In Figuur \ref{fig:VerdelingUnitsize} is een graphische representatie van de verdeling te zien van het aantal methodes dat een aantal regels code bevat. Opvallend is hierbij dat een significant aantal units geen implementatie hebben. Steekproeven van deze locaties laten zien dat dit auto-generated code is of methodes om een bepaalde interface te kunnen implementeren.
-\begin{figure}[htbp]
-%\caption{Oplopen van detectieregels bij meerdere methodes}
-\centering
-\includegraphics[width=0.8 \textwidth]{VerdelingUnitsize.png}
-\label{fig:VerdelingUnitsize}
-\end{figure}
-
-Wij zien hierin een significant aantal units zonder implementatie. Wij kiezen er voor om hier een aparte classificatie voor op te nemen: not implemented.
-Voor overige verdeling kiezen we ervoor om dezelfde verdeling aan te houden als in \cite{B}, zodat we de uitkomst kunnen vergelijken met de gemiddelde.
+Wij kiezen ervoor om de verdeling aan te houden als in \cite{B}, zodat we de uitkomst kunnen vergelijken met de gemiddelde.
 
 Als we de verhouding in \cite{B} aannemen, komen we op een verdeling als in Tabel \ref{tbl:UnitSizeClassificatie}.
 
@@ -265,7 +256,7 @@ Unitsize         & Classificatie      \\ \hline
 \end{tabular}
 \end{table}
 
-Met de relatieve aantallen ten opzichte van het toaal aantal units, geven we de applicatie een ranking. We vergelijken deze aantallen met de waardes uit \cite{B}. De applicatie dat onderzocht wordt kan boven (+), onder (-) of gelijk (o) scoren aan de gemiddelden scoren. Ter referentie hebben we de grafiek uit \cite{B} toegevoegd (zie Figuur \ref{fig:RefVerdeling}).
+Wij vergelijken de uitkomst van het programma met de waardes uit \cite{B}. De applicatie dat onderzocht wordt kan dan boven (+), onder (-) of gelijk (o) scoren. Ter referentie hebben we de grafiek uit \cite{B} toegevoegd (zie Figuur \ref{fig:RefVerdeling}).
 \begin{figure}[htbp]
 %\caption{Oplopen van detectieregels bij meerdere methodes}
 \centering
@@ -273,7 +264,7 @@ Met de relatieve aantallen ten opzichte van het toaal aantal units, geven we de 
 \label{fig:RefVerdeling}
 \end{figure}
 
-We willen hierbij wel de opmerking plaatsen dat de verdeling ons inziens te grof is. Wij zijn van mening dat de verhoudingen beter kunnen. Nader onderzoek zal plaats moeten vinden om een betere verdeling te maken. Toch kiezen wij ervoor om te refereren met \cite{B}, zodat we de uitkomsten ergens mee kunnen vergelijken. De unitsize uit het doorgerekende project (SmallSQL) heeft 28\% 1-15, 35\% 16-50, 14\% 51-100, 8\% 101-250 en 3\% \textgreater{}250.
+Wel willen wij hierbij de opmerking plaatsen dat de verdeling ons inziens te grof is. Wij zijn van mening dat de verhoudingen beter kunnen. Nader onderzoek zal plaats moeten vinden om een betere verdeling te maken. Toch kiezen wij ervoor om te refereren met \cite{B}, zodat we de uitkomsten ergens mee kunnen vergelijken. De unitsize uit het doorgerekende project (SmallSQL) heeft 28\% 1-15, 35\% 16-50, 14\% 51-100, 8\% 101-250 en 3\% \textgreater{}250.
 Als we dit vergelijken met Figuur \ref{fig:RefVerdeling}, scoort SmallSQL op het oog gelijk en krijgt daarom we waarde 0.
 
 
