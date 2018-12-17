@@ -200,33 +200,32 @@ De betrouwbaaheid en de juistheid van de oplossing kunnen we waarborgen door het
 We hebben meerdere `dummy'-projecten gemaakt die dienen als referentieproject bij het draaien van deze tests. 
 Door dat we zelf deze projecten maken, welke klein en overzichtelijk zijn, kunnen we vrij specifiek meten, testen en de juistheid valideren van de opgeleverde code. In Listing \ref{lst:testoutput} is de output weergegeven van onze unittests.
 \begin{lstlisting}[caption={Unit test output},label={lst:testoutput},frame = single]
-Running tests for tests::metrics::DuplicationTest
-Test report for tests::metrics::DuplicationTest
-        all 13/13 tests succeeded
 Running tests for tests::metrics::VolumeTest
-Test report for tests::metrics::VolumeTest
+Test report for tests::metrics::VolumeTest                                                
         all 3/3 tests succeeded
-Running tests for tests::metrics::UnitSizeTest
-Test report for tests::metrics::UnitSizeTest
-        all 2/2 tests succeeded
 Running tests for tests::metrics::AggregateTest
-Test report for tests::metrics::AggregateTest
-        all 1/1 tests succeeded
+Test report for tests::metrics::AggregateTest                                             
+        all 4/4 tests succeeded
 Running tests for tests::utils::TestUtilsTest
-| testing 0/5 Test failed. Msg: ** No worries! This test should fail **. Expected = blabla, actual = bla
-Test failed. Msg: ** No worries! This test should fail **. Expected = 1, actual = 2
-Test report for tests::utils::TestUtilsTest
+Test failed. Msg: ** No worries! This test should fail **. Expected = 1, actual = 2       
+Test failed. Msg: ** No worries! This test should fail **. Expected = blabla, actual = bla
+Test report for tests::utils::TestUtilsTest                                 
         all 5/5 tests succeeded
-Running tests for tests::metrics::RateTest
-Test report for tests::metrics::RateTest
-        all 11/11 tests succeeded
 Running tests for tests::utils::UtilsTest
-Test report for tests::utils::UtilsTest
+Test report for tests::utils::UtilsTest                                                     
         all 18/18 tests succeeded
-Running tests for tests::metrics::ComplexityTest
-Test report for tests::metrics::ComplexityTest
+Running tests for tests::metrics::UnitSizeTest
+Test report for tests::metrics::UnitSizeTest                                              
         all 2/2 tests succeeded
-bool: true
+Running tests for tests::metrics::DuplicationTest
+Test report for tests::metrics::DuplicationTest                                             
+        all 13/13 tests succeeded
+Running tests for tests::metrics::ComplexityTest
+Test report for tests::metrics::ComplexityTest                                            
+        all 2/2 tests succeeded
+Running tests for tests::metrics::RateTest
+Test report for tests::metrics::RateTest                                                    
+        all 11/11 tests succeeded
 \end{lstlisting}
 \section{Interpretatie}
 Als we de output van \ref{lst:output} nemen en deze tegen de referentie tabellen aanhouden als in \cite{A}, kunnen we een soortgelijk resultatentabel invullen. Omdat wij unittesting niet gemeten hebben, laten we deze buiten beschouwing.
@@ -274,17 +273,15 @@ Met de relatieve aantallen ten opzichte van het toaal aantal units, geven we de 
 \label{fig:RefVerdeling}
 \end{figure}
 
-We willen hierbij wel de opmerking plaatsen dat de verdeling ons inziens te grof is. Wij zijn van mening dat de verhoudingen beter kunnen. Nader onderzoek zal plaats moeten vinden om een betere verdeling te maken. Toch kiezen wij ervoor om te refereren met \cite{B}, zodat we de uitkomsten ergens mee kunnen vergelijken.
+We willen hierbij wel de opmerking plaatsen dat de verdeling ons inziens te grof is. Wij zijn van mening dat de verhoudingen beter kunnen. Nader onderzoek zal plaats moeten vinden om een betere verdeling te maken. Toch kiezen wij ervoor om te refereren met \cite{B}, zodat we de uitkomsten ergens mee kunnen vergelijken. De unitsize uit het doorgerekende project (SmallSQL) heeft 28\% 1-15, 35\% 16-50, 14\% 51-100, 8\% 101-250 en 3\% \textgreater{}250.
+Als we dit vergelijken met Figuur \ref{fig:RefVerdeling}, scoort SmallSQL op het oog gelijk en krijgt daarom we waarde 0.
 
-De unitsize uit het doorgerekende project (SmallSQL) heeft 12\% small units, 25\% medium, 17\% very large
-
-Het resulaat is dat unitsize van ons een score krijgt van \todo{waarde invullen}.
 
 Als we alle waardes in de tabel zetten zoals in \cite{A}, komen we uit op Tabel \ref{tbl:ResultaatSmallSQL}. De laatste kolom hiervan lichten we toe.
 \begin{description}
-\item[Analysability] \todo{blablabla}
+\item[Analysability] Analysability is afhankleijk van volume (++), complexity per unit (- - ) en unit size (0). Bij elkaar komt vinden wij dat dit een neutrale score oplevert van 0.
 \item[Changeability] Omdat de complexity per unit zeer hoog is, en de hoeveelheid duplicatie ook vrij hoog is, geven we changeability de score -.
-\item[Stability] We hebben de waarde van de unit testing niet gemeten. Hierdoor kunnen we niets zeggen over de stability en krijgt deze de neutrale waarde `o'.
+\item[Stability] We hebben de waarde van de unit testing niet gemeten. Hierdoor kunnen we niets zeggen over de stability en krijgt deze de neutrale waarde 0.
 \item[Testability] Omdat we unit testing niet hebben gemeten, is de testability volledig afhankelijk van de complexity per unit. Deze is voor SmallSQL zeer hoog en daarom geven we testability de gelijke waarde als complexity per unit: - -.
 \end{description}
 \begin{table}[h]
@@ -293,8 +290,8 @@ Als we alle waardes in de tabel zetten zoals in \cite{A}, komen we uit op Tabel 
 \begin{tabular}{llllllll}
                           &                                                      &                                    & \multicolumn{5}{l}{source code properties}                                                                                                                           \\ \cline{4-7}
                           &                                                      & \multicolumn{1}{l|}{}              & \multicolumn{1}{c|}{\rotatebox[origin=c]{90}{volume}} & \multicolumn{1}{c|}{\rotatebox[origin=c]{90}{ complexity per unit }} & \multicolumn{1}{c|}{\rotatebox[origin=c]{90}{duplication}} & \multicolumn{1}{c|}{\rotatebox[origin=c]{90}{unit size}} &                         \\ \cline{4-7}
-                          &                                                      & \multicolumn{1}{l|}{}              & \multicolumn{1}{c|}{++}       & \multicolumn{1}{c|}{- -}                    & \multicolumn{1}{c|}{-}            & \multicolumn{1}{l|}{}          &                         \\ \cline{3-8} 
-\multirow{4}{*}{\rotatebox[origin=c]{90}{ISO 9128}} & \multicolumn{1}{l|}{\multirow{4}{*}{\rotatebox[origin=c]{90}{maintainablity}}} & \multicolumn{1}{l|}{analysability} & \multicolumn{1}{c|}{X}      & \multicolumn{1}{l|}{}                    & \multicolumn{1}{c|}{X}           & \multicolumn{1}{c|}{X}         & \multicolumn{1}{c|}{???} \\ \cline{3-8} 
+                          &                                                      & \multicolumn{1}{l|}{}              & \multicolumn{1}{c|}{++}       & \multicolumn{1}{c|}{- -}                    & \multicolumn{1}{c|}{-}            & \multicolumn{1}{l|}{0}          &                         \\ \cline{3-8} 
+\multirow{4}{*}{\rotatebox[origin=c]{90}{ISO 9128}} & \multicolumn{1}{l|}{\multirow{4}{*}{\rotatebox[origin=c]{90}{maintainablity}}} & \multicolumn{1}{l|}{analysability} & \multicolumn{1}{c|}{X}      & \multicolumn{1}{l|}{}                    & \multicolumn{1}{c|}{X}           & \multicolumn{1}{c|}{X}         & \multicolumn{1}{c|}{0} \\ \cline{3-8} 
                           & \multicolumn{1}{l|}{}                                & \multicolumn{1}{l|}{changeability} & \multicolumn{1}{l|}{}       & \multicolumn{1}{c|}{X}                   & \multicolumn{1}{c|}{X}           & \multicolumn{1}{l|}{}          & \multicolumn{1}{c|}{- -} \\ \cline{3-8} 
                           & \multicolumn{1}{l|}{}                                & \multicolumn{1}{l|}{stability}     & \multicolumn{1}{l|}{}       & \multicolumn{1}{c|}{}                    & \multicolumn{1}{l|}{}            & \multicolumn{1}{l|}{}          & \multicolumn{1}{c|}{0} \\ \cline{3-8} 
                           & \multicolumn{1}{l|}{}                                & \multicolumn{1}{l|}{testability}   & \multicolumn{1}{l|}{}       & \multicolumn{1}{c|}{X}                   & \multicolumn{1}{l|}{}            & \multicolumn{1}{l|}{}          & \multicolumn{1}{c|}{- -} \\ \cline{3-8} 
