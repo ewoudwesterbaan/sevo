@@ -36,20 +36,11 @@ De volgende modules zijn in het Rascal project opgenomen:
 \item[metrics::Volume.rsc] Berekent het volume (LOC) van de SmallSQL aplicatie. Wij interpreteren het volume als alle regels code in een java file, zonder commentaar en zonder de lege ruimtes, zoals ook in \cite{A}. Hieronder beschouwen wij ook velddefinities, constantendefinities, import statements e.d.
 \item[metrics::UnitSize.rsc] Berekent het aantal regels code per unit (methode / constructor). Er zijn verschillen in de som van de unitsize ten opzicht van het volume. De som van de coderegels in units is de som van de inhoud van de methodes en constructoren.
 \item[metrics::Complexity.rsc] Bepaalt de complexiteit per unit. We gaan er vanuit dat de standaard complexiteitsmaat de waarde 1 heeft en dat er voor een aantal taalconstructies reden is om deze met 1 te verhogen.
-\item[metrics::Duplicate.rsc] Zoekt de dubbele code in de sources van SmallSQL.
+\item[metrics::Duplicate.rsc] Zoekt de dubbele code in de sources van SmallSQL. Onze aanname is dat het aantal duplicate regels het totaal van regels is dat meerdere keren in de applicatie voorkomt.
 \item[metrics::Aggregate.rsc] Aggregeert de gegevens van de bovenstaande modules en bepaalt de percentages t.b.v. de rating. Hierbij wordt rekening gehouden met de som van de unit sizes (en niet het totale volume, zie boven).
 \item[metrics::Rate.rsc] Bepaalt de rating van SmallSQL per onderdeel (unit size, complexiteit en duplicaten).
 \item[utils::Utils] Bevat een aantal utility functies.
 \end{description}
-\section{Aannames}
-\subsection{Duplicaten}
-Onze aanname is dat het aantal duplicate regels het totaal van regels is dat meerdere keren in de applicatie voorkomt. Dit hebben wij geimplementeerd door de set van unitparen te verdelen over sets gegeven het aantal duplicate regels. Van deze set maken wij een set van 2-tuples waarbij we de locatie en het startnummer binnen de content concateneren. Vervolgens beschouwen we deze nieuwe relatie als een graaf waarbij we het aantal units vermenigvuldigen met het aantal duplicate regels.
-
-Ter verduidelijking: laten we aannemen dat we 4 gelijke methodes hebben van 6 regels code.  Met deze methode krijgen we dan een groep van 4 elementen. Dit maal 6 regels duplicate code levert 24 op.
-
-Op deze manier zal ook een enkele duplicaat (dus 2 units dat dezelfde code bevatten) geen 50\% score opleveren, maar 100\%. Dat zagen we ook terug in het draaien met de verschillende vormen over het testobject (SmallSQL); voorheen hadden we een score van 4,5\%, maar met de laatste vorm een score van ongeveer 12\%.
-
-Overige aannames zijn al besproken in Sectie \ref{sec:Structuur}.
 
 \section{Betrouwbaarheid}
 De betrouwbaaheid en de juistheid van de oplossing kunnen we waarborgen door het gebruik van unittests. 
@@ -146,11 +137,11 @@ Unitsize         & Classificatie      \\ \hline
 \end{tabular}
 \end{table}
 
-Wij vergelijken de uitkomst van het programma met de waardes uit \cite{B}. De applicatie dat onderzocht wordt kan dan boven (+), onder (-) of gelijk (o) scoren. Ter referentie hebben we de grafiek uit \cite{B} toegevoegd (zie Figuur \ref{fig:RefVerdeling}).
+Wij vergelijken de uitkomst van het programma met de waardes uit \cite{B}. De applicatie die onderzocht wordt kan dan visueel vergeleken worden met \cite{B} en kan dan boven (+), onder (-) of gelijk (0) scoren. Ter referentie hebben we de grafiek uit \cite{B} toegevoegd (zie Figuur \ref{fig:RefVerdeling}).
 \begin{figure}[htbp]
-%\caption{Oplopen van detectieregels bij meerdere methodes}
+\caption{Percentages of SLOC}
 \centering
-\includegraphics[width=0.8 \textwidth]{Capture.png}
+\includegraphics[width=0.6 \textwidth]{Capture.png}
 \label{fig:RefVerdeling}
 \end{figure}
 
