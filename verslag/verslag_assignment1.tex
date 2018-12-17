@@ -25,88 +25,31 @@
 	\item [Studentnummer] 837372832
 \end{description}
 
-\section*{Samenwerking}
+\section{Samenwerking}
 Bij de start van het practicum zijn we parallel aan elkaar aan onze "eigen" modules begonnen: Main.rsc, Volume.rsc en Duplicates.rsc door Ewoud, en UnitSize.rsc, Complexity.rsc, Aggregate.rsc en Rate.rsc door Martin. Gaandeweg het project zijn we intensiever gaan samenwerken: Ewoud heeft Utils.rsc gemaakt waarin code is opgenomen die door meerdere modules wordt aangeroepen, en Martin heeft een opzet gemaakt voor de unittesten. Tijdens het bugfixen hebben we ook elkaars modules verder verbeterd. De diverse modules worden hieronder kort toegelicht.
 
 \section{Structuur}
+\label{sec:Structuur}
 De volgende modules zijn in het Rascal project opgenomen:
 \begin{description}
 \item[Main.rsc] De hoofdmodule. Van hieruit worden de andere modules aangeroepen en wordt de uitvoer gegenereerd.
-\item[metrics::Volume.rsc] Berekent het volume (LOC) van de SmallSQL aplicatie.
-\item[metrics::UnitSize.rsc] Berekent het aantal regels code per unit (methode/constructor). Er zijn verschillen in de som van de unitsize ten opzicht van het volume. Wij beschouwen het volume als alle regels code in een java file, zonder commentaar en zonder de lege ruimtes, zoals ook in \cite{A}, maar inclusief velddefinities, constantendefinities, import statements e.d. De som van de coderegels in units is de som van de inhoud (!) van de methodes en constructoren.
-\item[metrics::Complexity.rsc] Bepaalt de complexiteit per unit. We gaan er vanuit dat de standaard complexiteitsmaat de waarde 1 heeft, en dat er voor een aantal taalconstructies reden is om deze met 1 te verhogen. Deze taalconstructies blijken duidelijk uit listing 1.
-\item[metrics::Duplicate.rsc] Zoekt de dubbele code in de sources van SmallSQL
-\item[metrics::Aggregate.rsc] Aggregeert de gegevens van de bovenstaande modules, en bepaalt de percentages t.b.v. de rating. Hierbij wordt rekening gehouden met de som van de unit sizes (en niet het totale volume, zie boven).
+\item[metrics::Volume.rsc] Berekent het volume (LOC) van de SmallSQL aplicatie. Wij interpreteren het volume als alle regels code in een java file, zonder commentaar en zonder de lege ruimtes, zoals ook in \cite{A}. Hieronder beschouwen wij ook velddefinities, constantendefinities, import statements e.d.
+\item[metrics::UnitSize.rsc] Berekent het aantal regels code per unit (methode / constructor). Er zijn verschillen in de som van de unitsize ten opzicht van het volume. De som van de coderegels in units is de som van de inhoud van de methodes en constructoren.
+\item[metrics::Complexity.rsc] Bepaalt de complexiteit per unit. We gaan er vanuit dat de standaard complexiteitsmaat de waarde 1 heeft en dat er voor een aantal taalconstructies reden is om deze met 1 te verhogen.
+\item[metrics::Duplicate.rsc] Zoekt de dubbele code in de sources van SmallSQL.
+\item[metrics::Aggregate.rsc] Aggregeert de gegevens van de bovenstaande modules en bepaalt de percentages t.b.v. de rating. Hierbij wordt rekening gehouden met de som van de unit sizes (en niet het totale volume, zie boven).
 \item[metrics::Rate.rsc] Bepaalt de rating van SmallSQL per onderdeel (unit size, complexiteit en duplicaten).
 \item[utils::Utils] Bevat een aantal utility functies.
 \end{description}
 \section{Aannames}
 \subsection{Duplicaten}
-In onze oplossing vergelijken we de content van methodes en constructoren met elkaar, maar dit gebeurt in één richting. Als methode A wordt vergeleken met methode B, wordt methode B niet meer vergeleken met methode A. Stel dat het aantal opeenvolgende regels dat identiek is, 6 is. Dan is de duplicatiewaarde over de oplossing dus 6 / 12, dus 50\%. Als we dan drie methodes gebruiken, dan wordt methode A met methode B vergeleken, methode A met methode C én methode B en methode C. Het aantal duplicate regels is dan 18, wat gelijk is aan het totaal van aantal regels. In figuur \ref{fig:DuplicatenDetectie} hebben we dit doorgetrokken. op de x as staan het aantal methodes dat dezelfde code bevat. De blauwe lijn geeft het totaal aantal regels code in de oplossing aan, en de rode lijn het aantal gedetecteerde duplicate regels. Het aantal duplicate regels loopt dus exponentieel.
-\begin{figure}[htbp]
-\caption{Oplopen van detectieregels bij meerdere methodes}
-\centering
-\includegraphics[width=0.8 \textwidth]{DuplicatenDetectie.png}
-\label{fig:DuplicatenDetectie}
-\end{figure}
 Onze aanname is dat het aantal duplicate regels het totaal van regels is dat meerdere keren in de applicatie voorkomt. Dit hebben wij geimplementeerd door de set van unitparen te verdelen over sets gegeven het aantal duplicate regels. Van deze set maken wij een set van 2-tuples waarbij we de locatie en het startnummer binnen de content concateneren. Vervolgens beschouwen we deze nieuwe relatie als een graaf waarbij we het aantal units vermenigvuldigen met het aantal duplicate regels.
 
-Ter verduidelijking: laten we aannemen dat we 4 gelijke methodes hebben van 6 regels code. Als we voorheen de duplicatie berekende, kregen we 6 onderlinge verbindingen maal 6 regels duplicate code is 36 regels (van de 24 in totaal). Met de bovenbeschreven methode krijgen we dan een groep van 4 elementen. Dit maal 6 regels duplicate code levert 24 op.
+Ter verduidelijking: laten we aannemen dat we 4 gelijke methodes hebben van 6 regels code.  Met deze methode krijgen we dan een groep van 4 elementen. Dit maal 6 regels duplicate code levert 24 op.
 
 Op deze manier zal ook een enkele duplicaat (dus 2 units dat dezelfde code bevatten) geen 50\% score opleveren, maar 100\%. Dat zagen we ook terug in het draaien met de verschillende vormen over het testobject (SmallSQL); voorheen hadden we een score van 4,5\%, maar met de laatste vorm een score van ongeveer 12\%.
 
-\subsection{Complexity}
-De complexiteitsmaat heeft betrekking op het aantal paden die in
-een unit (methode of constructor) kan worden bewandeld. Dit zegt
-iets over de testbaarheid van zo'n unit. We gaan er vanuit dat
-de standaard complexiteitsmaat de waarde 1 heeft, en dat er voor
-een aantal taaconstructies reden is om deze met 1 te verhogen.
-Deze taalconstructies blijken duidelijk uit de onderstaande
-code:
-
-\begin{lstlisting}[caption={Taalsconstructies die de
-complexiteit verhogen},label={lst:complexity},escapechar=|,
-frame = single]
-int complexity = 1;
-visit(stat) {
-  case \case(_) : complexity += 1;
-  case \do(_, _) : complexity += 1;
-  case \if(_, _) : complexity += 1;
-  case \catch(_,_): complexity += 1;
-  case \while(_, _) : complexity += 1;
-  case \if(_, _, _) : complexity += 1;
-  case \for(_, _, _) : complexity += 1;
-  case infix(_,"&&",_) : complexity += 1;
-  case infix(_,"||",_) : complexity += 1;    
-  case \for(_, _, _, _) : complexity += 1;
-  case \foreach(_, _, _) : complexity += 1;
-  case \conditional(_,_,_): complexity += 1;
-}
-\end{lstlisting}
-
-De \texttt{if}-constructies spreken voor zich: de conditie kan
-waar zijn of niet. Er zijn dus twee mogelijkheden, waarmee het
-aantal mogelijke paden met 1 wordt uitgebreid. Ditzelfde geldt
-voor de \texttt{conditional} in Java (feitelijk een alternatieve
-manier van het schrijven van een if-constructie, bijv.:
-\texttt{b == true ? x : y;}). De \texttt{do}, \texttt{while},
-\texttt{for}, en \texttt{foreach} be\"invloeden de complexiteit
-op een vergelijkbare manier. In het \texttt{switch}-statement,
-is iedere \texttt{case} te beschouwen als een
-\texttt{if}-statement, en dus verhogen we voor iedere
-\texttt{case} de complexiteitsmaat met 1.
-De \texttt{default}-tak voegt wel een extra stap, maar geen
-extra pad aan de sequentie van statements toe, en heeft dus geen
-invoed op de complexiteitsmaat.
-Het optreden van een exception kan worden afgehandeld in een
-\texttt{catch}-blok. Ieder \texttt{catch}-blok voegt een nieuw
-pad aan de control-flow van het programma toe, zodat ook dit de
-complexiteit verhoogd.
-Tenslotte is er de infix-notatie (AND, of OR-variant) die
-invloed heeft op het aantal paden. We verhogen hiervoor de de
-complexiteitsmaat wederom met 1, omdat het al dan niet
-\texttt{true} zijn van de linker-conditie bepaald of de tweede
-conditie wordt bepaald.
+Overige aannames zijn al besproken in Sectie \ref{sec:Structuur}.
 
 \section{Betrouwbaarheid}
 De betrouwbaaheid en de juistheid van de oplossing kunnen we waarborgen door het gebruik van unittests. 
@@ -152,10 +95,18 @@ Berekend volume:
 
 Unit size berekenen ...
 Aantal gevonden units (methodes en constructoren): 2494
-Som van de aantallen regels per methode/constructor:
+Som van de aantallen regels per methode/constructor: 
 - totaal aantal regels (incl lege regels binnen de units): 22730
 - commentaarregels: 628
 - coderegels: 16401
+
+Aggregeren gegevens (unit size verhoudingen) ...
+- Categorie Insane (Extremely large units (>250)): 3%
+- Categorie Very large (Very large units (101-250)): 8%
+- Categorie Medium (Medium size units (16-50)): 35%
+- Categorie Large (Large units (51-100)): 14%
+- Categorie Small (Small units (0-15)): 38%
+- Rank op basis van aggregatie: --
 
 Berekenen cyclomatische complexiteit ...
 
@@ -167,10 +118,10 @@ Aggregeren gegevens (unit size and complexity) ...
 - Rank op basis van aggregatie: --
 
 Berekenen duplicatie ...
-size of pairs to check: 203203
 - Aantal duplicaties: 188
 - Aantal regels gedupliceerd: 1976
 - Duplicatepercentage: 12.04804585%
+- Rank op basis van duplicatie: -
 
 Programma beeindigd
 \end{lstlisting}
@@ -203,8 +154,7 @@ Wij vergelijken de uitkomst van het programma met de waardes uit \cite{B}. De ap
 \label{fig:RefVerdeling}
 \end{figure}
 
-Wel willen wij hierbij de opmerking plaatsen dat de verdeling ons inziens te grof is. Wij zijn van mening dat de verhoudingen beter kunnen. Nader onderzoek zal plaats moeten vinden om een betere verdeling te maken. Toch kiezen wij ervoor om te refereren met \cite{B}, zodat we de uitkomsten ergens mee kunnen vergelijken. De unitsize uit het doorgerekende project (SmallSQL) heeft 28\% 1-15, 35\% 16-50, 14\% 51-100, 8\% 101-250 en 3\% \textgreater{}250.
-Als we dit vergelijken met Figuur \ref{fig:RefVerdeling}, scoort SmallSQL op het oog gelijk en krijgt daarom we waarde 0.
+Wel willen wij hierbij de opmerking plaatsen dat de verdeling ons inziens te grof is. Wij zijn van mening dat de verhoudingen beter kunnen. Nader onderzoek zal plaats moeten vinden om een betere verdeling te maken. Toch kiezen wij ervoor om te refereren met \cite{B}, zodat we de uitkomsten ergens aan kunnen refereren. Als we de unitsize verhoudingen vergelijken met Figuur \ref{fig:RefVerdeling}, scoort SmallSQL op het oog gelijk en krijgt daarom de waarde 0.
 
 
 Als we alle waardes in de tabel zetten zoals in \cite{A}, komen we uit op Tabel \ref{tbl:ResultaatSmallSQL}. De laatste kolom hiervan lichten we toe.
