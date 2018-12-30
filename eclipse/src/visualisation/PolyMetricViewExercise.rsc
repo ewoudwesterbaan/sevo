@@ -14,6 +14,9 @@ import lang::java::jdt::m3::AST;
 // Voor het bepalen van de complexity
 import metrics::Complexity;
 
+// Voor het bepalen van de codeLines
+import utils::Utils;
+
 private alias UnitInfoTuple = tuple[loc location, str unitName, int complexity, int codeLines];
 private alias UnitInfoRel = rel[loc location, str unitName, int complexity, int codeLines];
 private alias ClassInfoTuple = tuple[loc location, str className];
@@ -43,13 +46,13 @@ public void showGraph() {
 			str unitName = unit.unitName;
 			int height = getUnitHeight(unit.codeLines);
 			Color clr = getUnitFillColor(unit.complexity);
-	        nodes += vcat([box(size(10, height), fillColor(clr)), text(unitName, textAngle(90))], id(unitId));
+	        nodes += vcat([box(size(10, height), fillColor(clr)), text(unitName, textAngle(90))], id(unitId), gap(10));
 			edges += edge(classId, unitId);
 		}
 	}	
 
 	// Render de gegereerde graaf	
-	render(graph(nodes, edges, hint("layered"), gap(50)));
+	render(graph(nodes, edges, hint("layered"), gap(30)));
 }
 
 // Geeft de complexity metric terug voor een bepaalde unit
@@ -89,21 +92,21 @@ private ClassInfoMap getClassInfo(loc project) {
             case \class(name, _, _, _) : {
 		    	clazz.className = name; 
             }       
-        	// Get interface name
-            case \interface(name, _, _, _) : {
-		    	clazz.className = "Interface: <name>"; 
+        	// Skip interfaces
+            case \interface(_, _, _, _) : {
+            	continue;
             }       
             // Get constructor info
             case \constructor(name, _, _, impl) : {
                 int complexity = getComplexityMetric(impl.src);
-            	int codeLines = 5; // TODO
+            	int codeLines = getLinesOfCode(impl.src).codeLines;
 				UnitInfoTuple unit = <impl.src, name, complexity, codeLines>;
             	units += unit;
             }
             // Get method info
             case \method(_, name, _, _, impl) : {
                 int complexity = getComplexityMetric(impl.src);
-            	int codeLines = 5; // TODO
+            	int codeLines = getLinesOfCode(impl.src).codeLines;
 				UnitInfoTuple unit = <impl.src, name, complexity, codeLines>;
             	units += unit;
             }
