@@ -20,6 +20,7 @@ private alias ClassInfoTuple = tuple[loc location, str className];
 private alias ClassInfoMap = map[ClassInfoTuple clazz, UnitInfoRel units];
 
 private loc project = |project://ComplexityTest/|;
+private RelComplexities complexities = cyclomaticComplexity(project);
 
 // Toont een graaf van alle klassen met hun methoden
 public void showGraph() {
@@ -27,7 +28,6 @@ public void showGraph() {
 	edges = [];
 
 	// Verzamel info van alle klassen
-	// ClassInfoMap classInfo = createTestClassInfoMap();
 	ClassInfoMap classInfo = getClassInfo(project);
 	
 	for (clazz <- classInfo) {
@@ -50,6 +50,12 @@ public void showGraph() {
 
 	// Render de gegereerde graaf	
 	render(graph(nodes, edges, hint("layered"), gap(50)));
+}
+
+// Geeft de complexity metric terug voor een bepaalde unit
+// TODO: hoort deze methode wellicht thuis in de Complexity module als een public methode?
+private int getComplexityMetric(loc unit) {
+	return head([complexity.complexity | complexity <- complexities, complexity.location == unit]);
 }
 
 // Bepaalt de kleur van een unit op basis van de complexity
@@ -89,16 +95,14 @@ private ClassInfoMap getClassInfo(loc project) {
             }       
             // Get constructor info
             case \constructor(name, _, _, impl) : {
-                //int complexity = getUnitComplexity(name, impl).complexity;
-                int complexity = 1;
+                int complexity = getComplexityMetric(impl.src);
             	int codeLines = 5; // TODO
 				UnitInfoTuple unit = <impl.src, name, complexity, codeLines>;
             	units += unit;
             }
             // Get method info
             case \method(_, name, _, _, impl) : {
-                //int complexity = getUnitComplexity(name, impl).complexity;
-                int complexity = 3;
+                int complexity = getComplexityMetric(impl.src);
             	int codeLines = 5; // TODO
 				UnitInfoTuple unit = <impl.src, name, complexity, codeLines>;
             	units += unit;
