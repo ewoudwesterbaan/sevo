@@ -3,10 +3,23 @@ module visualisation::PolyMetricViewExercise
 import vis::Figure;
 import vis::Render;
 
+import List;
+import Set;
+import Map;
+
+// Voor het ophalen van klassen en methoden uit een project:
+import lang::java::m3::Core;
+import lang::java::jdt::m3::AST;
+
+// Voor het bepalen van de complexity
+import metrics::Complexity;
+
 private alias UnitInfoTuple = tuple[loc location, str unitName, int complexity, int codeLines];
 private alias UnitInfoRel = rel[loc location, str unitName, int complexity, int codeLines];
 private alias ClassInfoTuple = tuple[loc location, str className];
 private alias ClassInfoMap = map[ClassInfoTuple clazz, UnitInfoRel units];
+
+private loc project = |project://ComplexityTest/|;
 
 // Toont een graaf van alle klassen met hun methoden
 public void showGraph() {
@@ -14,7 +27,8 @@ public void showGraph() {
 	edges = [];
 
 	// Verzamel info van alle klassen
-	ClassInfoMap classInfo = createTestClassInfoMap();
+	// ClassInfoMap classInfo = createTestClassInfoMap();
+	ClassInfoMap classInfo = getClassInfo(project);
 	
 	for (clazz <- classInfo) {
 		// Voeg klasse toe aan de graaf
@@ -54,24 +68,43 @@ private Color getClassFillColor() {
 	return color("lightgreen");
 }
 
-// Vult een ClassInfoMap met testdata
-private ClassInfoMap createTestClassInfoMap() {
-	loc dummyLoc1 = |project://Dummy/src/Dummy.java|(2967,604,<107,46>,<126,1>);
-	loc dummyLoc2 = |project://Dummy/src/Dummy.java|(2967,604,<107,46>,<126,2>);
-	loc dummyLoc3 = |project://Dummy/src/Dummy.java|(2967,604,<107,46>,<126,3>);
-	loc dummyLoc4 = |project://Dummy/src/Dummy.java|(2967,604,<107,46>,<126,4>);
-	loc dummyLoc5 = |project://Dummy/src/Dummy.java|(2967,604,<107,46>,<126,5>);
-	loc dummyLoc6 = |project://Dummy/src/Dummy.java|(2967,604,<107,46>,<126,6>);
+// Haal alle methoden en constructoren op, per java-klasse, op basis van het project
+// Deze methode lijkt op de getUnits in de Utils klasse misschien die twee samenvoegen? TODO...
+private ClassInfoMap getClassInfo(loc project) {
+	ClassInfoMap result = ();	
+    for (Declaration ast <- createAstsFromEclipseProject(project, true)) {
+    	// Location of compilation unit
+    	loc classLocation = ast.src; 
+    	ClassInfoTuple clazz = <ast.src, "?">;
+    	UnitInfoRel units = {};
 
-	UnitInfoTuple unit1 = <dummyLoc1, "methodA1", 1, 1>;
-	UnitInfoTuple unit2 = <dummyLoc2, "methodA2", 2, 5>;
-	UnitInfoRel unitsA = {unit1, unit2};
-	ClassInfoTuple clazzA = <dummyLoc5, "MyTestClassA">;
-
-	UnitInfoTuple unit3 = <dummyLoc3, "methodB1", 1, 10>;
-	UnitInfoTuple unit4 = <dummyLoc4, "methodB2", 8, 45>;
-	UnitInfoRel unitsB = {unit3, unit4};
-	ClassInfoTuple clazzB = <dummyLoc6, "MyTestClassB">;
-
-	return (clazzA : unitsA, clazzB : unitsB);
+        visit(ast) {
+        	// Get class name
+            case \class(name, _, _, _) : {
+		    	clazz.className = name; 
+            }       
+        	// Get interface name
+            case \interface(name, _, _, _) : {
+		    	clazz.className = "Interface: <name>"; 
+            }       
+            // Get constructor info
+            case \constructor(name, _, _, impl) : {
+                //int complexity = getUnitComplexity(name, impl).complexity;
+                int complexity = 1;
+            	int codeLines = 5; // TODO
+				UnitInfoTuple unit = <impl.src, name, complexity, codeLines>;
+            	units += unit;
+            }
+            // Get method info
+            case \method(_, name, _, _, impl) : {
+                //int complexity = getUnitComplexity(name, impl).complexity;
+                int complexity = 3;
+            	int codeLines = 5; // TODO
+				UnitInfoTuple unit = <impl.src, name, complexity, codeLines>;
+            	units += unit;
+            }
+        }
+        result += (clazz : units);
+    }
+    return result;
 }
