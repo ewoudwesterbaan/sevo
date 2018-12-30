@@ -7,6 +7,8 @@ import List;
 import Set;
 import Map;
 
+import IO;
+
 // Voor het ophalen van klassen en methoden uit een project:
 import lang::java::m3::Core;
 import lang::java::jdt::m3::AST;
@@ -18,11 +20,16 @@ import metrics::Complexity;
 import utils::Utils;
 
 private alias UnitInfoTuple = tuple[loc location, str unitName, int complexity, int codeLines];
-private alias UnitInfoRel = rel[loc location, str unitName, int complexity, int codeLines];
+private alias UnitInfoList = list[UnitInfoTuple];
 private alias ClassInfoTuple = tuple[loc location, str className];
-private alias ClassInfoMap = map[ClassInfoTuple clazz, UnitInfoRel units];
+private alias ClassInfoMap = map[ClassInfoTuple clazz, UnitInfoList units];
 
-private loc project = |project://ComplexityTest/|;
+//private loc project = |project://ComplexityTest/|;
+//private loc project = |project://smallsql/|;
+//private loc project = |project://DuplicationTest/|;
+private loc project = |project://JabberPoint/|;
+
+
 private RelComplexities complexities = cyclomaticComplexity(project);
 
 // Toont een graaf van alle klassen met hun methoden
@@ -35,19 +42,21 @@ public void showGraph() {
 	
 	for (clazz <- classInfo) {
 		// Voeg klasse toe aan de graaf
-		str classId = "<clazz.location>";
-		str className = clazz.className;
-		UnitInfoRel units = classInfo[clazz];
-		nodes += vcat([text(className), box(size(30), fillColor(getClassFillColor()))], id(classId));
+		Figure classFigure = createClassFigure(clazz);
+		nodes += classFigure;
+		println("*** <classFigure.id>");
+		return;
 
 		// Voeg de units in de klasse (en hun onderlinge relaties) toe aan de graaf
+		UnitInfoList units = classInfo[clazz];
 		for (unit <- units) {
 			str unitId = "<unit.location>";
 			str unitName = unit.unitName;
 			int height = getUnitHeight(unit.codeLines);
 			Color clr = getUnitFillColor(unit.complexity);
-	        nodes += vcat([box(size(10, height), fillColor(clr)), text(unitName, textAngle(90))], id(unitId), gap(10));
-			edges += edge(classId, unitId);
+			Figure unitFigure = vcat([box(size(10, height), fillColor(clr)), text(unitName, textAngle(90))], id(unitId), gap(10));
+	        nodes += unitFigure;
+			edges += edge(classFigure.id, unitFigure.id);
 		}
 	}	
 
@@ -55,10 +64,47 @@ public void showGraph() {
 	render(graph(nodes, edges, hint("layered"), gap(30)));
 }
 
-// Geeft de complexity metric terug voor een bepaalde unit
-// TODO: hoort deze methode wellicht thuis in de Complexity module als een public methode?
-private int getComplexityMetric(loc unit) {
-	return head([complexity.complexity | complexity <- complexities, complexity.location == unit]);
+// Toont een grid met een boom per klasse met de methoden als leaves van de klasse
+public void showTrees() {
+	// Grid heeft vooralsnog 1 row
+	row = [];
+
+	// Verzamel info van alle klassen
+	ClassInfoMap classInfo = getClassInfo(project);
+	
+	for (clazz <- classInfo) {
+		// De root van de tree representeert de klasse. We stellen de root hier samen.
+		str classId = "<clazz.location>";
+		str className = clazz.className;
+		UnitInfoList units = classInfo[clazz];
+		Figure classFigure = vcat([text(className), box(size(30), fillColor(getClassFillColor()))], id(classId));
+		root = classFigure;
+
+		// De leaves van de tree representeren de units (methoden en constructoren). We stellen de leaves hier samen.
+		leaves = [];
+		for (unit <- units) {
+			str unitId = "<unit.location>";
+			str unitName = unit.unitName;
+			int height = getUnitHeight(unit.codeLines);
+			Color clr = getUnitFillColor(unit.complexity);
+			Figure unitFigure = vcat([box(size(10, height), fillColor(clr)), text(unitName, textAngle(90))], id(unitId), gap(10));
+	        leaves += unitFigure;
+		}
+
+		// Voeg column toe aan de row. Deze column bevat een tree, bestaande uit de root en de leaves
+		t = tree(root, leaves, std(size(50)), std(gap(20)));
+		row += t;
+	}	
+
+	// Render een grid met de gegenereerde row
+	render(box(grid([row]),size(200)));
+}
+
+// Maakt een Figure representatie van een klasse
+private Figure createClassFigure(ClassInfoTuple clazz) {
+	str classId = "<clazz.location>";
+	str className = clazz.className;
+	return vcat([text(className), box(size(30), fillColor(getClassFillColor()))], id(classId)); 
 }
 
 // Bepaalt de kleur van een unit op basis van de complexity
@@ -85,7 +131,7 @@ private ClassInfoMap getClassInfo(loc project) {
     	// Location of compilation unit
     	loc classLocation = ast.src; 
     	ClassInfoTuple clazz = <ast.src, "?">;
-    	UnitInfoRel units = {};
+    	UnitInfoList units = [];
 
         visit(ast) {
         	// Get class name
@@ -115,3 +161,10 @@ private ClassInfoMap getClassInfo(loc project) {
     }
     return result;
 }
+
+// Geeft de complexity metric terug voor een bepaalde unit
+// TODO: hoort deze methode wellicht thuis in de Complexity module als een public methode?
+private int getComplexityMetric(loc unit) {
+	return head([complexity.complexity | complexity <- complexities, complexity.location == unit]);
+}
+
