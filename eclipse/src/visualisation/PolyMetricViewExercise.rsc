@@ -74,7 +74,7 @@ private Figure createClassFigure(ClassInfoTuple clazz, ClassInfoMap classInfo) {
 	str className = clazz.className;
 	int width = getClassSize(clazz.codeLines);
 	Color clr = getClassFillColor(clazz.avgComplexity);
-	return hcat([text(className), box(size(width, 10), fillColor(clr))], id(classId)); 
+	return hcat([text(className), box(size(width, 10), fillColor(clr), popup("Dit is een class"))], id(classId)); 
 }
 
 // Maak een Figure representatie voor een unit.
@@ -86,7 +86,13 @@ private Figure createUnitFigure(UnitInfoTuple unit) {
 	str unitName = unit.unitName;
 	int width = getUnitSize(unit.codeLines);
 	Color clr = getUnitFillColor(unit.complexity);
-	return hcat([box(size(width, 10), fillColor(clr)), text(unitName, textAngle(0))], id(unitId), hgap(5));
+	return hcat([box(size(width, 10), fillColor(clr), popup("Dit is een unit")), text(unitName, textAngle(0))], id(unitId), hgap(5));
+}
+
+// Toont een popup met een tooltip tekst.
+//   - gebruik: box(size(50),fillColor("red"), popup("Hello"))
+private FProperty popup(str msg) {
+	return mouseOver(box(text(msg), shadow(true), fillColor("lightyellow"), grow(0.8), resizable(false)));
 }
 
 // Bepaalt de kleur van een klasse op basis van de gewogen complexity
@@ -129,27 +135,21 @@ private ClassInfoMap getClassInfo(loc project) {
 
         visit(ast) {
         	// Get class name
-            case \class(name, _, _, _) : {
-		    	clazz.className = name; 
-            }
+            case \class(name, _, _, _) : clazz.className = name; 
         	// Skip interfaces
-            case \interface(_, _, _, _) : {
-            	continue;
-            }
+            case \interface(_, _, _, _) : continue;
             // Get constructor info
             case \constructor(name, _, _, impl) : {
                 int complexity = getComplexityMetric(impl.src);
             	int codeLines = getLinesOfCode(impl.src).codeLines;
-				UnitInfoTuple unit = <impl.src, name, complexity, codeLines>;
-            	units += unit;
+            	units += <impl.src, name, complexity, codeLines>;
             	sumComplexityFactor += complexity * codeLines;
             }
             // Get method info
             case \method(_, name, _, _, impl) : {
                 int complexity = getComplexityMetric(impl.src);
             	int codeLines = getLinesOfCode(impl.src).codeLines;
-				UnitInfoTuple unit = <impl.src, name, complexity, codeLines>;
-            	units += unit;
+            	units += <impl.src, name, complexity, codeLines>;
             	sumComplexityFactor += complexity * codeLines;
             }
         }
