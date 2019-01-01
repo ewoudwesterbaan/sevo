@@ -74,7 +74,8 @@ private Figure createClassFigure(ClassInfoTuple clazz, ClassInfoMap classInfo) {
 	str className = clazz.className;
 	int width = getClassSize(clazz.codeLines);
 	Color clr = getClassFillColor(clazz.avgComplexity);
-	return hcat([text(className), box(size(width, 10), fillColor(clr), popup("Dit is een class"))], id(classId)); 
+	str popupText = "Class: <className>, LOC: <clazz.codeLines>, weighed complexity: <clazz.avgComplexity>";
+	return hcat([text(className), box(size(width, 10), fillColor(clr), popup(popupText))], id(classId)); 
 }
 
 // Maak een Figure representatie voor een unit.
@@ -86,7 +87,8 @@ private Figure createUnitFigure(UnitInfoTuple unit) {
 	str unitName = unit.unitName;
 	int width = getUnitSize(unit.codeLines);
 	Color clr = getUnitFillColor(unit.complexity);
-	return hcat([box(size(width, 10), fillColor(clr), popup("Dit is een unit")), text(unitName, textAngle(0))], id(unitId), hgap(5));
+	str popupText = "Unit: <unitName>, LOC: <unit.codeLines>, cyclomatic complexity: <unit.complexity>";
+	return hcat([box(size(width, 10), fillColor(clr), popup(popupText)), text(unitName, textAngle(0))], id(unitId), hgap(5));
 }
 
 // Toont een popup met een tooltip tekst.
