@@ -8,6 +8,8 @@ import List;
 import Set;
 import Map;
 
+import visualisation::widgets::Widgets;
+
 import IO;
 
 // Voor het ophalen van klassen en methoden uit een project:
@@ -38,7 +40,7 @@ private RelComplexities complexities = cyclomaticComplexity(project);
 public void showPackages() {
     PkgInfoMap pkgInfo = getPkgInfoMapFromClassInfoMap(getClassInfo(project));
 	rows = [];
-	for (pkgName <- pkgInfo) rows += [[createTree(createPkgFigure(pkgName, pkgInfo), [])]];
+	for (pkgName <- pkgInfo) rows += [[createTree(createPkgFigure(pkgName, pkgInfo, true), [])]];
 	render(box(grid(rows),size(200)));
 }
 
@@ -55,12 +57,12 @@ private void showPackageTree(str packageName) {
 		if (pkgName != packageName) continue;
 		
 		// De root van de tree representeert de packagenaam. We stellen de root hier samen.
-		root = createPkgFigure(pkgName, pkgInfo);
+		root = createPkgFigure(pkgName, pkgInfo, false);
 		// De leaves van de tree representeren de klassen. We stellen de leaves hier samen.
 		leaves = [];
 		for (classInfo <- pkgInfo[pkgName]) {
 			for (clazz <- classInfo) {
-    	    	leaves += createClassFigure(clazz, classInfo);
+    	    	leaves += createClassFigure(clazz, classInfo, true);
     		}
 		}
 		// Voeg column toe aan de row. Deze column bevat een tree, bestaande uit de root (class) en de leaves (units).
@@ -87,7 +89,7 @@ public void showClassTree(str classId) {
 		if (classId != "<clazz.location>") continue;
 	
 		// De root van de tree representeert de klasse. We stellen de root hier samen.
-		root = createClassFigure(clazz, classInfo);
+		root = createClassFigure(clazz, classInfo, false);
 		// De leaves van de tree representeren de units (methoden en constructoren). We stellen de leaves hier samen.
 		leaves = [];
 		for (unit <- classInfo[clazz]) {
@@ -109,9 +111,10 @@ private Figure createTree(Figure root, list[Figure] leaves) {
 }
 
 // Maakt een Figure representatie voor een package.
-private Figure createPkgFigure(str pkgName, PkgInfoMap pkgInfo) {
+private Figure createPkgFigure(str pkgName, PkgInfoMap pkgInfo, bool isLeaf) {
 	Color clr = getFillColor(1, "orange"); // TODO
 	int width = 40; // TODO
+	if (isLeaf) return hcat([box(size(width, 10), fillColor(clr), handlePackageClick(pkgName)), text(pkgName)], id(pkgName), hgap(5));
 	return hcat([text(pkgName), box(size(width, 10), fillColor(clr), handlePackageClick(pkgName))], id(pkgName));
 }
 
@@ -119,11 +122,12 @@ private Figure createPkgFigure(str pkgName, PkgInfoMap pkgInfo) {
 //   - de location van de klasse fungeert als id, 
 //   - de breedte is afhankelijk van het aantal codeLines,
 //   - de kleur is afhankelijk van de (gewogen) complexiteit van de klasse.
-private Figure createClassFigure(ClassInfoTuple clazz, ClassInfoMap classInfo) {
+private Figure createClassFigure(ClassInfoTuple clazz, ClassInfoMap classInfo, bool isLeaf) {
 	str classId = "<clazz.location>";
 	str className = "<clazz.className>";
 	int width = getClassSize(clazz.codeLines);
 	Color clr = getClassFillColor(clazz.avgComplexity);
+	if (isLeaf) return hcat([box(size(width, 10), fillColor(clr), handleClassClick(classId)), text(className)], id(classId), hgap(5));
 	return hcat([text(className), box(size(width, 10), fillColor(clr), handleClassClick(classId))], id(classId)); 
 }
 
@@ -137,13 +141,7 @@ private Figure createUnitFigure(UnitInfoTuple unit) {
 	int width = getUnitSize(unit.codeLines);
 	Color clr = getUnitFillColor(unit.complexity);
 	str popupText = "Unit: <unitName>, LOC: <unit.codeLines>, cyclomatic complexity: <unit.complexity>";
-	return hcat([box(size(width, 10), fillColor(clr), popup(popupText)), text(unitName, textAngle(0))], id(unitId), hgap(5));
-}
-
-// Toont een popup met een tooltip tekst.
-//   - gebruik: box(size(50),fillColor("red"), popup("Hello"))
-private FProperty popup(str msg) {
-	return mouseOver(box(text(msg), shadow(true), fillColor("lightyellow"), grow(0.8), resizable(false)));
+	return hcat([box(size(width, 10), fillColor(clr), popup(popupText)), text(unitName)], id(unitId), hgap(5));
 }
 
 // Handelt een click event af op een package 
@@ -210,7 +208,7 @@ private ClassInfoMap getClassInfo(loc project) {
             case \class(name, _, _, _) : {
             	clazz.className = name;
             } 
-            // Get package name 
+            // Get constructor info 
             case \constructor(name, _, _, impl) : {
                 int complexity = getComplexityMetric(impl.src);
             	int codeLines = getLinesOfCode(impl.src).codeLines;
