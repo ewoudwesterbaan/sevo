@@ -2,8 +2,8 @@ package nl.ou.pkgB.pkgBSub1;
 
 public class Class3PkgBSub1 {
 	
-	public void complexity37(int level) {
-		complexity30(level);
+	public void complexity43(int level) {
+		complexity36(level);
 		switch (level) {
 			case 11 : System.out.println("11"); break;
 			case 12 : System.out.println("12"); break;
@@ -51,7 +51,7 @@ public class Class3PkgBSub1 {
 		}
 	}
 
-	public void complexity30(int level) {
+	public void complexity36(int level) {
 		switch (level) {
 			case 11 : System.out.println("11"); break;
 			case 12 : System.out.println("12"); break;
