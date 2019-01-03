@@ -34,48 +34,59 @@ private loc project = |project://VisualisationTest/|;
 //private loc project = |project://DuplicationTest/|;
 //private loc project = |project://JabberPoint/|;
 
+private str projectName = "<project>"[11..-1];
+
 private RelComplexities complexities = cyclomaticComplexity(project);
 
 // Toont alle packages in het project (zonder de bijbhorende klassen). 
-public void showPackages() {
+// De grootte van de nodes is afhankelijk van het aantal lines of code.
+// De kleur van de nodes is afhankelijk van de (gewogen) complexiteit.
+public void showProject() {
+	// Verzamel info van alle packages
     PkgInfoMap pkgInfo = getPkgInfoMapFromClassInfoMap(getClassInfo(project));
-	rows = [];
+    
+	// De root van de tree representeert het project.
+	root = createProjectFigure(projectName);
+	
+	// De leaves van de tree representeren de packages. We stellen de leaves hier samen.
 	leaves = [];
-	for (pkgName <- pkgInfo) rows += [[createTree(createPkgFigure(pkgName, pkgInfo, true), leaves)]];
-	render(box(grid(rows),size(200)));
+	for (pkgName <- pkgInfo) leaves += createPkgFigure(pkgName, pkgInfo, true);
+	
+	render(grid([[createTree(root, leaves)]]));
 }
 
-// Toont een boom van alle packages met hun classes in het project
+// Toont een boom van een package met de bijbehorende klassen.
+// De grootte van de nodes is afhankelijk van het aantal lines of code.
+// De kleur van de nodes is afhankelijk van de (gewogen) complexiteit.
 private void showPackageTree(str packageName) {
 	// Verzamel info van alle packages
     PkgInfoMap pkgInfo = getPkgInfoMapFromClassInfoMap(getClassInfo(project));
-	// Grid bestaat uit rows, die elk 1 column zullen bevatten
-	rows = [];
+    
 	for (pkgName <- pkgInfo) {
 		// Filter op packagenaam
 		if (pkgName != packageName) continue;
-		// De root van de tree representeert de packagenaam. We stellen de root hier samen.
+		
+		// De root van de tree representeert de package. We stellen de root hier samen.
 		root = createPkgFigure(pkgName, pkgInfo, false);
+		
 		// De leaves van de tree representeren de klassen. We stellen de leaves hier samen.
 		leaves = [];
 		for (classInfo <- pkgInfo[pkgName]) {
 			for (clazz <- classInfo) leaves += createClassFigure(clazz, classInfo, true);
 		}
-		rows += [[createTree(root, leaves)]];
+		
+		// Render een grid met de boom
+		render(grid([[createTree(root, leaves)]]));
+		return;
 	}	
-	render(box(grid(rows),size(200)));
 }
 
-// Toont een grid met een boom per klasse met de methoden als leaves van de klasse
-// Alle bomen worden onder elkaar getoond, en hebben als root de klasse.
+// Toont een boom van een klasse met de bijbehorende methoden.
 // De grootte van de nodes is afhankelijk van het aantal lines of code.
-// De kleur van de nodes is afhankelijk van de (gewogen) complexiteit (donkerder = complexer).
+// De kleur van de nodes is afhankelijk van de (gewogen) complexiteit.
 public void showClassTree(str classId) {
 	// Verzamel info van alle classes
     ClassInfoMap classInfo = getClassInfo(project);
-	
-	// Grid bestaat uit rows, die elk 1 column zullen bevatten
-	rows = [];
 	
 	for (clazz <- classInfo) {
 		// Filter op classId (location)
@@ -83,17 +94,16 @@ public void showClassTree(str classId) {
 	
 		// De root van de tree representeert de klasse. We stellen de root hier samen.
 		root = createClassFigure(clazz, classInfo, false);
+		
 		// De leaves van de tree representeren de units (methoden en constructoren). We stellen de leaves hier samen.
 		leaves = [];
-		for (unit <- classInfo[clazz]) {
-	        leaves += createUnitFigure(unit);
-		}
-		// Voeg column toe aan de row. Deze column bevat een tree, bestaande uit de root (class) en de leaves (units).
-		rows += [[createTree(root, leaves)]];
+		for (unit <- classInfo[clazz]) leaves += createUnitFigure(unit);
+
+		// Render een grid met de gegenereerde rows
+		render(grid([[createTree(root, leaves)]]));
+		return;
 	}	
 
-	// Render een grid met de gegenereerde rows
-	render(box(grid(rows),size(200)));
 }
 
 // Maakt een boom met de opgegeven root en leaves.
@@ -103,11 +113,21 @@ private Figure createTree(Figure root, list[Figure] leaves) {
 	return tree(root, leaves, std(size(30)), std(hgap(30)), std(vgap(2)), orientation(leftRight()), left());
 }
 
+// Maakt een Figure representatie voor een project.
+private Figure createProjectFigure(str projectName) {
+	int width = 40; // TODO
+	str popupText = "Project: <projectName>. "; // TODO: volume en gewogen complexiteit in de popup opnemen.
+	Color clr = getProjectFillColor(1);; // TODO
+	Figure b = box(size(width, 10), fillColor(clr), popup(popupText));
+	Figure t = text(projectName);
+	return hcat([t, b], id(projectName), hgap(5));
+}
+
 // Maakt een Figure representatie voor een package.
 private Figure createPkgFigure(str pkgName, PkgInfoMap pkgInfo, bool isLeaf) {
 	int width = 40; // TODO
-	str popupText = "TODO.";
-	Color clr = getFillColor(1, "orange"); // TODO
+	str popupText = "Package: <pkgName>. "; // TODO: volume en gewogen complexiteit in de popup opnemen.
+	Color clr = getPkgFillColor(1);; // TODO
 	Figure leafbox = box(size(width, 10), fillColor(clr), popup("<popupText>\n(Click to zoom in.)"), handlePackageClick(pkgName));
 	Figure rootbox = box(size(width, 10), fillColor(clr), popup("<popupText>\n(Shift-click to zoom out.)"), handlePackageShiftClick());
 	Figure t = text(pkgName);
@@ -124,7 +144,7 @@ private Figure createClassFigure(ClassInfoTuple clazz, ClassInfoMap classInfo, b
 	str className = clazz.className;
 	str pkgName = clazz.pkgName == "" ? "\<root\>" : clazz.pkgName;
 	int width = getClassSize(clazz.codeLines);
-	str popupText = "Class: <className>, LOC: <clazz.codeLines>, weighed complexity: <clazz.avgComplexity>";
+	str popupText = "Class: <className>, LOC: <clazz.codeLines>, weighed complexity: <clazz.avgComplexity>. ";
 	Color clr = getClassFillColor(clazz.avgComplexity);
 	Figure leafbox = box(size(width, 10), fillColor(clr), popup("<popupText>\n(Click to zoom in.)"), handleClassClick(classId));
 	Figure rootbox = box(size(width, 10), fillColor(clr), popup("<popupText>\n(Shift-click to zoom out.)"), handleClassShiftClick(pkgName));
@@ -151,6 +171,9 @@ private Figure createUnitFigure(UnitInfoTuple unit) {
 // Handelt een click event af op een package 
 private FProperty handlePackageClick(str pkgName) {
 	return onMouseDown(bool (int butnr, map[KeyModifier,bool] modifiers) {
+		if (modifiers[modShift()]) return false;
+		if (modifiers[modCtrl()]) return false;
+		if (modifiers[modAlt()]) return false;
 		showPackageTree(pkgName);
 		return true;
 	});
@@ -159,14 +182,20 @@ private FProperty handlePackageClick(str pkgName) {
 // Handelt een shift-click event af op een package 
 private FProperty handlePackageShiftClick() {
 	return onMouseDown(bool (int butnr, map[KeyModifier,bool] modifiers) {
-		if (modifiers[modShift()]) showPackages();
-		return true;
+		if (modifiers[modShift()]) {
+			showProject();
+			return true;
+		}
+		return false;
 	});
 }
 
 // Handelt een click event af op een klasse 
 private FProperty handleClassClick(str classId) {
 	return onMouseDown(bool (int butnr, map[KeyModifier,bool] modifiers) {
+		if (modifiers[modShift()]) return false;
+		if (modifiers[modCtrl()]) return false;
+		if (modifiers[modAlt()]) return false;
 		showClassTree(classId);
 		return true;
 	});
@@ -175,12 +204,25 @@ private FProperty handleClassClick(str classId) {
 // Handelt een shift-click event af op een klasse 
 private FProperty handleClassShiftClick(str pkgName) {
 	return onMouseDown(bool (int butnr, map[KeyModifier,bool] modifiers) {
-		if (modifiers[modShift()]) showPackageTree(pkgName);
-		return true;
+		if (modifiers[modShift()]) {
+			showPackageTree(pkgName);
+			return true;
+		}
+		return false;
 	});
 }
 
-// Bepaalt de kleur van een klasse op basis van de gewogen complexity
+// Bepaalt de kleur van een project figure op basis van de gewogen complexity
+private Color getProjectFillColor(int avgComplexity) {
+	return getFillColor(avgComplexity, "gold");
+}
+
+// Bepaalt de kleur van een package figure op basis van de gewogen complexity
+private Color getPkgFillColor(int avgComplexity) {
+	return getFillColor(avgComplexity, "crimson");
+}
+
+// Bepaalt de kleur van een klasse figure op basis van de gewogen complexity
 private Color getClassFillColor(int avgComplexity) {
 	return getFillColor(avgComplexity, "green");
 }
@@ -198,14 +240,15 @@ private Color getFillColor(int complexity, str baseColor) {
 
 // Bepaalt de grootte van een unit op basis van de lines of code
 private int getUnitSize(int codeLines) {
-	return 30 + codeLines / 2;
+	return 25 + codeLines / 2;
 }
 
 // Bepaalt de grootte van een class op basis van de lines of code
 private int getClassSize(int codeLines) {
-	return 30 + codeLines / 8;
+	return 25 + codeLines / 6;
 }
 
+// TODO: hoort deze methode wellicht thuis in de Utils module als een public methode?
 // Haalt alle methoden en constructoren op, per java-klasse, voor het hele project.
 private ClassInfoMap getClassInfo(loc project) {
 	// Initieel is het result leeg. Deze gaan we hieronder vullen.
@@ -251,6 +294,7 @@ private ClassInfoMap getClassInfo(loc project) {
     return result;
 }
 
+// TODO: hoort deze methode wellicht thuis in de Utils module als een public methode?
 // Maakt uit een ClassInfoMap een PkgInfoMap. Dit is een map met als key de package naam, en 
 // als values een lijst met ClassInfoMaps van klassen in de respectievelijke package.
 private PkgInfoMap getPkgInfoMapFromClassInfoMap(ClassInfoMap classInfo) {
