@@ -2,6 +2,10 @@ package nl.ou.pkgB.pkgBSub1;
 
 public class Class2PkgBSub1 {
 	
+	public void complexity1(int level) {
+		complexity8(1);
+	}
+	
 	public void complexity8(int level) {
 		while (level < 99) {
 			switch (level) {

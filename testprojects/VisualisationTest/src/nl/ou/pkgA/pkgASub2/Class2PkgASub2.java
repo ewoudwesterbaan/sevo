@@ -13,5 +13,15 @@ public class Class2PkgASub2 {
 			default : System.out.println("default"); break;
 		}
 	}
+	
+	public void complexity1() {
+		complexity7(1);
+		complexity7(2);
+		complexity7(3);
+		complexity7(4);
+		complexity7(5);
+		complexity7(6);
+		complexity7(7);
+	}
 
 }

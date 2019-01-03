@@ -112,7 +112,7 @@ private Figure createPkgFigure(str pkgName, PkgInfoMap pkgInfo, bool isLeaf) {
 	Figure rootbox = box(size(width, 10), fillColor(clr), popup("<popupText>\n(Shift-click to zoom out.)"), handlePackageShiftClick());
 	Figure t = text(pkgName);
 	if (isLeaf) return hcat([leafbox, t], id(pkgName), hgap(5));
-	return hcat([t, rootbox], id(pkgName));
+	return hcat([t, rootbox], id(pkgName), hgap(5));
 }
 
 // Maakt een Figure representatie voor een klasse.
@@ -122,15 +122,15 @@ private Figure createPkgFigure(str pkgName, PkgInfoMap pkgInfo, bool isLeaf) {
 private Figure createClassFigure(ClassInfoTuple clazz, ClassInfoMap classInfo, bool isLeaf) {
 	str classId = "<clazz.location>";
 	str className = clazz.className;
-	str pkgName = clazz.pkgName;
+	str pkgName = clazz.pkgName == "" ? "\<root\>" : clazz.pkgName;
 	int width = getClassSize(clazz.codeLines);
-	str popupText = "Class: <className>, LOC: <clazz.codeLines>, weighed complexity: <clazz.avgComplexity>";;
+	str popupText = "Class: <className>, LOC: <clazz.codeLines>, weighed complexity: <clazz.avgComplexity>";
 	Color clr = getClassFillColor(clazz.avgComplexity);
 	Figure leafbox = box(size(width, 10), fillColor(clr), popup("<popupText>\n(Click to zoom in.)"), handleClassClick(classId));
 	Figure rootbox = box(size(width, 10), fillColor(clr), popup("<popupText>\n(Shift-click to zoom out.)"), handleClassShiftClick(pkgName));
 	Figure t = text(className);
 	if (isLeaf) return hcat([leafbox, t], id(classId), hgap(5));
-	return hcat([t, rootbox], id(classId)); 
+	return hcat([t, rootbox], id(classId), hgap(5)); 
 }
 
 // Maak een Figure representatie voor een unit.

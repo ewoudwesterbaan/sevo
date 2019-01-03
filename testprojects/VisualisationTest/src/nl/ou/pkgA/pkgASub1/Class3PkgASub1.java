@@ -2,7 +2,53 @@ package nl.ou.pkgA.pkgASub1;
 
 public class Class3PkgASub1 {
 	
-	public void complexity43(int level) {
+	public void complexity1() {
+		complexity49(1);
+		complexity49(2);
+		complexity49(3);
+		complexity49(4);
+		complexity49(5);
+		complexity49(6);
+		complexity49(7);
+		complexity49(8);
+		complexity49(9);
+		complexity49(10);
+		complexity49(11);
+		complexity49(12);
+		complexity49(13);
+		complexity49(14);
+		complexity49(15);
+		complexity49(16);
+		complexity49(17);
+		complexity49(18);
+		complexity49(19);
+		complexity49(20);
+		complexity49(21);
+		complexity49(22);
+		complexity49(23);
+		complexity49(24);
+		complexity49(25);
+		complexity49(26);
+		complexity49(27);
+		complexity49(28);
+		complexity49(29);
+		complexity49(30);
+		complexity49(31);
+		complexity49(32);
+		complexity49(33);
+		complexity49(34);
+		complexity49(35);
+		complexity49(36);
+		complexity49(37);
+		complexity49(38);
+		complexity49(39);
+		complexity49(40);
+		complexity49(41);
+		complexity49(42);
+		complexity49(43);
+	}
+	
+	public void complexity49(int level) {
 		switch (level) {
 			case 1 : System.out.println("1"); break;
 			case 2 : System.out.println("2"); break;
@@ -56,4 +102,24 @@ public class Class3PkgASub1 {
 		}
 	}
 
+	public void complexity4(int level) {
+		switch (level) {
+			case 1 : System.out.println("1"); break;
+			case 2 : System.out.println("2"); break;
+			case 3 : System.out.println("3"); break;
+			default : System.out.println("default"); break;
+		}
+	}
+
+	public void complexity8(int level) {
+		if (level == 1 || level == 2 || level == 3 || level == 4) {
+			switch (level) {
+				case 1 : System.out.println("1"); break;
+				case 2 : System.out.println("2"); break;
+				case 3 : System.out.println("3"); break;
+				default : System.out.println("default"); break;
+			}
+		}
+	}
+	
 }
