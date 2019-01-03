@@ -28,11 +28,11 @@ private alias ClassInfoTuple = tuple[loc location, str className, str pkgName, i
 private alias ClassInfoMap = map[ClassInfoTuple clazz, UnitInfoList units];
 private alias PkgInfoMap = map[str pkgName, list[ClassInfoMap classInfo] clazzes];
 
-//private loc project = |project://VisualisationTest/|;
+private loc project = |project://VisualisationTest/|;
 //private loc project = |project://ComplexityTest/|;
 //private loc project = |project://smallsql/|;
 //private loc project = |project://DuplicationTest/|;
-private loc project = |project://JabberPoint/|;
+//private loc project = |project://JabberPoint/|;
 
 private RelComplexities complexities = cyclomaticComplexity(project);
 
@@ -40,7 +40,8 @@ private RelComplexities complexities = cyclomaticComplexity(project);
 public void showPackages() {
     PkgInfoMap pkgInfo = getPkgInfoMapFromClassInfoMap(getClassInfo(project));
 	rows = [];
-	for (pkgName <- pkgInfo) rows += [[createTree(createPkgFigure(pkgName, pkgInfo, true), [])]];
+	leaves = [];
+	for (pkgName <- pkgInfo) rows += [[createTree(createPkgFigure(pkgName, pkgInfo, true), leaves)]];
 	render(box(grid(rows),size(200)));
 }
 
@@ -48,28 +49,20 @@ public void showPackages() {
 private void showPackageTree(str packageName) {
 	// Verzamel info van alle packages
     PkgInfoMap pkgInfo = getPkgInfoMapFromClassInfoMap(getClassInfo(project));
-
 	// Grid bestaat uit rows, die elk 1 column zullen bevatten
 	rows = [];
-	
 	for (pkgName <- pkgInfo) {
 		// Filter op packagenaam
 		if (pkgName != packageName) continue;
-		
 		// De root van de tree representeert de packagenaam. We stellen de root hier samen.
 		root = createPkgFigure(pkgName, pkgInfo, false);
 		// De leaves van de tree representeren de klassen. We stellen de leaves hier samen.
 		leaves = [];
 		for (classInfo <- pkgInfo[pkgName]) {
-			for (clazz <- classInfo) {
-    	    	leaves += createClassFigure(clazz, classInfo, true);
-    		}
+			for (clazz <- classInfo) leaves += createClassFigure(clazz, classInfo, true);
 		}
-		// Voeg column toe aan de row. Deze column bevat een tree, bestaande uit de root (class) en de leaves (units).
 		rows += [[createTree(root, leaves)]];
 	}	
-
-	// Render een grid met de gegenereerde rows
 	render(box(grid(rows),size(200)));
 }
 
@@ -112,10 +105,14 @@ private Figure createTree(Figure root, list[Figure] leaves) {
 
 // Maakt een Figure representatie voor een package.
 private Figure createPkgFigure(str pkgName, PkgInfoMap pkgInfo, bool isLeaf) {
-	Color clr = getFillColor(1, "orange"); // TODO
 	int width = 40; // TODO
-	if (isLeaf) return hcat([box(size(width, 10), fillColor(clr), handlePackageClick(pkgName)), text(pkgName)], id(pkgName), hgap(5));
-	return hcat([text(pkgName), box(size(width, 10), fillColor(clr), handlePackageClick(pkgName))], id(pkgName));
+	str popupText = "TODO.";
+	Color clr = getFillColor(1, "orange"); // TODO
+	Figure leafbox = box(size(width, 10), fillColor(clr), popup("<popupText>\n(Click to zoom in.)"), handlePackageClick(pkgName));
+	Figure rootbox = box(size(width, 10), fillColor(clr), popup("<popupText>\n(Shift-click to zoom out.)"), handlePackageShiftClick());
+	Figure t = text(pkgName);
+	if (isLeaf) return hcat([leafbox, t], id(pkgName), hgap(5));
+	return hcat([t, rootbox], id(pkgName));
 }
 
 // Maakt een Figure representatie voor een klasse.
@@ -124,11 +121,16 @@ private Figure createPkgFigure(str pkgName, PkgInfoMap pkgInfo, bool isLeaf) {
 //   - de kleur is afhankelijk van de (gewogen) complexiteit van de klasse.
 private Figure createClassFigure(ClassInfoTuple clazz, ClassInfoMap classInfo, bool isLeaf) {
 	str classId = "<clazz.location>";
-	str className = "<clazz.className>";
+	str className = clazz.className;
+	str pkgName = clazz.pkgName;
 	int width = getClassSize(clazz.codeLines);
+	str popupText = "Class: <className>, LOC: <clazz.codeLines>, weighed complexity: <clazz.avgComplexity>";;
 	Color clr = getClassFillColor(clazz.avgComplexity);
-	if (isLeaf) return hcat([box(size(width, 10), fillColor(clr), handleClassClick(classId)), text(className)], id(classId), hgap(5));
-	return hcat([text(className), box(size(width, 10), fillColor(clr), handleClassClick(classId))], id(classId)); 
+	Figure leafbox = box(size(width, 10), fillColor(clr), popup("<popupText>\n(Click to zoom in.)"), handleClassClick(classId));
+	Figure rootbox = box(size(width, 10), fillColor(clr), popup("<popupText>\n(Shift-click to zoom out.)"), handleClassShiftClick(pkgName));
+	Figure t = text(className);
+	if (isLeaf) return hcat([leafbox, t], id(classId), hgap(5));
+	return hcat([t, rootbox], id(classId)); 
 }
 
 // Maak een Figure representatie voor een unit.
@@ -139,9 +141,11 @@ private Figure createUnitFigure(UnitInfoTuple unit) {
 	str unitId = "<unit.location>";
 	str unitName = unit.unitName;
 	int width = getUnitSize(unit.codeLines);
-	Color clr = getUnitFillColor(unit.complexity);
 	str popupText = "Unit: <unitName>, LOC: <unit.codeLines>, cyclomatic complexity: <unit.complexity>";
-	return hcat([box(size(width, 10), fillColor(clr), popup(popupText)), text(unitName)], id(unitId), hgap(5));
+	Color clr = getUnitFillColor(unit.complexity);
+	Figure b = box(size(width, 10), fillColor(clr), popup(popupText));
+	Figure t = text(unitName);
+	return hcat([b, t], id(unitId), hgap(5));
 }
 
 // Handelt een click event af op een package 
@@ -152,10 +156,26 @@ private FProperty handlePackageClick(str pkgName) {
 	});
 }
 
+// Handelt een shift-click event af op een package 
+private FProperty handlePackageShiftClick() {
+	return onMouseDown(bool (int butnr, map[KeyModifier,bool] modifiers) {
+		if (modifiers[modShift()]) showPackages();
+		return true;
+	});
+}
+
 // Handelt een click event af op een klasse 
 private FProperty handleClassClick(str classId) {
 	return onMouseDown(bool (int butnr, map[KeyModifier,bool] modifiers) {
 		showClassTree(classId);
+		return true;
+	});
+}
+
+// Handelt een shift-click event af op een klasse 
+private FProperty handleClassShiftClick(str pkgName) {
+	return onMouseDown(bool (int butnr, map[KeyModifier,bool] modifiers) {
+		if (modifiers[modShift()]) showPackageTree(pkgName);
 		return true;
 	});
 }
