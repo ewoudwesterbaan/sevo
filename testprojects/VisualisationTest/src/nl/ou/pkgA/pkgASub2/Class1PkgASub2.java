@@ -1,21 +1,13 @@
-package nl.ou.visualisation;
+package nl.ou.pkgA.pkgASub2;
 
-import nl.ou.visualisation.complexity.ComplexityTestClass;
-
-public class VisualisationTestClass {
+public class Class1PkgASub2 {
 	
-	private ComplexityTestClass complexity = new ComplexityTestClass();
-	
-	public void complexity(int level) {
+	public void complexity4(int level) {
 		switch (level) {
-			case 1 : complexity.complexityOne();
-			case 2 : complexity.complexityTwo(true);
-			case 3 : complexity.complexityThree(1);
-			case 4 : complexity.complexityFour();
-			case 6 : complexity.complexitySix(true, 53);
-			case 20 : complexity.complexityTwenty(1);
-			case 21 : complexity.complexityTwentyOne(2);
-			default : complexity.complexityFiftyOne(3);
+			case 1 : System.out.println("1"); break;
+			case 2 : System.out.println("2"); break;
+			case 3 : System.out.println("3"); break;
+			default : System.out.println("default"); break;
 		}
 	}
 
