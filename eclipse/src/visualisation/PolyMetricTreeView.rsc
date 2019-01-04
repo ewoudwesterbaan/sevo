@@ -150,7 +150,7 @@ private Figure createUnitFigure(UnitInfoTuple unit) {
 	str unitName = unit.unitName;
 	int width = getUnitSize(unit.codeLines);
 	str popupText = "Unit: <unitName>, LOC: <unit.codeLines>, cyclomatic complexity: <unit.complexity>";
-	Color clr = getUnitFillColor(unit.complexity);
+	Color clr = getUnitComplexityIndicationColor(unit.complexity);
 	Figure b = box(size(width, 10), fillColor(clr), popup(popupText));
 	Figure t = text(unitName);
 	return hcat([b, t], id(unitId), hgap(5));
@@ -202,22 +202,17 @@ private FProperty handleClassShiftClick(str pkgName) {
 
 // Bepaalt de kleur van een project figure op basis van de gewogen complexity
 private Color getProjectFillColor(int avgComplexity) {
-	return getFillColor(avgComplexity, "gold");
+	return getFillColor(avgComplexity, "gray");
 }
 
 // Bepaalt de kleur van een package figure op basis van de gewogen complexity
 private Color getPkgFillColor(int avgComplexity) {
-	return getFillColor(avgComplexity, "crimson");
+	return getFillColor(avgComplexity, "gray");
 }
 
 // Bepaalt de kleur van een klasse figure op basis van de gewogen complexity
 private Color getClassFillColor(int avgComplexity) {
-	return getFillColor(avgComplexity, "green");
-}
-
-// Bepaalt de kleur van een unit op basis van de complexity
-private Color getUnitFillColor(int complexity) {
-	return getFillColor(complexity, "purple");
+	return getFillColor(avgComplexity, "gray");
 }
 
 // Bepaalt de kleur van een figuur op basis van de complexity en een basiskleur
