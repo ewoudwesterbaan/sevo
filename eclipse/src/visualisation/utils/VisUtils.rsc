@@ -35,13 +35,14 @@ private Color rankZeroColor = complexColor;
 private Color rankMinusColor = untestableColor;
 private Color rankMinusMinusColor = color("darkred");
 
+// Geeft de kleur van een unit figure terug, op basis van de complexiteitscategorie waarin de unit valt.
 public Color getUnitComplexityIndicationColor(int complexity) {
 	int simpleMax = getTupRiskCategoryByCategoryName("Simple").maxComplexity;
 	int moderateMax = getTupRiskCategoryByCategoryName("Moderate").maxComplexity;
 	int complexMax = getTupRiskCategoryByCategoryName("Complex").maxComplexity;
 	if (complexity <= simpleMax) return simpleColor;
-	if (complexity <= simpleMax) return moderateColor;
-	if (complexity <= simpleMax) return complexColor;
+	if (complexity <= moderateMax) return moderateColor;
+	if (complexity <= complexMax) return complexColor;
 	return untestableColor;
 }
 
