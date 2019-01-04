@@ -1,3 +1,12 @@
+//
+//
+// *** DEPRECATED ***
+//
+// De module niet meer gebruiken.
+// Uitsluitend ter lering en vermaak :)
+//
+//
+
 module visualisation::PolyMetricViewExercise
 
 import vis::Figure;

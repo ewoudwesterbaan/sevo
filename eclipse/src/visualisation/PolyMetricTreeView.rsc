@@ -9,24 +9,9 @@ import Set;
 import Map;
 
 import visualisation::widgets::Widgets;
+import visualisation::utils::VisUtils;
 
 import IO;
-
-// Voor het ophalen van klassen en methoden uit een project:
-import lang::java::m3::Core;
-import lang::java::jdt::m3::AST;
-
-// Voor het bepalen van de complexity
-import metrics::Complexity;
-
-// Voor het bepalen van de codeLines
-import utils::Utils;
-
-private alias UnitInfoTuple = tuple[loc location, str unitName, int complexity, int codeLines];
-private alias UnitInfoList = list[UnitInfoTuple];
-private alias ClassInfoTuple = tuple[loc location, str className, str pkgName, int avgComplexity, int codeLines];
-private alias ClassInfoMap = map[ClassInfoTuple clazz, UnitInfoList units];
-private alias PkgInfoMap = map[str pkgName, list[ClassInfoMap classInfo] clazzes];
 
 private loc project = |project://VisualisationTest/|;
 //private loc project = |project://ComplexityTest/|;
@@ -35,8 +20,6 @@ private loc project = |project://VisualisationTest/|;
 //private loc project = |project://JabberPoint/|;
 
 private str projectName = "<project>"[11..-1];
-
-private RelComplexities complexities = cyclomaticComplexity(project);
 
 // Toont alle packages in het project (zonder de bijbhorende klassen). 
 // De grootte van de nodes is afhankelijk van het aantal lines of code.
@@ -248,68 +231,4 @@ private int getClassSize(int codeLines) {
 	return 25 + codeLines / 6;
 }
 
-// TODO: hoort deze methode wellicht thuis in de Utils module als een public methode?
-// Haalt alle methoden en constructoren op, per java-klasse, voor het hele project.
-private ClassInfoMap getClassInfo(loc project) {
-	// Initieel is het result leeg. Deze gaan we hieronder vullen.
-	ClassInfoMap result = ();	
-	
-    for (Declaration ast <- createAstsFromEclipseProject(project, true)) {
-    	loc classLocation = ast.src; 
-    	ClassInfoTuple clazz = <classLocation, "", "", 1, getLinesOfCode(classLocation).codeLines>;
-    	UnitInfoList units = [];
-    	int sumComplexityFactor = 0;
-    	int sumUnitCodeLines = 0;
-
-        visit(ast) {
-        	// Get package name
-            case \package(parent, name) : {
-            	if (clazz.pkgName == "") clazz.pkgName = "<parent.name>";
-            	clazz.pkgName += ".<name>";
-            }
-        	// Get class name
-            case \class(name, _, _, _) : {
-            	clazz.className = name;
-            } 
-            // Get constructor info 
-            case \constructor(name, _, _, impl) : {
-                int complexity = getComplexityMetric(impl.src);
-            	int codeLines = getLinesOfCode(impl.src).codeLines;
-            	units += <impl.src, name, complexity, codeLines>;
-            	sumComplexityFactor += complexity * codeLines;
-            	sumUnitCodeLines += codeLines;
-            }
-            // Get method info
-            case \method(_, name, _, _, impl) : {
-                int complexity = getComplexityMetric(impl.src);
-            	int codeLines = getLinesOfCode(impl.src).codeLines;
-            	units += <impl.src, name, complexity, codeLines>;
-            	sumComplexityFactor += complexity * codeLines;
-            	sumUnitCodeLines += codeLines;
-            }
-        }
-        clazz.avgComplexity = sumComplexityFactor / sumUnitCodeLines;
-        result += (clazz : units);
-    }
-    return result;
-}
-
-// TODO: hoort deze methode wellicht thuis in de Utils module als een public methode?
-// Maakt uit een ClassInfoMap een PkgInfoMap. Dit is een map met als key de package naam, en 
-// als values een lijst met ClassInfoMaps van klassen in de respectievelijke package.
-private PkgInfoMap getPkgInfoMapFromClassInfoMap(ClassInfoMap classInfo) {
-	PkgInfoMap result = ();
-	for (clazz <- classInfo) {
-		str pkgName = clazz.pkgName == "" ? "\<root\>" : clazz.pkgName;
-		if (pkgName notin result) result += (pkgName : [(clazz : classInfo[clazz])]);
-		else result[pkgName] += (clazz : classInfo[clazz]);
-	}
-	return result;
-}
-
-// Geeft de complexity metric terug voor een bepaalde unit
-// TODO: hoort deze methode wellicht thuis in de Complexity module als een public methode?
-private int getComplexityMetric(loc unit) {
-	return head([complexity.complexity | complexity <- complexities, complexity.location == unit]);
-}
 
