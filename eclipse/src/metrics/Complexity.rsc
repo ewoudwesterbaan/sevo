@@ -63,7 +63,7 @@ private TupComplexity getUnitComplexity(str unitName, Statement stat) {
 }
 
 // Geeft de risicocategorienaam terug bij een complexiteitsmaat
-private str getCategoryName(int complexityMeasure) {
+public str getCategoryName(int complexityMeasure) {
 	return head([riskCategory.categoryName | riskCategory <- riskCategories, 
 		complexityMeasure >= riskCategory.minComplexity, 
 		complexityMeasure <= riskCategory.maxComplexity || 
