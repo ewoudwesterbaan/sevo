@@ -13,27 +13,25 @@ import visualisation::utils::VisUtils;
 
 import IO;
 
-private loc project = |project://VisualisationTest/|;
-//private loc project = |project://ComplexityTest/|;
-//private loc project = |project://smallsql/|;
-//private loc project = |project://DuplicationTest/|;
-//private loc project = |project://JabberPoint/|;
-
-private str projectName = "<project>"[11..-1];
+private loc project;
+private str projectName;
+private ClassInfoMap classInfo;
+private PkgInfoMap pkgInfo;
 
 // Toont alle packages in het project (zonder de bijbhorende klassen). 
 // De grootte van de nodes is afhankelijk van het aantal lines of code.
 // De kleur van de nodes is afhankelijk van de (gewogen) complexiteit.
-public void showProjectTree() {
-	// Verzamel info van alle packages
-    PkgInfoMap pkgInfo = getPkgInfoMapFromClassInfoMap(getClassInfo(project));
-    
+public void showProjectTree(loc proj) {
+	project = proj;
+	projectName = "<project>"[11..-1];
+	classInfo = getClassInfo(project);
+	pkgInfo = getPkgInfoMapFromClassInfoMap(classInfo);
+
 	// De root van de tree representeert het project.
 	root = createProjectFigure(projectName);
-	
 	// De leaves van de tree representeren de packages. We stellen de leaves hier samen.
 	leaves = [];
-	for (pkgName <- pkgInfo) leaves += createPkgFigure(pkgName, pkgInfo, true);
+	for (pkgName <- pkgInfo) leaves += createPkgFigure(pkgName, true);
 	
 	render(grid([[createTree(root, leaves)]]));
 }
@@ -42,20 +40,17 @@ public void showProjectTree() {
 // De grootte van de nodes is afhankelijk van het aantal lines of code.
 // De kleur van de nodes is afhankelijk van de (gewogen) complexiteit.
 private void showPackageTree(str packageName) {
-	// Verzamel info van alle packages
-    PkgInfoMap pkgInfo = getPkgInfoMapFromClassInfoMap(getClassInfo(project));
-    
 	for (pkgName <- pkgInfo) {
 		// Filter op packagenaam
 		if (pkgName != packageName) continue;
 		
 		// De root van de tree representeert de package. We stellen de root hier samen.
-		root = createPkgFigure(pkgName, pkgInfo, false);
+		root = createPkgFigure(pkgName, false);
 		
 		// De leaves van de tree representeren de klassen. We stellen de leaves hier samen.
 		leaves = [];
-		for (classInfo <- pkgInfo[pkgName]) {
-			for (clazz <- classInfo) leaves += createClassFigure(clazz, classInfo, true);
+		for (clazzInfo <- pkgInfo[pkgName]) {
+			for (clazz <- clazzInfo) leaves += createClassFigure(clazz, true);
 		}
 		
 		// Render een grid met de boom
@@ -67,22 +62,19 @@ private void showPackageTree(str packageName) {
 // Toont een boom van een klasse met de bijbehorende methoden.
 // De grootte van de nodes is afhankelijk van het aantal lines of code.
 // De kleur van de nodes is afhankelijk van de (gewogen) complexiteit.
-public void showClassTree(str classId) {
-	// Verzamel info van alle classes
-    ClassInfoMap classInfo = getClassInfo(project);
-	
+private void showClassTree(str classId) {
 	for (clazz <- classInfo) {
 		// Filter op classId (location)
 		if (classId != "<clazz.location>") continue;
 	
 		// De root van de tree representeert de klasse. We stellen de root hier samen.
-		root = createClassFigure(clazz, classInfo, false);
+		root = createClassFigure(clazz, false);
 		
 		// De leaves van de tree representeren de units (methoden en constructoren). We stellen de leaves hier samen.
 		leaves = [];
 		for (unit <- classInfo[clazz]) leaves += createUnitFigure(unit);
 
-		// Render een grid met de gegenereerde rows
+		// Render een grid met de boom
 		render(grid([[createTree(root, leaves)]]));
 		return;
 	}	
@@ -107,7 +99,7 @@ private Figure createProjectFigure(str projectName) {
 }
 
 // Maakt een Figure representatie voor een package.
-private Figure createPkgFigure(str pkgName, PkgInfoMap pkgInfo, bool isLeaf) {
+private Figure createPkgFigure(str pkgName, bool isLeaf) {
 	int width = 40; // TODO
 	str popupText = "Package: <pkgName>. "; // TODO: volume en gewogen complexiteit in de popup opnemen.
 	Color clr = getPkgFillColor(1);; // TODO
@@ -122,7 +114,7 @@ private Figure createPkgFigure(str pkgName, PkgInfoMap pkgInfo, bool isLeaf) {
 //   - de location van de klasse fungeert als id, 
 //   - de breedte is afhankelijk van het aantal codeLines,
 //   - de kleur is afhankelijk van de (gewogen) complexiteit van de klasse.
-private Figure createClassFigure(ClassInfoTuple clazz, ClassInfoMap classInfo, bool isLeaf) {
+private Figure createClassFigure(ClassInfoTuple clazz, bool isLeaf) {
 	str classId = "<clazz.location>";
 	str className = clazz.className;
 	str pkgName = clazz.pkgName == "" ? "\<root\>" : clazz.pkgName;
@@ -166,7 +158,7 @@ private FProperty handlePackageClick(str pkgName) {
 private FProperty handlePackageShiftClick() {
 	return onMouseDown(bool (int butnr, map[KeyModifier,bool] modifiers) {
 		if (modifiers[modShift()]) {
-			showProjectTree();
+			showProjectTree(project);
 			return true;
 		}
 		return false;

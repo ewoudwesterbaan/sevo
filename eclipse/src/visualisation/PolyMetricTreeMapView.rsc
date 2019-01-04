@@ -13,7 +13,7 @@ import visualisation::widgets::Widgets;
 import IO;
 
 // Tijdelijk. Hier moet de visualisatie mbv TreeMaps komen.
-public void showProjectTreeMap() {
+public void showProjectTreeMap(loc project) {
 	Figure title = pageTitle("Under construction...");
 	Figure descr = text(
 		"Deze toepassing ondersteunt momenteen nog geen TreeMaps. Deze worden binnenkort gerealiseerd."

@@ -19,7 +19,6 @@ private loc project = |project://VisualisationTest/|;
 //private loc project = |project://smallsql/|;
 //private loc project = |project://DuplicationTest/|;
 //private loc project = |project://JabberPoint/|;
-
 private str projectName = "<project>"[11..-1];
 
 // Start de visualisatie van metrics.
@@ -32,7 +31,7 @@ public void visualizeMetrics() {
 		"op een van de onderstaande knoppen te klikken. Tijdens het gebruik kan op elk gewenst \n" + 
 		"moment van view worden gewisseld."
 	); 
-	Figure treeViewButton = button(void(){showProjectTree();}, "Polymetric Tree");
-	Figure treeMapViewButton = button(void(){showProjectTreeMap();}, "Polymetric TreeMap"); 
+	Figure treeViewButton = button(void(){showProjectTree(project);}, "Polymetric Tree");
+	Figure treeMapViewButton = button(void(){showProjectTreeMap(project);}, "Polymetric TreeMap"); 
 	render(grid([[title], [descr], [grid([[treeViewButton, treeMapViewButton]], gap(20))]], gap(20), vsize(300), hsize(400), resizable(false)));
 }
