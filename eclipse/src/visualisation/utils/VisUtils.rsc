@@ -18,7 +18,7 @@ import metrics::Rate;
 // Voor het bepalen van de codeLines
 import utils::Utils;
 
-public alias UnitInfoTuple = tuple[loc location, str unitName, int complexity, int codeLines];
+public alias UnitInfoTuple = tuple[loc location, str unitName, int complexity, str risk, int codeLines];
 public alias UnitInfoList = list[UnitInfoTuple];
 public alias ClassInfoTuple = tuple[loc location, str className, str pkgName, int avgComplexity, int codeLines];
 public alias ClassInfoMap = map[ClassInfoTuple clazz, UnitInfoList units];
@@ -75,7 +75,8 @@ public ClassInfoMap getClassInfo(loc project) {
             case \constructor(name, _, _, impl) : {
                 int complexity = getComplexityMetric(complexities, impl.src);
             	int codeLines = getLinesOfCode(impl.src).codeLines;
-            	units += <impl.src, name, complexity, codeLines>;
+            	str risk = getCategoryDescription(complexity);
+            	units += <impl.src, name, complexity, risk, codeLines>;
             	sumComplexityFactor += complexity * codeLines;
             	sumUnitCodeLines += codeLines;
             }
@@ -83,7 +84,8 @@ public ClassInfoMap getClassInfo(loc project) {
             case \method(_, name, _, _, impl) : {
                 int complexity = getComplexityMetric(complexities, impl.src);
             	int codeLines = getLinesOfCode(impl.src).codeLines;
-            	units += <impl.src, name, complexity, codeLines>;
+            	str risk = getCategoryDescription(complexity);
+            	units += <impl.src, name, complexity, risk, codeLines>;
             	sumComplexityFactor += complexity * codeLines;
             	sumUnitCodeLines += codeLines;
             }

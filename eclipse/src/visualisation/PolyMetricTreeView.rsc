@@ -149,7 +149,8 @@ private Figure createUnitFigure(UnitInfoTuple unit) {
 	str unitId = "<unit.location>";
 	str unitName = unit.unitName;
 	int width = getUnitSize(unit.codeLines);
-	str popupText = "Unit: <unitName>, LOC: <unit.codeLines>, cyclomatic complexity: <unit.complexity>";
+	str risk = unit.risk;
+	str popupText = "Unit: <unitName>, LOC: <unit.codeLines>, cyclomatische complexiteit: <unit.complexity>, risico-inschatting: \"<risk>\"";
 	Color clr = getUnitRiskIndicationColor(unit.complexity);
 	Figure b = box(size(width, 10), fillColor(clr), popup(popupText));
 	Figure t = text(unitName);
