@@ -32,6 +32,7 @@ public void visualizeMetrics() {
 		"moment van view worden gewisseld."
 	); 
 	Figure treeViewButton = button(void(){showProjectTree(project);}, "Polymetric Tree");
-	Figure treeMapViewButton = button(void(){showProjectTreeMap(project);}, "Polymetric TreeMap"); 
-	render(grid([[title], [descr], [grid([[treeViewButton, treeMapViewButton]], gap(20))]], gap(20), vsize(300), hsize(400), resizable(false)));
+	Figure treeMapViewButton = button(void(){showProjectTreeMap(project);}, "Polymetric TreeMap");
+	Figure buttonGrid = grid([[treeViewButton, treeMapViewButton]], gap(20)); 
+	render(grid([[title], [descr], [buttonGrid]], gap(20), vsize(300), hsize(400), resizable(false)));
 }

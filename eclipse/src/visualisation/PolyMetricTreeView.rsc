@@ -8,6 +8,8 @@ import List;
 import Set;
 import Map;
 
+import View;
+import visualisation::PolyMetricTreeMapView;
 import visualisation::widgets::Widgets;
 import visualisation::utils::VisUtils;
 
@@ -22,6 +24,7 @@ private PkgInfoMap pkgInfo;
 // De grootte van de nodes is afhankelijk van het aantal lines of code.
 // De kleur van de nodes is afhankelijk van de (gewogen) complexiteit.
 public void showProjectTree(loc proj) {
+	// Eenmalig vullen van de private attributen
 	project = proj;
 	projectName = "<project>"[11..-1];
 	classInfo = getClassInfo(project);
@@ -33,7 +36,8 @@ public void showProjectTree(loc proj) {
 	leaves = [];
 	for (pkgName <- pkgInfo) leaves += createPkgFigure(pkgName, true);
 	
-	render(grid([[createTree(root, leaves)]]));
+	// Render een pagina met de boom
+	renderPage(createTree(root, leaves));
 }
 
 // Toont een boom van een package met de bijbehorende klassen.
@@ -53,8 +57,8 @@ private void showPackageTree(str packageName) {
 			for (clazz <- clazzInfo) leaves += createClassFigure(clazz, true);
 		}
 		
-		// Render een grid met de boom
-		render(grid([[createTree(root, leaves)]]));
+		// Render een pagina met de boom
+		renderPage(createTree(root, leaves));
 		return;
 	}	
 }
@@ -74,11 +78,20 @@ private void showClassTree(str classId) {
 		leaves = [];
 		for (unit <- classInfo[clazz]) leaves += createUnitFigure(unit);
 
-		// Render een grid met de boom
-		render(grid([[createTree(root, leaves)]]));
+		// Render een pagina met de boom
+		renderPage(createTree(root, leaves));
 		return;
 	}	
 
+}
+
+// Rendert een pagina.
+private void renderPage(Figure tree) {
+	Figure title = pageTitle("<projectName> - Polymetric Tree");
+	Figure homeButton = button(void(){visualizeMetrics();}, "Home");
+	Figure treeMapViewButton = button(void(){showProjectTreeMap(project);}, "Switch naar TreeMap"); 
+	Figure buttonGrid = grid([[homeButton, treeMapViewButton]], gap(20));
+	render(grid([[title], [tree], [buttonGrid]], gap(20), vsize(300), hsize(400), resizable(false)));
 }
 
 // Maakt een boom met de opgegeven root en leaves.
