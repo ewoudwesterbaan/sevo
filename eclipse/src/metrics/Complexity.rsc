@@ -71,6 +71,15 @@ public str getCategoryName(int complexityMeasure) {
 	);
 }
 
+// Geeft de risico-omschrijving terug bij een complexiteitsmaat
+public str getCategoryDescription(int complexityMeasure) {
+	return head([riskCategory.description | riskCategory <- riskCategories, 
+		complexityMeasure >= riskCategory.minComplexity, 
+		complexityMeasure <= riskCategory.maxComplexity || 
+		-1 == riskCategory.maxComplexity]
+	);
+}
+
 // Geeft een tupel met complexiteitsrisicogegevens terug op basis van de categorienaam
 public TupComplexityRiskCategory getTupRiskCategoryByCategoryName(str name) {
 	return head([riskCategory | riskCategory <- riskCategories, name == riskCategory.categoryName]);	
