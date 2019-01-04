@@ -150,7 +150,7 @@ private Figure createUnitFigure(UnitInfoTuple unit) {
 	str unitName = unit.unitName;
 	int width = getUnitSize(unit.codeLines);
 	str popupText = "Unit: <unitName>, LOC: <unit.codeLines>, cyclomatic complexity: <unit.complexity>";
-	Color clr = getUnitComplexityIndicationColor(unit.complexity);
+	Color clr = getUnitRiskIndicationColor(unit.complexity);
 	Figure b = box(size(width, 10), fillColor(clr), popup(popupText));
 	Figure t = text(unitName);
 	return hcat([b, t], id(unitId), hgap(5));
