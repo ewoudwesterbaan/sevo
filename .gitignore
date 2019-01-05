@@ -4,4 +4,5 @@ bin/**
 *.pdf
 *.synctex.gz
 eclipse/bin/
-
+eclipse\bin\
+\eclipse\bin\
