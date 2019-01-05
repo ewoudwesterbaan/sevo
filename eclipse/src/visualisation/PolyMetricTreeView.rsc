@@ -17,7 +17,6 @@ import IO;
 
 private loc project;
 private str projectName;
-private ClassInfoMap classInfo;
 private PkgInfoMap pkgInfo;
 
 // Toont alle packages in het project (zonder de bijbhorende klassen). 
@@ -27,8 +26,7 @@ public void showProjectTree(loc proj) {
 	// Eenmalig vullen van de private attributen
 	project = proj;
 	projectName = "<project>"[11..-1];
-	classInfo = getClassInfo(project);
-	pkgInfo = getPkgInfoMapFromClassInfoMap(classInfo);
+	pkgInfo = getPkgInfoMapFromClassInfoMap(getClassInfo(project));
 
 	// De root van de tree representeert het project.
 	root = createProjectFigure(projectName);
@@ -53,8 +51,8 @@ private void showPackageTree(str packageName) {
 		
 		// De leaves van de tree representeren de klassen. We stellen de leaves hier samen.
 		leaves = [];
-		for (clazzInfo <- pkgInfo[pkgName]) {
-			for (clazz <- clazzInfo) leaves += createClassFigure(clazz, true);
+		for (classInfoTuple <- pkgInfo[pkgName]) {
+			leaves += createClassFigure(classInfoTuple, true);
 		}
 		
 		// Render een pagina met de boom
@@ -66,7 +64,8 @@ private void showPackageTree(str packageName) {
 // Toont een boom van een klasse met de bijbehorende methoden.
 // De grootte van de nodes is afhankelijk van het aantal lines of code.
 // De kleur van de nodes is afhankelijk van de (gewogen) complexiteit.
-private void showClassTree(str classId) {
+private void showClassTree(str pkgName, str classId) {
+	ClassInfoMap classInfo = pkgInfo[pkgName];
 	for (clazz <- classInfo) {
 		// Filter op classId (location)
 		if (classId != "<clazz.location>") continue;
@@ -134,7 +133,7 @@ private Figure createClassFigure(ClassInfoTuple clazz, bool isLeaf) {
 	int width = getClassSize(clazz.codeLines);
 	str popupText = "Class: <className>, LOC: <clazz.codeLines>, weighed complexity: <clazz.avgComplexity>. ";
 	Color clr = getClassFillColor(clazz.avgComplexity);
-	Figure leafbox = box(size(width, 10), fillColor(clr), popup("<popupText>\n(Click to zoom in.)"), handleClassClick(classId));
+	Figure leafbox = box(size(width, 10), fillColor(clr), popup("<popupText>\n(Click to zoom in.)"), handleClassClick(pkgName, classId));
 	Figure rootbox = box(size(width, 10), fillColor(clr), popup("<popupText>\n(Shift-click to zoom out.)"), handleClassShiftClick(pkgName));
 	Figure t = text(className);
 	if (isLeaf) return hcat([leafbox, t], id(classId), hgap(5));
@@ -180,12 +179,12 @@ private FProperty handlePackageShiftClick() {
 }
 
 // Handelt een click event af op een klasse 
-private FProperty handleClassClick(str classId) {
+private FProperty handleClassClick(str pkgName, str classId) {
 	return onMouseDown(bool (int butnr, map[KeyModifier,bool] modifiers) {
 		if (modifiers[modShift()]) return false;
 		if (modifiers[modCtrl()]) return false;
 		if (modifiers[modAlt()]) return false;
-		showClassTree(classId);
+		showClassTree(pkgName, classId);
 		return true;
 	});
 }

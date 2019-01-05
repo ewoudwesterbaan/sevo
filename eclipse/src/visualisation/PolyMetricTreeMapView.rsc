@@ -17,15 +17,13 @@ import IO;
 
 private loc project;
 private str projectName;
-private ClassInfoMap classInfo;
 private PkgInfoMap pkgInfo;
 
 public void showProjectTreeMap(loc proj) {
 	// Eenmalig vullen van de private attributen
 	project = proj;
 	projectName = "<project>"[11..-1];
-	classInfo = getClassInfo(project);
-	pkgInfo = getPkgInfoMapFromClassInfoMap(classInfo);
+	pkgInfo = getPkgInfoMapFromClassInfoMap(getClassInfo(project));
 	
 	// Tijdelijk. Hier moet de visualisatie mbv TreeMaps komen.
 	Figure descr = text(

@@ -24,8 +24,9 @@ import IO;
 public alias UnitInfoTuple = tuple[loc location, str unitName, int complexity, str risk, int codeLines];
 public alias UnitInfoList = list[UnitInfoTuple];
 public alias ClassInfoTuple = tuple[loc location, str className, str pkgName, int avgComplexity, int codeLines];
-public alias ClassInfoMap = map[ClassInfoTuple clazz, UnitInfoList units];
-public alias PkgInfoMap = map[str pkgName, list[ClassInfoMap classInfo] clazzes];
+public alias ClassInfoMap = map[ClassInfoTuple classInfoTuple, UnitInfoList units];
+public alias PkgInfoMap = map[str pkgName, ClassInfoMap classInfoMap];
+//public alias ProjectInfoMap = map[loc project, str projName, str riskRank, PkgInfoMap pkgInfo];
 
 private Color simpleColor = color("yellowgreen");
 private Color moderateColor = color("gold");
@@ -39,9 +40,16 @@ private Color rankMinusColor = color("darkorange");
 private Color rankMinusMinusColor = untestableColor;
 
 // Geeft de kleur van een project figure terug, op basis van de complexity rank waarin het project valt.
+//   - project: het project
+// TODO: deze methode verwijderen nadat de rank als project-informatie is opgehaald in een andere functie
 public Color getProjectRankIndicationColor(loc project) {
 	str rank = getComplexityRank(getComplexityDistribution(project));
-	println("Rank = <rank>");
+	return getProjectRankIndicationColor(rank);
+}
+
+// Geeft de kleur van een project figure terug, op basis van de complexity rank waarin het project valt.
+//   - rank: de risico rank (++, +, 0, -, --)
+public Color getProjectRankIndicationColor(str rank) {
 	if (rank == "++") return rankPlusPlusColor;
 	if (rank == "+") return rankPlusColor;
 	if (rank == "0") return rankZeroColor;
@@ -115,12 +123,12 @@ public ClassInfoMap getClassInfo(loc project) {
 // TODO: hoort deze methode wellicht thuis in de Utils module als een public methode?
 // Maakt uit een ClassInfoMap een PkgInfoMap. Dit is een map met als key de package naam, en 
 // als values een lijst met ClassInfoMaps van klassen in de respectievelijke package.
-public PkgInfoMap getPkgInfoMapFromClassInfoMap(ClassInfoMap classInfo) {
+public PkgInfoMap getPkgInfoMapFromClassInfoMap(ClassInfoMap classInfoMap) {
 	PkgInfoMap result = ();
-	for (clazz <- classInfo) {
-		str pkgName = clazz.pkgName == "" ? "\<root\>" : clazz.pkgName;
-		if (pkgName notin result) result += (pkgName : [(clazz : classInfo[clazz])]);
-		else result[pkgName] += (clazz : classInfo[clazz]);
+	for (classInfoTuple <- classInfoMap) {
+		str pkgName = classInfoTuple.pkgName == "" ? "\<root\>" : classInfoTuple.pkgName;
+		if (pkgName notin result) result += (pkgName : (classInfoTuple : classInfoMap[classInfoTuple]));
+		else result[pkgName][classInfoTuple] = classInfoMap[classInfoTuple];
 	}
 	return result;
 }
