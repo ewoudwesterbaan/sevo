@@ -3,5 +3,5 @@ bin/**
 # toegevoegd ivm Latex
 *.pdf
 *.synctex.gz
-eclipse/bin
+eclipse/bin/*
 
