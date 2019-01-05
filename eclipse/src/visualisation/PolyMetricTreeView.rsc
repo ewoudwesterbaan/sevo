@@ -104,8 +104,8 @@ private Figure createTree(Figure root, list[Figure] leaves) {
 // Maakt een Figure representatie voor een project.
 private Figure createProjectFigure(str projectName) {
 	int width = 40; // TODO
-	str popupText = "Project: <projectName>. "; // TODO: volume en gewogen complexiteit in de popup opnemen.
-	Color clr = getProjectFillColor(1);; // TODO
+	str popupText = "Project: <projectName>. "; // TODO: volume en complexiteit rank in de popup opnemen.
+	Color clr = getProjectRankIndicationColor(project); 
 	Figure b = box(size(width, 10), fillColor(clr), popup(popupText));
 	Figure t = text(projectName);
 	return hcat([t, b], id(projectName), hgap(5));
@@ -115,7 +115,7 @@ private Figure createProjectFigure(str projectName) {
 private Figure createPkgFigure(str pkgName, bool isLeaf) {
 	int width = 40; // TODO
 	str popupText = "Package: <pkgName>. "; // TODO: volume en gewogen complexiteit in de popup opnemen.
-	Color clr = getPkgFillColor(1);; // TODO
+	Color clr = getPkgFillColor(1); // TODO
 	Figure leafbox = box(size(width, 10), fillColor(clr), popup("<popupText>\n(Click to zoom in.)"), handlePackageClick(pkgName));
 	Figure rootbox = box(size(width, 10), fillColor(clr), popup("<popupText>\n(Shift-click to zoom out.)"), handlePackageShiftClick());
 	Figure t = text(pkgName);
@@ -199,11 +199,6 @@ private FProperty handleClassShiftClick(str pkgName) {
 		}
 		return false;
 	});
-}
-
-// Bepaalt de kleur van een project figure op basis van de gewogen complexity
-private Color getProjectFillColor(int avgComplexity) {
-	return getFillColor(avgComplexity, "gray");
 }
 
 // Bepaalt de kleur van een package figure op basis van de gewogen complexity

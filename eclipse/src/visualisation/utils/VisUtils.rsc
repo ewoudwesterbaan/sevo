@@ -14,9 +14,12 @@ import lang::java::jdt::m3::AST;
 // Voor hte ophalen van complexiteit en rank.
 import metrics::Complexity;
 import metrics::Rate;
+import metrics::Aggregate;
 
 // Voor het bepalen van de codeLines
 import utils::Utils;
+
+import IO;
 
 public alias UnitInfoTuple = tuple[loc location, str unitName, int complexity, str risk, int codeLines];
 public alias UnitInfoList = list[UnitInfoTuple];
@@ -32,8 +35,21 @@ private Color untestableColor = color("crimson");
 private Color rankPlusPlusColor = simpleColor;
 private Color rankPlusColor = moderateColor;
 private Color rankZeroColor = complexColor;
-private Color rankMinusColor = untestableColor;
-private Color rankMinusMinusColor = color("darkred");
+private Color rankMinusColor = color("darkorange");
+private Color rankMinusMinusColor = untestableColor;
+
+// Geeft de kleur van een project figure terug, op basis van de complexity rank waarin het project valt.
+public Color getProjectRankIndicationColor(loc project) {
+	str rank = getComplexityRank(getComplexityDistribution(project));
+	println("Rank = <rank>");
+	if (rank == "++") return rankPlusPlusColor;
+	if (rank == "+") return rankPlusColor;
+	if (rank == "0") return rankZeroColor;
+	if (rank == "-") return rankMinusColor;
+	if (rank == "--") return rankMinusMinusColor;
+	return rankMinusMinusColor;
+	throw "Unexpected rank: <rank>";
+}
 
 // Geeft de kleur van een unit figure terug, op basis van de risicocategorie waarin de unit valt.
 public Color getUnitRiskIndicationColor(int complexity) {
