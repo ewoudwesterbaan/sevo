@@ -15,21 +15,18 @@ import visualisation::utils::VisUtils;
 
 import IO;
 
-private loc project;
-private str projectName;
-private PkgInfoMap pkgInfo;
+private ProjectInfoTuple projectInfo;
 
 // Toont alle packages in het project (zonder de bijbhorende klassen). 
 // De grootte van de nodes is afhankelijk van het aantal lines of code.
 // De kleur van de nodes is afhankelijk van de (gewogen) complexiteit.
-public void showProjectTree(loc proj) {
+public void showProjectTree(loc project) {
 	// Eenmalig vullen van de private attributen
-	project = proj;
-	projectName = "<project>"[11..-1];
-	pkgInfo = getPkgInfoMapFromClassInfoMap(getClassInfo(project));
+	projectInfo = getProjectInfoTupleFromPkgInfoMap(project, getPkgInfoMapFromClassInfoMap(getClassInfo(project)));
+	PkgInfoMap pkgInfo = projectInfo.pkgInfo;
 
 	// De root van de tree representeert het project.
-	root = createProjectFigure(projectName);
+	root = createProjectFigure();
 	// De leaves van de tree representeren de packages. We stellen de leaves hier samen.
 	leaves = [];
 	for (pkgName <- pkgInfo) leaves += createPkgFigure(pkgName, true);
@@ -42,6 +39,7 @@ public void showProjectTree(loc proj) {
 // De grootte van de nodes is afhankelijk van het aantal lines of code.
 // De kleur van de nodes is afhankelijk van de (gewogen) complexiteit.
 private void showPackageTree(str packageName) {
+	PkgInfoMap pkgInfo = projectInfo.pkgInfo;
 	for (pkgName <- pkgInfo) {
 		// Filter op packagenaam
 		if (pkgName != packageName) continue;
@@ -65,7 +63,7 @@ private void showPackageTree(str packageName) {
 // De grootte van de nodes is afhankelijk van het aantal lines of code.
 // De kleur van de nodes is afhankelijk van de (gewogen) complexiteit.
 private void showClassTree(str pkgName, str classId) {
-	ClassInfoMap classInfo = pkgInfo[pkgName];
+	ClassInfoMap classInfo = projectInfo.pkgInfo[pkgName];
 	for (clazz <- classInfo) {
 		// Filter op classId (location)
 		if (classId != "<clazz.location>") continue;
@@ -86,9 +84,9 @@ private void showClassTree(str pkgName, str classId) {
 
 // Rendert een pagina.
 private void renderPage(Figure tree) {
-	Figure title = pageTitle("<projectName> - Polymetric Tree");
+	Figure title = pageTitle("<projectInfo.projName> - Polymetric Tree");
 	Figure homeButton = button(void(){visualizeMetrics();}, "Home");
-	Figure treeMapViewButton = button(void(){showProjectTreeMap(project);}, "Switch naar TreeMap"); 
+	Figure treeMapViewButton = button(void(){showProjectTreeMap(projectInfo.project);}, "Switch naar TreeMap"); 
 	Figure buttonGrid = grid([[homeButton, treeMapViewButton]], gap(20));
 	render(grid([[title], [tree], [buttonGrid]], gap(20), vsize(300), hsize(400), resizable(false)));
 }
@@ -101,13 +99,13 @@ private Figure createTree(Figure root, list[Figure] leaves) {
 }
 
 // Maakt een Figure representatie voor een project.
-private Figure createProjectFigure(str projectName) {
+private Figure createProjectFigure() {
 	int width = 40; // TODO
-	str popupText = "Project: <projectName>. "; // TODO: volume en complexiteit rank in de popup opnemen.
-	Color clr = getProjectRankIndicationColor(project); 
+	str popupText = "Project: <projectInfo.projName>. "; // TODO: volume en complexiteit rank in de popup opnemen.
+	Color clr = getProjectRankIndicationColor(projectInfo.riskRank); 
 	Figure b = box(size(width, 10), fillColor(clr), popup(popupText));
-	Figure t = text(projectName);
-	return hcat([t, b], id(projectName), hgap(5));
+	Figure t = text(projectInfo.projName);
+	return hcat([t, b], id(projectInfo.projName), hgap(5));
 }
 
 // Maakt een Figure representatie voor een package.
@@ -171,7 +169,7 @@ private FProperty handlePackageClick(str pkgName) {
 private FProperty handlePackageShiftClick() {
 	return onMouseDown(bool (int butnr, map[KeyModifier,bool] modifiers) {
 		if (modifiers[modShift()]) {
-			showProjectTree(project);
+			showProjectTree(projectInfo.project);
 			return true;
 		}
 		return false;

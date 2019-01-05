@@ -26,7 +26,7 @@ public alias UnitInfoList = list[UnitInfoTuple];
 public alias ClassInfoTuple = tuple[loc location, str className, str pkgName, int avgComplexity, int codeLines];
 public alias ClassInfoMap = map[ClassInfoTuple classInfoTuple, UnitInfoList units];
 public alias PkgInfoMap = map[str pkgName, ClassInfoMap classInfoMap];
-//public alias ProjectInfoMap = map[loc project, str projName, str riskRank, PkgInfoMap pkgInfo];
+public alias ProjectInfoTuple = tuple[loc project, str projName, str riskRank, PkgInfoMap pkgInfo];
 
 private Color simpleColor = color("yellowgreen");
 private Color moderateColor = color("gold");
@@ -38,14 +38,6 @@ private Color rankPlusColor = moderateColor;
 private Color rankZeroColor = complexColor;
 private Color rankMinusColor = color("darkorange");
 private Color rankMinusMinusColor = untestableColor;
-
-// Geeft de kleur van een project figure terug, op basis van de complexity rank waarin het project valt.
-//   - project: het project
-// TODO: deze methode verwijderen nadat de rank als project-informatie is opgehaald in een andere functie
-public Color getProjectRankIndicationColor(loc project) {
-	str rank = getComplexityRank(getComplexityDistribution(project));
-	return getProjectRankIndicationColor(rank);
-}
 
 // Geeft de kleur van een project figure terug, op basis van de complexity rank waarin het project valt.
 //   - rank: de risico rank (++, +, 0, -, --)
@@ -69,6 +61,16 @@ public Color getUnitRiskIndicationColor(int complexity) {
 	if (complexity <= complexMax) return complexColor;
 	return untestableColor;
 }
+
+
+// -------------------------------------------------------------------------------------------
+//
+// De onderstaande code heeft betrekking op het ophalen van data uit het onderhavige project.
+// Deze code hoort in een aparte module thuis, die ook caching voor zijn rekening zou moeten
+// nemen.
+//
+// -------------------------------------------------------------------------------------------
+
 
 // TODO: hoort deze methode wellicht thuis in de Utils module als een public methode?
 // Haalt alle methoden en constructoren op, per java-klasse, voor het hele project.
@@ -131,6 +133,15 @@ public PkgInfoMap getPkgInfoMapFromClassInfoMap(ClassInfoMap classInfoMap) {
 		else result[pkgName][classInfoTuple] = classInfoMap[classInfoTuple];
 	}
 	return result;
+}
+
+// TODO: hoort deze methode wellicht thuis in de Utils module als een public methode?
+// Maakt uit een PkgInfoMap een ProjectInfoMap. Dit is een map met als key de projectlocatie, 
+// en als values een lijst met PkgInfoMaps.
+public ProjectInfoTuple getProjectInfoTupleFromPkgInfoMap(loc project, PkgInfoMap pkgInfoMap) {
+	str projName = "<project>"[11..-1];
+	str riskRank = getComplexityRank(getComplexityDistribution(project));
+	return <project, projName, riskRank, pkgInfoMap>;
 }
 
 // Geeft de complexity metric terug voor een bepaalde unit

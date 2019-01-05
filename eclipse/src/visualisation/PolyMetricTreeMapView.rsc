@@ -15,15 +15,12 @@ import visualisation::utils::VisUtils;
 
 import IO;
 
-private loc project;
-private str projectName;
-private PkgInfoMap pkgInfo;
+private ProjectInfoTuple projectInfo;
 
-public void showProjectTreeMap(loc proj) {
+public void showProjectTreeMap(loc project) {
 	// Eenmalig vullen van de private attributen
-	project = proj;
-	projectName = "<project>"[11..-1];
-	pkgInfo = getPkgInfoMapFromClassInfoMap(getClassInfo(project));
+	projectInfo = getProjectInfoTupleFromPkgInfoMap(project, getPkgInfoMapFromClassInfoMap(getClassInfo(project)));
+	PkgInfoMap pkgInfo = projectInfo.pkgInfo;
 	
 	// Tijdelijk. Hier moet de visualisatie mbv TreeMaps komen.
 	Figure descr = text(
@@ -35,9 +32,9 @@ public void showProjectTreeMap(loc proj) {
 
 // Rendert een pagina.
 private void renderPage(Figure tree) {
-	Figure title = pageTitle("<projectName> - Polymetric TreeMap");
+	Figure title = pageTitle("<projectInfo.projName> - Polymetric TreeMap");
 	Figure homeButton = button(void(){visualizeMetrics();}, "Home");
-	Figure treeMapViewButton = button(void(){showProjectTree(project);}, "Switch naar Tree"); 
+	Figure treeMapViewButton = button(void(){showProjectTree(projectInfo.project);}, "Switch naar Tree"); 
 	Figure buttonGrid = grid([[homeButton, treeMapViewButton]], gap(20));
 	render(grid([[title], [tree], [buttonGrid]], gap(20), vsize(300), hsize(400), resizable(false)));
 }
