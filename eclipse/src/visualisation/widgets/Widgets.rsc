@@ -13,6 +13,7 @@ public FProperty popup(str msg) {
 		shadow(true), shadowColor(color("gainsboro", 0.5)), shadowPos(5, 5), 
 		lineColor("burlywood"), fillColor("blanchedalmond"), 
 		right(), top(),
+		gap(10),
 		resizable(false))
 	);
 }

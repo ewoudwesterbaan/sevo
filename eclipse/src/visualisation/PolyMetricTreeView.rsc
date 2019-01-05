@@ -100,9 +100,13 @@ private Figure createTree(Figure root, list[Figure] leaves) {
 
 // Maakt een Figure representatie voor een project.
 private Figure createProjectFigure() {
-	int width = 40; // TODO
-	str popupText = "Project: <projectInfo.projName>. "; // TODO: volume en complexiteit rank in de popup opnemen.
-	Color clr = getProjectRankIndicationColor(projectInfo.riskRank); 
+	int width = 40 + (projectInfo.codeLines / 100);
+	str popupText = "Project: <projectInfo.projName>, " + 
+	                "\ntotaal aantal regels (incl lege regels binnen de units): <projectInfo.totalLines>," + 
+	                "\ncommentaarregels: <projectInfo.commentLines>, " + 
+	                "\ncoderegels: <projectInfo.codeLines>, " + 
+	                "\ncomplexity rating: <projectInfo.complexityRating>. ";
+	Color clr = getProjectRankIndicationColor(projectInfo.complexityRating); 
 	Figure b = box(size(width, 10), fillColor(clr), popup(popupText));
 	Figure t = text(projectInfo.projName);
 	return hcat([t, b], id(projectInfo.projName), hgap(5));

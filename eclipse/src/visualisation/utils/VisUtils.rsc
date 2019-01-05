@@ -15,6 +15,7 @@ import lang::java::jdt::m3::AST;
 import metrics::Complexity;
 import metrics::Rate;
 import metrics::Aggregate;
+import metrics::Volume;
 
 // Voor het bepalen van de codeLines
 import utils::Utils;
@@ -26,7 +27,7 @@ public alias UnitInfoList = list[UnitInfoTuple];
 public alias ClassInfoTuple = tuple[loc location, str className, str pkgName, int avgComplexity, int codeLines];
 public alias ClassInfoMap = map[ClassInfoTuple classInfoTuple, UnitInfoList units];
 public alias PkgInfoMap = map[str pkgName, ClassInfoMap classInfoMap];
-public alias ProjectInfoTuple = tuple[loc project, str projName, str riskRank, PkgInfoMap pkgInfo];
+public alias ProjectInfoTuple = tuple[loc project, str projName, str complexityRating, int totalLines, int commentLines, int codeLines, PkgInfoMap pkgInfo];
 
 private Color simpleColor = color("yellowgreen");
 private Color moderateColor = color("gold");
@@ -140,8 +141,12 @@ public PkgInfoMap getPkgInfoMapFromClassInfoMap(ClassInfoMap classInfoMap) {
 // en als values een lijst met PkgInfoMaps.
 public ProjectInfoTuple getProjectInfoTupleFromPkgInfoMap(loc project, PkgInfoMap pkgInfoMap) {
 	str projName = "<project>"[11..-1];
-	str riskRank = getComplexityRank(getComplexityDistribution(project));
-	return <project, projName, riskRank, pkgInfoMap>;
+	str complexityRating = getComplexityRank(getComplexityDistribution(project));
+	RelLinesOfCode volumeMetrics = volumeMetrics(project);
+	int totalLines = sum(volumeMetrics.totalLines);
+	int commentLines = sum(volumeMetrics.commentLines);
+	int codeLines = sum(volumeMetrics.codeLines);
+	return <project, projName, complexityRating, totalLines, commentLines, codeLines, pkgInfoMap>;
 }
 
 // Geeft de complexity metric terug voor een bepaalde unit
