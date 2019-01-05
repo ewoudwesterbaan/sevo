@@ -20,9 +20,9 @@ private ProjectInfoTuple projectInfo;
 // Toont alle packages in het project (zonder de bijbhorende klassen). 
 // De grootte van de nodes is afhankelijk van het aantal lines of code.
 // De kleur van de nodes is afhankelijk van de (gewogen) complexiteit.
-public void showProjectTree(loc project) {
+public void showProjectTree(ProjectInfoTuple projInfo) {
 	// Eenmalig vullen van de private attributen
-	projectInfo = getProjectInfoTupleFromPkgInfoMap(project, getPkgInfoMapFromClassInfoMap(getClassInfo(project)));
+	projectInfo = projInfo;
 	PkgInfoMap pkgInfo = projectInfo.pkgInfo;
 
 	// De root van de tree representeert het project.
@@ -86,7 +86,7 @@ private void showClassTree(str pkgName, str classId) {
 private void renderPage(Figure tree) {
 	Figure title = pageTitle("<projectInfo.projName> - Polymetric Tree");
 	Figure homeButton = button(void(){visualizeMetrics();}, "Home");
-	Figure treeMapViewButton = button(void(){showProjectTreeMap(projectInfo.project);}, "Switch naar TreeMap"); 
+	Figure treeMapViewButton = button(void(){showProjectTreeMap(projectInfo);}, "Switch naar TreeMap"); 
 	Figure buttonGrid = grid([[homeButton, treeMapViewButton]], gap(20));
 	render(grid([[title], [tree], [buttonGrid]], gap(20), vsize(300), hsize(400), resizable(false)));
 }
@@ -169,7 +169,7 @@ private FProperty handlePackageClick(str pkgName) {
 private FProperty handlePackageShiftClick() {
 	return onMouseDown(bool (int butnr, map[KeyModifier,bool] modifiers) {
 		if (modifiers[modShift()]) {
-			showProjectTree(projectInfo.project);
+			showProjectTree(projectInfo);
 			return true;
 		}
 		return false;

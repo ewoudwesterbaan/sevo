@@ -17,9 +17,9 @@ import IO;
 
 private ProjectInfoTuple projectInfo;
 
-public void showProjectTreeMap(loc project) {
+public void showProjectTreeMap(ProjectInfoTuple projInfo) {
 	// Eenmalig vullen van de private attributen
-	projectInfo = getProjectInfoTupleFromPkgInfoMap(project, getPkgInfoMapFromClassInfoMap(getClassInfo(project)));
+	projectInfo = projInfo;
 	PkgInfoMap pkgInfo = projectInfo.pkgInfo;
 	
 	// Tijdelijk. Hier moet de visualisatie mbv TreeMaps komen.
@@ -34,7 +34,7 @@ public void showProjectTreeMap(loc project) {
 private void renderPage(Figure tree) {
 	Figure title = pageTitle("<projectInfo.projName> - Polymetric TreeMap");
 	Figure homeButton = button(void(){visualizeMetrics();}, "Home");
-	Figure treeMapViewButton = button(void(){showProjectTree(projectInfo.project);}, "Switch naar Tree"); 
+	Figure treeMapViewButton = button(void(){showProjectTree(projectInfo);}, "Switch naar Tree"); 
 	Figure buttonGrid = grid([[homeButton, treeMapViewButton]], gap(20));
 	render(grid([[title], [tree], [buttonGrid]], gap(20), vsize(300), hsize(400), resizable(false)));
 }
