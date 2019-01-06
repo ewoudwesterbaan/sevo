@@ -20,7 +20,7 @@ private ProjectInfoTuple projectInfo;
 public void showProjectTreeMap(ProjectInfoTuple projInfo) {
 	// Eenmalig vullen van de private attributen
 	projectInfo = projInfo;
-	PkgInfoMap pkgInfo = projectInfo.pkgInfo;
+	PkgInfoMap pkgInfos = projectInfo.pkgInfos;
 	
 	// Tijdelijk. Hier moet de visualisatie mbv TreeMaps komen.
 	Figure descr = text(
