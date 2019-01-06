@@ -31,7 +31,8 @@ public void showProjectTree(ProjectInfoTuple projInfo) {
 	for (pkgInfo <- range(pkgInfos)) leaves += createPkgFigure(pkgInfo, true);
 	
 	// Render een pagina met de boom
-	renderPage(createTree(root, leaves));
+	Figure bc1 = breadcrumElement(projectInfo.projName);
+	renderPage(breadcrumPath([bc1]), createTree(root, leaves));
 }
 
 // Toont een boom van een package met de bijbehorende klassen.
@@ -47,7 +48,9 @@ private void showPackageTree(str pkgName) {
 	for (classInfo <- range(classInfos)) leaves += createClassFigure(classInfo, true);
 	
 	// Render een pagina met de boom
-	renderPage(createTree(root, leaves));
+	Figure bc1 = breadcrumElement(void(){showProjectTree(projectInfo);}, projectInfo.projName);
+	Figure bc2 = breadcrumElement(pkgName);
+	renderPage(breadcrumPath([bc1, bc2]), createTree(root, leaves));
 }
 
 // Toont een boom van een klasse met de bijbehorende methoden.
@@ -62,16 +65,21 @@ private void showClassTree(str pkgName, str classId) {
 	for (unit <- classInfo.units) leaves += createUnitFigure(unit);
 
 	// Render een pagina met de boom
-	renderPage(createTree(root, leaves));
+	Figure bc1 = breadcrumElement(void(){showProjectTree(projectInfo);}, projectInfo.projName);
+	Figure bc2 = breadcrumElement(void(){showPackageTree(pkgName);}, pkgName);
+	Figure bc3 = breadcrumElement(classInfo.className);
+	renderPage(breadcrumPath([bc1, bc2, bc3]), createTree(root, leaves));
 }
 
 // Rendert een pagina.
-private void renderPage(Figure tree) {
+private void renderPage(Figure breadcrumPath, Figure tree) {
 	Figure title = pageTitle("<projectInfo.projName> - Polymetric Tree");
+	
 	Figure homeButton = button(void(){visualizeMetrics();}, "Home");
 	Figure treeMapViewButton = button(void(){showProjectTreeMap(projectInfo);}, "Switch naar TreeMap"); 
 	Figure buttonGrid = grid([[homeButton, treeMapViewButton]], gap(20));
-	render(grid([[title], [tree], [buttonGrid]], gap(20), vsize(300), hsize(400), resizable(false)));
+	
+	render(grid([[title], [breadcrumPath], [tree], [buttonGrid]], gap(20), vsize(300), hsize(400), resizable(false)));
 }
 
 // Maakt een boom met de opgegeven root en leaves.
