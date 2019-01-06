@@ -18,9 +18,9 @@ import utils::Cache;
 
 import IO;
 
-//private loc project = |project://VisualisationTest/|;
+private loc project = |project://VisualisationTest/|;
 //private loc project = |project://ComplexityTest/|;
-private loc project = |project://smallsql/|;
+//private loc project = |project://smallsql/|;
 //private loc project = |project://DuplicationTest/|;
 //private loc project = |project://JabberPoint/|;
 

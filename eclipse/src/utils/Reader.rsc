@@ -86,8 +86,7 @@ public PkgInfoMap getPkgInfoMapFromClassInfoMap(ClassInfoMap classInfos) {
 			PkgInfoTuple pkgInfo = <pkgName, complexityRating, totalLines, commentLines, codeLines, (classId : classInfos[classId])>;
 			result += (pkgName : pkgInfo);
 		} else {
-			PkgInfoTuple pkgInfo = result[pkgName];
-			pkgInfo.classInfos += (classId : classInfos[classId]);
+			result[pkgName].classInfos += (classId : classInfos[classId]);
 		}
 	}
 	return result;
