@@ -85,3 +85,8 @@ public TupComplexityRiskCategory getTupRiskCategoryByCategoryName(str name) {
 	return head([riskCategory | riskCategory <- riskCategories, name == riskCategory.categoryName]);	
 }
 
+// Geeft de complexity metric terug voor een bepaalde unit
+public int getComplexityMetric(RelComplexities complexities, loc unit) {
+	return head([complexity.complexity | complexity <- complexities, complexity.location == unit]);
+}
+

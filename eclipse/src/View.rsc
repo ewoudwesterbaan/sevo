@@ -14,11 +14,13 @@ import visualisation::widgets::Widgets;
 
 import visualisation::utils::VisUtils;
 
+import utils::Cache;
+
 import IO;
 
-private loc project = |project://VisualisationTest/|;
+//private loc project = |project://VisualisationTest/|;
 //private loc project = |project://ComplexityTest/|;
-//private loc project = |project://smallsql/|;
+private loc project = |project://smallsql/|;
 //private loc project = |project://DuplicationTest/|;
 //private loc project = |project://JabberPoint/|;
 
@@ -29,7 +31,7 @@ public void visualizeMetrics() {
 	// Data inladen...
 	Figure loading = pageTitle("Project Laden ...");
 	render(grid([[loading]], gap(20), vsize(300), hsize(400), resizable(false)));
-	ProjectInfoTuple projectInfo = getProjectInfoTupleFromPkgInfoMap(project, getPkgInfoMapFromClassInfoMap(getClassInfo(project)));
+	ProjectInfoTuple projectInfo = readProject(project);
 
 	// Twee buttons voor de verschillende views: Tree view resp. TreeMap view.
 	Figure title = pageTitle("Polymetrische visualisatie van <projectInfo.projName>");
