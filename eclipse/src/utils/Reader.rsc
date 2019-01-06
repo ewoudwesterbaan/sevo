@@ -8,10 +8,13 @@ import metrics::Complexity;
 import metrics::Rate;
 import metrics::Aggregate;
 import metrics::Volume;
+
 // Voor het bepalen van de codeLines
 import utils::Utils;
+
 // Voor de aliases
-import visualisation::utils::VisUtils;
+import visualisation::DataTypes;
+
 // Voor het ophalen van klassen en methoden uit een project:
 import lang::java::m3::Core;
 import lang::java::jdt::m3::AST;
@@ -19,7 +22,6 @@ import lang::java::jdt::m3::AST;
 import List;
 import Set;
 import Map;
-
 import IO;
 
 // Haalt alle methoden en constructoren op, per java-klasse, voor het hele project.

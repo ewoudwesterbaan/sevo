@@ -11,7 +11,7 @@ import Map;
 import visualisation::PolyMetricTreeView;
 import visualisation::PolyMetricTreeMapView;
 import visualisation::widgets::Widgets;
-
+import visualisation::DataTypes;
 import visualisation::utils::VisUtils;
 
 import utils::Cache;

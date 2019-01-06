@@ -12,6 +12,7 @@ import View;
 import visualisation::PolyMetricTreeView;
 import visualisation::widgets::Widgets;
 import visualisation::utils::VisUtils;
+import visualisation::DataTypes;
 
 import IO;
 
