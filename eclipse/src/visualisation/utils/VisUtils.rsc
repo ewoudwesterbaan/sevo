@@ -28,14 +28,12 @@ private Color rankMinusMinusColor = untestableColor;
 
 // Geeft de kleur van een figure terug, op basis van de complexity rating waarin het project valt.
 //   - rank: de risico rank (++, +, 0, -, --)
-// TODO: ew; Volgens mij wordt de exceptie nooit opgeworpen?
 public Color getComplexityRatingIndicationColor(str rank) {
 	if (rank == "++") return rankPlusPlusColor;
 	if (rank == "+") return rankPlusColor;
 	if (rank == "0") return rankZeroColor;
 	if (rank == "-") return rankMinusColor;
 	if (rank == "--") return rankMinusMinusColor;
-	return rankMinusMinusColor;
 	throw "Unexpected rank: <rank>";
 }
 
