@@ -78,7 +78,7 @@ private FProperty handleBreadcrumClick(void () vcallback) {
 		if (modifiers[modShift()]) return false;
 		if (modifiers[modCtrl()]) return false;
 		if (modifiers[modAlt()]) return false;
-		vcallback;
+		vcallback();
 		return true;
 	});
 }
