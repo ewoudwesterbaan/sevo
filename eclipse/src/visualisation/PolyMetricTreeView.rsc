@@ -78,9 +78,9 @@ private void renderPage(Figure breadcrumPath, Figure tree) {
 	
 	Figure homeButton = button(void(){visualizeMetrics();}, "Home");
 	Figure treeMapViewButton = button(void(){showProjectTreeMap(projectInfo);}, "Switch naar TreeMap"); 
-	Figure buttonGrid = grid([[homeButton, treeMapViewButton]], gap(20));
+	Figure buttonGrid = buttonGrid([homeButton, treeMapViewButton]);
 	
-	render(grid([[title], [breadcrumPath], [tree], [buttonGrid]], gap(20), vsize(300), hsize(400), resizable(false)));
+	render(page(title, breadcrumPath, tree, buttonGrid));
 }
 
 // Maakt een boom met de opgegeven root en leaves.

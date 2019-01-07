@@ -29,7 +29,14 @@ private loc project = |project://VisualisationTest/|;
 // Toont dan een scherm met twee buttons, eentje voor elke view die we kennen.
 public void visualizeMetrics() {
 	// Data inladen...
-	Figure loading = pageTitle("Project Laden ...");
+	Figure loading = text (
+		"Project Laden ...",
+		fontColor(color("steelblue")),
+		fontBold(true),
+		fontSize(25),
+		resizable(false),
+		vsize(70)
+	);
 	render(grid([[loading]], gap(20), vsize(300), hsize(400), resizable(false)));
 	ProjectInfoTuple projectInfo = readProject(project);
 
@@ -38,10 +45,11 @@ public void visualizeMetrics() {
 	Figure descr = text(
 		"Deze toepassing ondersteunt twee verschillende polymetrische views. Maak een keuze door\n" + 
 		"op een van de onderstaande knoppen te klikken. Tijdens het gebruik kan op elk gewenst \n" + 
-		"moment van view worden gewisseld."
+		"moment van view worden gewisseld.",
+		fontSize(14)
 	); 
 	Figure treeViewButton = button(void(){showProjectTree(projectInfo);}, "Polymetric Tree");
 	Figure treeMapViewButton = button(void(){showProjectTreeMap(projectInfo);}, "Polymetric TreeMap");
-	Figure buttonGrid = grid([[treeViewButton, treeMapViewButton]], gap(20)); 
-	render(grid([[title], [descr], [buttonGrid]], gap(20), vsize(300), hsize(400), resizable(false)));
+	Figure buttonGrid = buttonGrid([treeViewButton, treeMapViewButton]);
+	render(page(title, descr, buttonGrid));
 }

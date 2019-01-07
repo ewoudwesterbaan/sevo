@@ -36,6 +36,6 @@ private void renderPage(Figure tree) {
 	Figure title = pageTitle("<projectInfo.projName> - Polymetric TreeMap");
 	Figure homeButton = button(void(){visualizeMetrics();}, "Home");
 	Figure treeMapViewButton = button(void(){showProjectTree(projectInfo);}, "Switch naar Tree"); 
-	Figure buttonGrid = grid([[homeButton, treeMapViewButton]], gap(20));
-	render(grid([[title], [tree], [buttonGrid]], gap(20), vsize(300), hsize(400), resizable(false)));
+	Figure buttonGrid = buttonGrid([homeButton, treeMapViewButton]);
+	render(page(title, tree, buttonGrid));
 }
