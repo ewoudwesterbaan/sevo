@@ -25,7 +25,8 @@ public void showProjectTreeMap(ProjectInfoTuple projInfo) {
 	
 	// Tijdelijk. Hier moet de visualisatie mbv TreeMaps komen.
 	Figure descr = text(
-		"Deze toepassing ondersteunt momenteen nog geen TreeMaps. Deze worden binnenkort gerealiseerd."
+		"Deze toepassing ondersteunt momenteel nog geen TreeMaps. Deze worden binnenkort gerealiseerd.",
+		fontSize(14)
 	); 
 	
 	renderPage(descr);
