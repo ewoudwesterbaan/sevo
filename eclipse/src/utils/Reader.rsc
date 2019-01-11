@@ -8,8 +8,6 @@ import metrics::Complexity;
 import metrics::Rate;
 import metrics::Aggregate;
 import metrics::Volume;
-
-// Voor het bepalen van de codeLines
 import utils::Utils;
 
 // Voor de aliases
@@ -66,7 +64,7 @@ public ClassInfoMap getClassInfo(loc project) {
             	units += <impl.src, name, complexity, risk, totalLines, commentLines, codeLines>;
             }
         }
-        classInfo.complexityRating = "0"; // TODO: bepalen of dit ++, +, 0, -, -- moet zijn
+        classInfo.complexityRating = getComplexityRankForClass(units, complexities);
         classInfo.units = units;
         result += ("<classLocation>" : classInfo);
     }
@@ -82,13 +80,16 @@ public PkgInfoMap getPkgInfoMapFromClassInfoMap(ClassInfoMap classInfos) {
 		str classId = "<classInfo.location>";
 		if (pkgName notin result) {
 			str complexityRating = "0"; // TODO
-			int totalLines = sum([classInfo.totalLines | classInfo <- range(classInfos)]);
-			int commentLines = sum([classInfo.commentLines | classInfo <- range(classInfos)]);
-			int codeLines = sum([classInfo.codeLines | classInfo <- range(classInfos)]);
+			int totalLines = classInfo.totalLines;
+			int commentLines = classInfo.commentLines;
+			int codeLines = classInfo.codeLines;
 			PkgInfoTuple pkgInfo = <pkgName, complexityRating, totalLines, commentLines, codeLines, (classId : classInfos[classId])>;
 			result += (pkgName : pkgInfo);
 		} else {
-			result[pkgName].classInfos += (classId : classInfos[classId]);
+			result[pkgName].classInfos += (classId : classInfo);
+			result[pkgName].totalLines += classInfo.totalLines;
+			result[pkgName].commentLines += classInfo.commentLines;
+			result[pkgName].codeLines += classInfo.codeLines;
 		}
 	}
 	return result;
@@ -104,3 +105,45 @@ public ProjectInfoTuple getProjectInfoTupleFromPkgInfoMap(loc project, PkgInfoMa
 	int codeLines = sum(volumeMetrics.codeLines);
 	return <project, projName, complexityRating, totalLines, commentLines, codeLines, pkgInfos>;
 }
+
+// 1. Haal unit locations uit classInfoMap voor een bepaalde class
+// 2. Haal uit RelComplexity de complexities en risk categorieen door te filteren op unit location (zie 1)
+// 3. Maak een ComplexityDistributionMap voor de gefilterde units
+//    - itereer over de units
+//    - bepaal per risk categorie het aantal lines of code, en houd dat bij in een map[cat, lines of code], waarbij cat een TupComplexRiskCategory object is.
+//    - doe daarmee een getComplexityRank(ComplexityDistributionMap cdMap)
+private str getComplexityRankForClass(UnitInfoList units, RelComplexities complexities) {
+	// Een map waarin we het totaal aantal LOC van alle units per complexiteitscategorie bijhouden
+	ComplexityDistributionMap distributionMap = (rc : 0.0 | rc <- riskCategories);
+
+	int classCodeLines = 0;
+	for (unit <- units) {
+		str categoryName = head([complexity.riskCategory  | complexity <- complexities, 0 == compareLocations(unit.location, complexity.location)]);
+		TupComplexityRiskCategory riskCategory = getTupRiskCategoryByCategoryName(categoryName);
+		distributionMap[riskCategory] += unit.codeLines;
+		classCodeLines += unit.codeLines;
+	}
+	// We hebben nu een distributionMap met per risicocategorie het aantal unitcoderegels.
+	// Bepaal nu de ratio/distributie van de regels per complexiteitscategorie
+	for (key <- distributionMap.category) {
+		distributionMap[key] = (distributionMap[key] * 100) / classCodeLines;
+	}
+	return getComplexityRank(distributionMap);
+}
+
+// TODO
+private str getComplexityRankForPackage(PkgInfoTuple pkgInfoInfo) {
+	return "0";
+}
+
+
+
+
+
+
+
+
+
+
+
+

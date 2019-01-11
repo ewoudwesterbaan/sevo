@@ -23,9 +23,9 @@ public LstComplexityRankCategories riskRankCategories = [
 
 // Bepaalt de rank van de software op basis van de complexiteit
 public Rank getComplexityRank(ComplexityDistributionMap cdMap) {
-	int percModerate = cdMap[getTupRiskCategoryByCategoryName("Moderate")];
-	int percComplex = cdMap[getTupRiskCategoryByCategoryName("Complex")];
-	int percUntestable = cdMap[getTupRiskCategoryByCategoryName("Untestable")];
+	real percModerate = cdMap[getTupRiskCategoryByCategoryName("Moderate")];
+	real percComplex = cdMap[getTupRiskCategoryByCategoryName("Complex")];
+	real percUntestable = cdMap[getTupRiskCategoryByCategoryName("Untestable")];
 	return head([rc.rank | rc <- riskRankCategories, percModerate <= rc.maxRelativeLOCModerate && percComplex <= rc.maxRelativeLOCComplex && percUntestable <= rc.maxRelativeLOCUntestable]);
 }
 
