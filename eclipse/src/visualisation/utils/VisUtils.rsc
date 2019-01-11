@@ -15,15 +15,15 @@ import metrics::Complexity;
 // Voor de data types en aliassen
 import visualisation::DataTypes;
 
-private Color simpleColor = color("yellowgreen");
+private Color simpleColor = color("limegreen");
 private Color moderateColor = color("gold");
-private Color complexColor = color("orange");
+private Color complexColor = color("darkorange");
 private Color untestableColor = color("crimson");
 
 private Color rankPlusPlusColor = simpleColor;
-private Color rankPlusColor = moderateColor;
-private Color rankZeroColor = complexColor;
-private Color rankMinusColor = color("darkorange");
+private Color rankPlusColor = color("yellowgreen");
+private Color rankZeroColor = moderateColor;
+private Color rankMinusColor = color("orange");
 private Color rankMinusMinusColor = untestableColor;
 
 // Geeft de kleur van een figure terug, op basis van de complexity rating waarin het project valt.
