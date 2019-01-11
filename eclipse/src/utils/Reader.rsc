@@ -22,9 +22,11 @@ import Set;
 import Map;
 import IO;
 
+private RelComplexities complexities;
+
 // Haalt alle methoden en constructoren op, per java-klasse, voor het hele project.
 public ClassInfoMap getClassInfo(loc project) {
-	RelComplexities complexities = cyclomaticComplexity(project);
+	complexities = cyclomaticComplexity(project);
 
 	// Initieel is het result leeg. Deze gaan we hieronder vullen.
 	ClassInfoMap result = ();	
@@ -79,7 +81,7 @@ public PkgInfoMap getPkgInfoMapFromClassInfoMap(ClassInfoMap classInfos) {
 		str pkgName = classInfo.pkgName == "" ? "\<root\>" : classInfo.pkgName;
 		str classId = "<classInfo.location>";
 		if (pkgName notin result) {
-			str complexityRating = "0"; // TODO
+			str complexityRating = "0";
 			int totalLines = classInfo.totalLines;
 			int commentLines = classInfo.commentLines;
 			int codeLines = classInfo.codeLines;
@@ -92,6 +94,12 @@ public PkgInfoMap getPkgInfoMapFromClassInfoMap(ClassInfoMap classInfos) {
 			result[pkgName].codeLines += classInfo.codeLines;
 		}
 	}
+	
+	// Nu alle info per package verzameld is, kunnen we de complexityRating bijwerken.
+	for (pkgName <- result) {
+		result[pkgName].complexityRating = getComplexityRankForPackage(result[pkgName], complexities);
+	}
+	
 	return result;
 }
 
@@ -106,12 +114,7 @@ public ProjectInfoTuple getProjectInfoTupleFromPkgInfoMap(loc project, PkgInfoMa
 	return <project, projName, complexityRating, totalLines, commentLines, codeLines, pkgInfos>;
 }
 
-// 1. Haal unit locations uit classInfoMap voor een bepaalde class
-// 2. Haal uit RelComplexity de complexities en risk categorieen door te filteren op unit location (zie 1)
-// 3. Maak een ComplexityDistributionMap voor de gefilterde units
-//    - itereer over de units
-//    - bepaal per risk categorie het aantal lines of code, en houd dat bij in een map[cat, lines of code], waarbij cat een TupComplexRiskCategory object is.
-//    - doe daarmee een getComplexityRank(ComplexityDistributionMap cdMap)
+// Bepaalt de complexity rank/rating op klasseniveau.
 private str getComplexityRankForClass(UnitInfoList units, RelComplexities complexities) {
 	// Een map waarin we het totaal aantal LOC van alle units per complexiteitscategorie bijhouden
 	ComplexityDistributionMap distributionMap = (rc : 0.0 | rc <- riskCategories);
@@ -131,9 +134,30 @@ private str getComplexityRankForClass(UnitInfoList units, RelComplexities comple
 	return getComplexityRank(distributionMap);
 }
 
-// TODO
-private str getComplexityRankForPackage(PkgInfoTuple pkgInfoInfo) {
-	return "0";
+// Bepaalt de complexity rank/rating op packageniveau.
+private str getComplexityRankForPackage(PkgInfoTuple pkgInfo, RelComplexities complexities) {
+	// Een map waarin we het totaal aantal LOC van alle units per complexiteitscategorie bijhouden
+	ComplexityDistributionMap distributionMap = (rc : 0.0 | rc <- riskCategories);
+	
+	// Verzamel alle units van de hele package
+	UnitInfoList units = [];
+	for (ClassInfoTuple classInfo <- range(pkgInfo.classInfos)) {
+		units += classInfo.units;
+	}
+	
+	int packageCodeLines = 0;
+	for (unit <- units) {
+		str categoryName = head([complexity.riskCategory  | complexity <- complexities, 0 == compareLocations(unit.location, complexity.location)]);
+		TupComplexityRiskCategory riskCategory = getTupRiskCategoryByCategoryName(categoryName);
+		distributionMap[riskCategory] += unit.codeLines;
+		packageCodeLines += unit.codeLines;
+	}
+	// We hebben nu een distributionMap met per risicocategorie het aantal unitcoderegels.
+	// Bepaal nu de ratio/distributie van de regels per complexiteitscategorie
+	for (key <- distributionMap.category) {
+		distributionMap[key] = (distributionMap[key] * 100) / packageCodeLines;
+	}
+	return getComplexityRank(distributionMap);
 }
 
 
