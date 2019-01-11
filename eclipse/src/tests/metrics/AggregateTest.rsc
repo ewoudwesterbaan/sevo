@@ -16,10 +16,10 @@ private loc project = |project://ComplexityTest/|;
 test bool testGetComplexityRating() {
     ComplexityDistributionMap cdMap = getComplexityDistribution(project);
     
-    int simplePerc = (34 * 100) / 161;
-    int moderatePerc =  (22 * 100) / 161;
-    int complexPerc =  (52 * 100) / 161;
-    int untestablePerc =  (53 * 100) / 161;
+    real simplePerc = (34 * 100) / 161.0;
+    real moderatePerc =  (22 * 100) / 161.0;
+    real complexPerc =  (52 * 100) / 161.0;
+    real untestablePerc =  (53 * 100) / 161.0;
     
     bool result = true;
     result = result && assertComplexityDist(cdMap, simplePerc, "Simple", "Unexpected % for Simple category.");
@@ -125,7 +125,7 @@ test bool testGetTupUnitSizeCategoryByCategoryName() {
 	return result;
 }
 
-private bool assertComplexityDist(ComplexityDistributionMap cdMap, int perc, str categoryName, str msg) {
+private bool assertComplexityDist(ComplexityDistributionMap cdMap, real perc, str categoryName, str msg) {
 	TupComplexityRiskCategory cat = getTupRiskCategoryByCategoryName(categoryName);
 	return assertEqual(perc, cdMap[cat], msg);
 }

@@ -13,10 +13,10 @@ import List;
 // Test de methode metrics::Rate::getComplexityRank
 test bool testGetComplexityRank_PlusPlus() {
 	ComplexityDistributionMap cdMap = (
-		getTupRiskCategoryByCategoryName("Simple") : 75,
-		getTupRiskCategoryByCategoryName("Moderate") : 25,
-		getTupRiskCategoryByCategoryName("Complex") : 0,
-		getTupRiskCategoryByCategoryName("Untestable") : 0
+		getTupRiskCategoryByCategoryName("Simple") : 75.0,
+		getTupRiskCategoryByCategoryName("Moderate") : 25.0,
+		getTupRiskCategoryByCategoryName("Complex") : 0.0,
+		getTupRiskCategoryByCategoryName("Untestable") : 0.0
 	);
 	return assertEqual("++", getComplexityRank(cdMap), "Unexpected rank.");
 }
@@ -24,10 +24,10 @@ test bool testGetComplexityRank_PlusPlus() {
 // Test de methode metrics::Rate::getComplexityRank
 test bool testGetComplexityRank_Plus1() {
 	ComplexityDistributionMap cdMap = (
-		getTupRiskCategoryByCategoryName("Simple") : 75,
-		getTupRiskCategoryByCategoryName("Moderate") : 26,
-		getTupRiskCategoryByCategoryName("Complex") : 0,
-		getTupRiskCategoryByCategoryName("Untestable") : 0
+		getTupRiskCategoryByCategoryName("Simple") : 75.0,
+		getTupRiskCategoryByCategoryName("Moderate") : 26.0,
+		getTupRiskCategoryByCategoryName("Complex") : 0.0,
+		getTupRiskCategoryByCategoryName("Untestable") : 0.0
 	);
 	return assertEqual("+", getComplexityRank(cdMap), "Unexpected rank.");
 }
@@ -35,10 +35,10 @@ test bool testGetComplexityRank_Plus1() {
 // Test de methode metrics::Rate::getComplexityRank
 test bool testGetComplexityRank_Plus2() {
 	ComplexityDistributionMap cdMap = (
-		getTupRiskCategoryByCategoryName("Simple") : 75,
-		getTupRiskCategoryByCategoryName("Moderate") : 24,
-		getTupRiskCategoryByCategoryName("Complex") : 5,
-		getTupRiskCategoryByCategoryName("Untestable") : 0
+		getTupRiskCategoryByCategoryName("Simple") : 75.0,
+		getTupRiskCategoryByCategoryName("Moderate") : 24.0,
+		getTupRiskCategoryByCategoryName("Complex") : 5.0,
+		getTupRiskCategoryByCategoryName("Untestable") : 0.0
 	);
 	return assertEqual("+", getComplexityRank(cdMap), "Unexpected rank.");
 }
@@ -46,10 +46,10 @@ test bool testGetComplexityRank_Plus2() {
 // Test de methode metrics::Rate::getComplexityRank
 test bool testGetComplexityRank_Zero1() {
 	ComplexityDistributionMap cdMap = (
-		getTupRiskCategoryByCategoryName("Simple") : 75,
-		getTupRiskCategoryByCategoryName("Moderate") : 31,
-		getTupRiskCategoryByCategoryName("Complex") : 0,
-		getTupRiskCategoryByCategoryName("Untestable") : 0
+		getTupRiskCategoryByCategoryName("Simple") : 75.0,
+		getTupRiskCategoryByCategoryName("Moderate") : 31.0,
+		getTupRiskCategoryByCategoryName("Complex") : 0.0,
+		getTupRiskCategoryByCategoryName("Untestable") : 0.0
 	);
 	return assertEqual("0", getComplexityRank(cdMap), "Unexpected rank.");
 }
@@ -57,10 +57,10 @@ test bool testGetComplexityRank_Zero1() {
 // Test de methode metrics::Rate::getComplexityRank
 test bool testGetComplexityRank_Zero2() {
 	ComplexityDistributionMap cdMap = (
-		getTupRiskCategoryByCategoryName("Simple") : 75,
-		getTupRiskCategoryByCategoryName("Moderate") : 26,
-		getTupRiskCategoryByCategoryName("Complex") : 6,
-		getTupRiskCategoryByCategoryName("Untestable") : 0
+		getTupRiskCategoryByCategoryName("Simple") : 75.0,
+		getTupRiskCategoryByCategoryName("Moderate") : 26.0,
+		getTupRiskCategoryByCategoryName("Complex") : 6.0,
+		getTupRiskCategoryByCategoryName("Untestable") : 0.0
 	);
 	return assertEqual("0", getComplexityRank(cdMap), "Unexpected rank.");
 }
@@ -68,10 +68,10 @@ test bool testGetComplexityRank_Zero2() {
 // Test de methode metrics::Rate::getComplexityRank
 test bool testGetComplexityRank_Minus1() {
 	ComplexityDistributionMap cdMap = (
-		getTupRiskCategoryByCategoryName("Simple") : 75,
-		getTupRiskCategoryByCategoryName("Moderate") : 41,
-		getTupRiskCategoryByCategoryName("Complex") : 0,
-		getTupRiskCategoryByCategoryName("Untestable") : 0
+		getTupRiskCategoryByCategoryName("Simple") : 75.0,
+		getTupRiskCategoryByCategoryName("Moderate") : 41.0,
+		getTupRiskCategoryByCategoryName("Complex") : 0.0,
+		getTupRiskCategoryByCategoryName("Untestable") : 0.0
 	);
 	return assertEqual("-", getComplexityRank(cdMap), "Unexpected rank.");
 }
@@ -79,10 +79,10 @@ test bool testGetComplexityRank_Minus1() {
 // Test de methode metrics::Rate::getComplexityRank
 test bool testGetComplexityRank_Minus2() {
 	ComplexityDistributionMap cdMap = (
-		getTupRiskCategoryByCategoryName("Simple") : 75,
-		getTupRiskCategoryByCategoryName("Moderate") : 31,
-		getTupRiskCategoryByCategoryName("Complex") : 11,
-		getTupRiskCategoryByCategoryName("Untestable") : 0
+		getTupRiskCategoryByCategoryName("Simple") : 75.0,
+		getTupRiskCategoryByCategoryName("Moderate") : 31.0,
+		getTupRiskCategoryByCategoryName("Complex") : 11.0,
+		getTupRiskCategoryByCategoryName("Untestable") : 0.0
 	);
 	return assertEqual("-", getComplexityRank(cdMap), "Unexpected rank.");
 }
@@ -90,10 +90,10 @@ test bool testGetComplexityRank_Minus2() {
 // Test de methode metrics::Rate::getComplexityRank
 test bool testGetComplexityRank_Minus3() {
 	ComplexityDistributionMap cdMap = (
-		getTupRiskCategoryByCategoryName("Simple") : 75,
-		getTupRiskCategoryByCategoryName("Moderate") : 31,
-		getTupRiskCategoryByCategoryName("Complex") : 9,
-		getTupRiskCategoryByCategoryName("Untestable") : 5
+		getTupRiskCategoryByCategoryName("Simple") : 75.0,
+		getTupRiskCategoryByCategoryName("Moderate") : 31.0,
+		getTupRiskCategoryByCategoryName("Complex") : 9.0,
+		getTupRiskCategoryByCategoryName("Untestable") : 5.0
 	);
 	return assertEqual("-", getComplexityRank(cdMap), "Unexpected rank.");
 }
@@ -101,10 +101,10 @@ test bool testGetComplexityRank_Minus3() {
 // Test de methode metrics::Rate::getComplexityRank
 test bool testGetComplexityRank_MinusMinus1() {
 	ComplexityDistributionMap cdMap = (
-		getTupRiskCategoryByCategoryName("Simple") : 23,
-		getTupRiskCategoryByCategoryName("Moderate") : 51,
-		getTupRiskCategoryByCategoryName("Complex") : 0,
-		getTupRiskCategoryByCategoryName("Untestable") : 0
+		getTupRiskCategoryByCategoryName("Simple") : 23.0,
+		getTupRiskCategoryByCategoryName("Moderate") : 51.0,
+		getTupRiskCategoryByCategoryName("Complex") : 0.0,
+		getTupRiskCategoryByCategoryName("Untestable") : 0.0
 	);
 	return assertEqual("--", getComplexityRank(cdMap), "Unexpected rank.");
 }
@@ -112,10 +112,10 @@ test bool testGetComplexityRank_MinusMinus1() {
 // Test de methode metrics::Rate::getComplexityRank
 test bool testGetComplexityRank_MinusMinus2() {
 	ComplexityDistributionMap cdMap = (
-		getTupRiskCategoryByCategoryName("Simple") : 23,
-		getTupRiskCategoryByCategoryName("Moderate") : 31,
-		getTupRiskCategoryByCategoryName("Complex") : 16,
-		getTupRiskCategoryByCategoryName("Untestable") : 0
+		getTupRiskCategoryByCategoryName("Simple") : 23.0,
+		getTupRiskCategoryByCategoryName("Moderate") : 31.0,
+		getTupRiskCategoryByCategoryName("Complex") : 16.0,
+		getTupRiskCategoryByCategoryName("Untestable") : 0.0
 	);
 	return assertEqual("--", getComplexityRank(cdMap), "Unexpected rank.");
 }
@@ -123,10 +123,10 @@ test bool testGetComplexityRank_MinusMinus2() {
 // Test de methode metrics::Rate::getComplexityRank
 test bool testGetComplexityRank_MinusMinus2() {
 	ComplexityDistributionMap cdMap = (
-		getTupRiskCategoryByCategoryName("Simple") : 23,
-		getTupRiskCategoryByCategoryName("Moderate") : 5,
-		getTupRiskCategoryByCategoryName("Complex") : 5,
-		getTupRiskCategoryByCategoryName("Untestable") : 6
+		getTupRiskCategoryByCategoryName("Simple") : 23.0,
+		getTupRiskCategoryByCategoryName("Moderate") : 5.0,
+		getTupRiskCategoryByCategoryName("Complex") : 5.0,
+		getTupRiskCategoryByCategoryName("Untestable") : 6.0
 	);
 	return assertEqual("--", getComplexityRank(cdMap), "Unexpected rank.");
 }
