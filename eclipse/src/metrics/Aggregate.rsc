@@ -26,8 +26,8 @@ public LstUnitSizeCategories unitSizeCategories = [
 	<"Insane", "Extremely large units (\>250)", 251, -1>
 ];
 
-// Een map met de totale hoeveelheid code in het systeem per unit size category
-public alias UnitSizeDistributionMap = map[TupUnitSizeCategory category, int lines];
+// Een map met het gemiddeld aantal regels code per in het systeem per unit size category
+public alias UnitSizeDistributionMap = map[TupUnitSizeCategory category, real lines];
 
 // Produceert een verdeling van de complexity. Per complexiteitscategorie (simple, moderate, high, ...)
 // wordt op basis van de regels code in het hele systeem, afgezet tegen de regels code per unit 
@@ -77,7 +77,7 @@ public ComplexityDistributionMap getComplexityDistribution(loc project) {
 public UnitSizeDistributionMap getUnitSizeDistribution(int sysLinesOfCode, RelLinesOfCode unitSizes) {
 
 	// Een map waarin we het totaal aantal LOC van alle units per groottecategorie bijhouden
-	UnitSizeDistributionMap distributionMap = (rc : 0 | rc <- unitSizeCategories);
+	UnitSizeDistributionMap distributionMap = (rc : 0.0 | rc <- unitSizeCategories);
 
 	// Bepaal het (absolute) aantal regels unitcode per categorie
 	for (TupLinesOfCode tloc <- unitSizes) {

@@ -55,11 +55,11 @@ test bool testGetUnitSizeDistribution() {
 	UnitSizeDistributionMap usdMap = getUnitSizeDistribution(sysLinesOfCode, unitSizes);
 	
 	// Verwachte resultaten
-    int smallPerc = ((1 + 15) * 100) / sysLinesOfCode;
-    int mediumPerc = ((16 + 50) * 100) / sysLinesOfCode;
-    int largePerc = ((51 + 100) * 100) / sysLinesOfCode;
-    int veryLargePerc = ((101 + 250) * 100) / sysLinesOfCode;
-    int insanePerc = (251 * 100) / sysLinesOfCode;
+    real smallPerc = ((1 + 15) * 100.0) / sysLinesOfCode;
+    real mediumPerc = ((16 + 50) * 100.0) / sysLinesOfCode;
+    real largePerc = ((51 + 100) * 100.0) / sysLinesOfCode;
+    real veryLargePerc = ((101 + 250) * 100.0) / sysLinesOfCode;
+    real insanePerc = (251 * 100.0) / sysLinesOfCode;
 
 	// Controleer resultaat
     bool result = true;
@@ -130,7 +130,7 @@ private bool assertComplexityDist(ComplexityDistributionMap cdMap, real perc, st
 	return assertEqual(perc, cdMap[cat], msg);
 }
 
-private bool assertUnitSizeDist(UnitSizeDistributionMap usdMap, int perc, str categoryName, str msg) {
+private bool assertUnitSizeDist(UnitSizeDistributionMap usdMap, real perc, str categoryName, str msg) {
 	TupUnitSizeCategory cat = getTupUnitSizeCategoryByCategoryName(categoryName);
 	return assertEqual(perc, usdMap[cat], msg);
 }
