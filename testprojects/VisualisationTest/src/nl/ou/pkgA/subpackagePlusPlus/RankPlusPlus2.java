@@ -1,6 +1,6 @@
-package nl.ou.pkgA.pkgASub2;
+package nl.ou.pkgA.subpackagePlusPlus;
 
-public class Class1PkgASub2 {
+public class RankPlusPlus2 {
 	
 	public void complexity4(int level) {
 		switch (level) {
