@@ -113,8 +113,8 @@ private Figure createPkgFigure(PkgInfoTuple pkgInfo, bool isLeaf) {
 	                "\ncoderegels: <pkgInfo.codeLines>, " + 
 	                "\ncomplexity rating: <pkgInfo.complexityRating>. ";
 	Color clr = getComplexityRatingIndicationColor(pkgInfo.complexityRating);
-	Figure leafbox = box(size(width, 10), fillColor(clr), popup("<popupText>\n(Click to zoom in.)"), handlePackageClick(pkgInfo.pkgName));
-	Figure rootbox = box(size(width, 10), fillColor(clr), popup("<popupText>\n(Shift-click to zoom out.)"), handlePackageShiftClick());
+	Figure leafbox = box(size(width, 10), fillColor(clr), popup("<popupText>\n(Klik om in de zoomen.)"), handlePackageClick(pkgInfo.pkgName));
+	Figure rootbox = box(size(width, 10), fillColor(clr), popup("<popupText>\n(Shift-klik om uit te zoomen.)"), handlePackageShiftClick());
 	Figure t = text(pkgInfo.pkgName);
 	if (isLeaf) return hcat([leafbox, t], id(pkgInfo.pkgName), hgap(5));
 	return hcat([t, rootbox], id(pkgInfo.pkgName), hgap(5));
@@ -135,8 +135,8 @@ private Figure createClassFigure(ClassInfoTuple classInfo, bool isLeaf) {
 	                "\ncoderegels: <classInfo.codeLines>, " + 
 	                "\ncomplexity rating: <classInfo.complexityRating>. ";
 	Color clr = getComplexityRatingIndicationColor(classInfo.complexityRating);
-	Figure leafbox = box(size(width, 10), fillColor(clr), popup("<popupText>\n(Click to zoom in.)"), handleClassClick(pkgName, classId));
-	Figure rootbox = box(size(width, 10), fillColor(clr), popup("<popupText>\n(Shift-click to zoom out.)"), handleClassShiftClick(pkgName));
+	Figure leafbox = box(size(width, 10), fillColor(clr), popup("<popupText>\n(Klik om in de zoomen.)"), handleClassClick(pkgName, classId));
+	Figure rootbox = box(size(width, 10), fillColor(clr), popup("<popupText>\n(Shift-klik om uit te zoomen.)"), handleClassShiftClick(pkgName));
 	Figure t = text(className);
 	if (isLeaf) return hcat([leafbox, t], id(classId), hgap(5));
 	return hcat([t, rootbox], id(classId), hgap(5)); 
