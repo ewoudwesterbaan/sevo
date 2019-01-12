@@ -18,7 +18,10 @@ import IO;
 
 private ProjectInfoTuple projectInfo;
 
-// Toont alle packages in het project (zonder de bijbehorende klassen). 
+// Toont alle packages in het project (zonder de bijbehorende klassen). Deze methode is de eerste 
+// methode in deze module wordt aangeroepen (en ook de enige public methode). Hier vindt daarom de
+// initialisatie plaats van het private aatribuut projectInfo, die in andere private methoden wordt
+// gebruikt.
 public void showProjectTree(ProjectInfoTuple projInfo) {
 	// Eenmalig vullen van de private attributen
 	projectInfo = projInfo;
@@ -105,6 +108,9 @@ private Figure createProjectFigure() {
 }
 
 // Maakt een Figure representatie voor een package.
+//   - de packagenaam fungeert als id
+//   - de breedte is afhankelijk van het aantal codeLines
+//   - de kleur is afhankelijk van de complexity rating 
 private Figure createPkgFigure(PkgInfoTuple pkgInfo, bool isLeaf) {
 	int width = getPackageSize(pkgInfo.codeLines);
 	str popupText = "Package: <pkgInfo.pkgName>, " + 
@@ -123,7 +129,7 @@ private Figure createPkgFigure(PkgInfoTuple pkgInfo, bool isLeaf) {
 // Maakt een Figure representatie voor een klasse.
 //   - de location van de klasse fungeert als id, 
 //   - de breedte is afhankelijk van het aantal codeLines,
-//   - de kleur is afhankelijk van de (gewogen) complexiteit van de klasse.
+//   - de kleur is afhankelijk van de complexity rating 
 private Figure createClassFigure(ClassInfoTuple classInfo, bool isLeaf) {
 	str classId = "<classInfo.location>";
 	str className = classInfo.className;
@@ -145,7 +151,7 @@ private Figure createClassFigure(ClassInfoTuple classInfo, bool isLeaf) {
 // Maak een Figure representatie voor een unit.
 //   - de location van de unit fungeert als id, 
 //   - de breedte is afhankelijk van het aantal codeLines,
-//   - de kleur is afhankelijk van de complexiteit van de unit.
+//   - de kleur is afhankelijk van de complexiteitsmaat van de unit.
 private Figure createUnitFigure(UnitInfoTuple unitInfo) {
 	str unitId = "<unitInfo.location>";
 	str unitName = unitInfo.unitName;
