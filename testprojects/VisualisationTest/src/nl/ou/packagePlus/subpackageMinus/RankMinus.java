@@ -1,4 +1,4 @@
-package nl.ou.pkgA.subpackageMinusMinus;
+package nl.ou.packagePlus.subpackageMinus;
 
 public class RankMinus {
 	

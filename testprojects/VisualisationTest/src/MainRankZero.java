@@ -1,4 +1,4 @@
-public class Main {
+public class MainRankZero {
 
 	public void main(String[] args) {
 		new InnerRankZero().complexity1();
