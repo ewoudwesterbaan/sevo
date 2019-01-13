@@ -4,14 +4,46 @@ import vis::Figure;
 import vis::Render;
 import vis::KeySym;
 
+import util::Math;
+import List;
+import analysis::statistics::Descriptive;
+
 import IO;
 
+private Color defaultFontColor = rgb(70, 70, 70);
+private Color defaultLineColor = color("dimgray");
+private Color defaultFillColor = color("white");
+
+private Color popupShadowColor = color("black", 0.1);
+private Color popupLineColor = color("burlywood");
+private Color popupFillColor = color("blanchedalmond");
+private Color popupFontColor = rgb(30, 30, 30);
+
+private Color headerFillColor = color("aliceblue");
+private Color headerFontColor = color("steelblue");
+private Color headerLineColor = defaultFillColor;
+
+private Color footerFillColor = headerFillColor;
+private Color footerFontColor = headerFontColor;
+private Color footerLineColor = headerLineColor;
+
+private Color buttonFillColor = headerFillColor;
+private Color buttonFontColor = headerFontColor;
+private Color buttonLineColor = buttonFontColor;
+
+private Color breadcrumLineColor = defaultFillColor;
+private Color breadcrumFillColor = color("whitesmoke");
+private Color breadcrumSelectableFontColor = headerFontColor;
+
+private Color subGridLineColor = breadcrumLineColor;
+private Color subGridFillColor = breadcrumFillColor;
+
 // Toont een popup met een tooltip tekst.
-//   - gebruik: box(size(50),fillColor("red"), popup("Hello"))
+//   - gebruik bijv.: box(size(50),fillColor("red"), popup("Hello"))
 public FProperty popup(str msg) {
 	return mouseOver(box(text(msg), 
-		shadow(true), shadowColor(color("gainsboro", 0.5)), shadowPos(5, 5), 
-		lineColor("burlywood"), fillColor("blanchedalmond"), fontColor(rgb(30, 30, 30)),
+		shadow(true), shadowColor(popupShadowColor), shadowPos(5, 5), 
+		lineColor(popupLineColor), fillColor(popupFillColor), fontColor(popupFontColor),
 		right(), top(),
 		gap(10),
 		resizable(false))
@@ -25,9 +57,9 @@ public Figure button(void () vcallback, str btnText){
 	return button(
 		btnText, 
 		vcallback, 
-		fillColor(color("aliceblue")), 
-		lineColor(color("steelblue")), 
-		fontColor(color("steelblue")),
+		fillColor(buttonFillColor), 
+		lineColor(buttonLineColor), 
+		fontColor(buttonFontColor),
 		fontBold(true),
 		resizable(false),
 		vsize(35),
@@ -40,14 +72,14 @@ public Figure pageTitle(str titleText){
 	return box(
 		text(
 			titleText, 
-			fontColor(color("steelblue")),
+			fontColor(headerFontColor),
 			fontBold(true),
 			fontSize(25),
 			resizable(false),
 			vsize(70)
 		),
-		fillColor(color("aliceblue")),
-		lineColor(color("aliceblue")),
+		fillColor(headerFillColor),
+		lineColor(headerLineColor),
 		vsize(70),
 		vresizable(false)
 	);
@@ -57,8 +89,8 @@ public Figure pageTitle(str titleText){
 public Figure breadcrumPath(list[Figure] breadcrumElements) {
 	return box(
 		hcat(breadcrumElements, ialign(0.0), resizable(false)), 
-		lineColor(color("white")),
-		fillColor(color("whitesmoke")),
+		lineColor(breadcrumLineColor),
+		fillColor(breadcrumFillColor),
 		vsize(30),
 		vresizable(false)
 	);
@@ -69,7 +101,7 @@ public Figure breadcrumElement(void () vcallback, str elmText){
 	return text(
 		" / <elmText>", 
 		handleBreadcrumClick(vcallback), 
-		fontColor(color("steelblue")),
+		fontColor(breadcrumSelectableFontColor),
 		fontSize(14),
 		resizable(false),
 		hsize(1),
@@ -104,9 +136,51 @@ private FProperty handleBreadcrumClick(void () vcallback) {
 public Figure buttonGrid(list[Figure] buttons) {
 	return box(
 		grid([buttons], gap(20), resizable(false), size(75, 75)), 
-		fillColor(color("aliceblue")),
-		lineColor(color("aliceblue")),
+		fillColor(footerFillColor),
+		lineColor(footerLineColor),
 		vresizable(false)
+	);
+}
+
+public Figure dashBoard(Figure mainContent, Figure topRightContent, Figure bottomRightContent) {
+	return box(
+		hcat([
+			// Twee subpanels aan de linkerkant van het dashboard, gevolgd door een filler 
+			box(
+				vcat (
+					[
+						box(grid([[topRightContent]]), size(200), resizable(false)), 
+						box(grid([[bottomRightContent]]), size(200), resizable(false)),
+						box(grid([[]]), resizable(true)) // Filler
+					],  
+					std(fillColor(subGridFillColor)), 
+					std(lineColor(subGridLineColor))
+				),
+				width(200),
+				hresizable(false)
+			),	
+
+			// Hoofdgedeelte van het dashboard
+			box(grid([[mainContent]], std(lineColor(defaultLineColor))), lineColor(defaultFillColor), resizable(true)), 
+			
+			// Twee subpanels aan de rechterkant van het dashboard, gevolgd door een filler 
+			box(
+				vcat (
+					[
+						box(grid([[topRightContent]]), size(200), resizable(false)), 
+						box(grid([[bottomRightContent]]), size(200), resizable(false)),
+						box(grid([[]]), resizable(true)) // Filler
+					],  
+					std(fillColor(subGridFillColor)), 
+					std(lineColor(subGridLineColor))
+				),
+				width(200),
+				hresizable(false)
+			)	
+		]),
+		std(lineColor(defaultFillColor)),
+		std(fontColor(defaultFontColor)),
+		resizable(true)
 	);
 }
 
@@ -114,28 +188,154 @@ public Figure buttonGrid(list[Figure] buttons) {
 public Figure page(Figure pageTitle, Figure breadcrumPath, Figure content, Figure buttonGrid) {
 	return box(
 		vcat([
-			box(
-				vcat([pageTitle, breadcrumPath]),
-				vresizable(false)
-			),
-			box(
-				grid([[content]], std(lineColor(color("dimgray")))), 
-				vresizable(true)
-			),
-			box(
-				buttonGrid, 
-				vresizable(false)
-			)
+			// Titel en kruimelpad bovenaan de pagina
+			box(vcat([pageTitle, breadcrumPath]), vresizable(false)),
+			// Content 
+			box(grid([[content]], std(lineColor(defaultLineColor))), vresizable(true)),
+			// Buttongrid onderaan de pagina
+			box(buttonGrid, vresizable(false))
 		]),
-		std(lineColor(color("white"))),
-		std(fontColor(rgb(70, 70, 70))),
+		std(lineColor(defaultFillColor)),
+		std(fontColor(defaultFontColor)),
 		resizable(true)
 	);
-
 }
 
 // Geeft een pagina terug met een titel, inhoud (text, tree of treemap), en een buttongrid.
 public Figure page(Figure pageTitle, Figure content, Figure buttonGrid) {
 	return page(pageTitle, breadcrumPath([text("")]), content, buttonGrid);
 }
+
+
+
+// TODO --------------
+
+
+
+public Figure boxPlot(list[int] values, FProperty props...) {
+
+	return box(text("BOXPLOT"), fillColor(subGridFillColor), lineColor(subGridLineColor));
+
+	num median = median(values);
+	num q1 = percentile(values, 25);
+	num q3 = percentile(values, 75);
+	num qr = q3 - q1;
+	num minimum = q1 - (1.5 * qr);
+	num maximum = q3 + (1.5 * qr);
+	num startRange = analysis::statistics::Descriptive::min(values);
+	num endRange = analysis::statistics::Descriptive::max(values);
+	num mean = mean(values);
+	return boxPlot(startRange, minimum, q1, median, q3, maximum, endRange, mean, props);
+}
+
+private Figure boxPlot(num startRange, num minimum, num q1, num median, num q3, num maximum, num endRange, num mean, FProperty props...) {	
+	num ratio = (endRange - startRange);
+ 	
+ 	// Ratio's berekenen
+ 	num ratio_endRange_maximum = percent((endRange - maximum), ratio) / 100.0;
+ 	num ratio_maximum_q3 = percent((maximum - q3), ratio) / 100.0;
+ 	num ratio_q3_median = percent((q3 - median), ratio) / 100.0;
+ 	num ratio_median_q1 = percent((median - q1), ratio) / 100.0;
+ 	num ratio_q1_minimum = percent((q1- minimum), ratio) / 100.0;
+ 	num ratio_minimum_startRange = percent((minimum - startRange), ratio) / 100.0;
+ 	
+ 	// Grid opbouwen
+ 
+ 	// Eventueel kunnen we hier nog outliers wegschrijven
+ 	row_endRange_maximum = [ box(vshrink(ratio_endRange_maximum), lineColor("White")) ];
+	row_maximum_q3  = [ 
+		grid(
+			[
+				[ box(fillColor("Black"), height(2), vresizable(false))
+				, box(fillColor("Black"), height(2), width(2), resizable(false))
+				, box(fillColor("Black"), height(2), vresizable(false)) 
+				],
+				[ box(lineColor("White"))
+				, box(lineColor("Black"), width(1), lineWidth(1), hresizable(false), lineStyle("dash"))
+				, box(lineColor("White")) ]
+			]
+		, vshrink(ratio_maximum_q3)) 
+		];
+    row_q3_median = [ 
+    	grid (
+    	[
+    		[ box() ]
+    		,[ box(height(1), vresizable(false), lineWidth(1)) ] // Om de mediaanlijn wat dikker aan te zetten
+    	], vshrink(ratio_q3_median))
+    ];
+    row_median_q1 = [ box(vshrink(ratio_median_q1)) ];
+
+    row_q1_minimum = [ 
+    	grid(
+			[
+				[ 
+				  box(fillColor("Black"), height(1), vresizable(false))
+				, box(fillColor("Black"), height(1), width(2), resizable(false))
+				, box(fillColor("Black"), height(1), vresizable(false)) 
+				],
+				[ 
+				  box(lineColor("White"))
+				, box(lineColor("Black"), width(1), lineWidth(1), hresizable(false), lineStyle("dash"))
+				, box(lineColor("White")) ],
+				[ 
+				  box(fillColor("Black"), height(2), vresizable(false))
+				, box(fillColor("Black"), height(2), width(2), resizable(false))
+				, box(fillColor("Black"), height(2), vresizable(false)) 
+				]
+			]
+		, vshrink(ratio_q1_minimum)
+		)
+		];
+	// Eventueel kunnen we hier nog outliers wegschrijven
+    row_minimum_startRange = [ box(lineColor("White"), vshrink(ratio_minimum_startRange)) ];
+    
+    // Uiteindelijke boxplot opbouwen vanuit de rijen 
+	Figure boxPlotContent = box(
+		grid(
+		[
+		  row_endRange_maximum
+		, row_maximum_q3
+		, row_q3_median
+		, row_median_q1
+		, row_q1_minimum
+		, row_minimum_startRange
+		]
+		));
+	
+	// TODO: Dit ongelooflijke lelijke stuk ombouwen. Dit kan echt niet...!!!!
+	
+	
+	
+	Figure axisGrid = box (grid(
+		[ 
+			[ box(text("<endRange>", top()), height(5),lineColor("White")), box(height(1), width(5), top(), resizable(false)) ]
+		  , [ box(top(), resizable(false),lineColor("White")), box(height(1), width(5), center(), resizable(false)) ]
+		  , [ box(top(), resizable(false),lineColor("White")), box(width(5),lineColor("White")) ]
+		  , [ box(top(), resizable(false),lineColor("White")), box(height(1), width(5), center(), resizable(false)) ]
+		  , [ box(top(), resizable(false),lineColor("White")), box(width(5),lineColor("White")) ]
+		  , [ box(top(), resizable(false),lineColor("White")), box(height(1), width(5), center(), resizable(false)) ]
+		  , [ box(top(), resizable(false),lineColor("White")), box(width(5),lineColor("White")) ]
+		  , [ box(top(), resizable(false),lineColor("White")), box(height(1), width(5), center(), resizable(false)) ]
+		  , [ box(top(), resizable(false),lineColor("White")), box(width(5),lineColor("White")) ]
+		  , [ box(top(), resizable(false),lineColor("White")), box(height(1), width(5), center(), resizable(false)) ]
+		  , [ box(top(), resizable(false),lineColor("White")), box(width(5),lineColor("White")) ]
+		  , [ box(top(), resizable(false),lineColor("White")), box(height(1), width(5), center(), resizable(false)) ]
+		  , [ box(top(), resizable(false),lineColor("White")), box(width(5),lineColor("White")) ]
+		  , [ box(top(), resizable(false),lineColor("White")), box(height(1), width(5), center(), resizable(false)) ]
+		  , [ box(top(), resizable(false),lineColor("White")), box(width(5),lineColor("White")) ]
+		  , [ box(top(), resizable(false),lineColor("White")), box(height(1), width(5), center(), resizable(false)) ]
+		  , [ box(top(), resizable(false),lineColor("White")), box(width(5),lineColor("White")) ]
+		  , [ box(top(), resizable(false),lineColor("White")), box(height(1), width(5), center(), resizable(false)) ]
+		  , [ box(top(), resizable(false),lineColor("White")), box(width(5),lineColor("White")) ]
+		  , [ box(text("<startRange>"), bottom(), resizable(false),lineColor("White")), box(height(1), width(5), bottom(), resizable(false)) ] 
+		], hgap(10)), width(20), hresizable(false),lineColor("White")
+		);
+	
+	Figure boxPlotTotal = box(grid([[axisGrid, boxPlotContent]], hgap(10)),lineColor("White"));
+	
+	return boxPlotTotal;
+}
+
+
+
 
