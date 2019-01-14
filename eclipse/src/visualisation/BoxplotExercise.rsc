@@ -25,7 +25,9 @@ void Test() {
 	
 	//Figure testCage = box(boxPlot, center(), shrink(0.8), lineWidth(1));
 	
-	render(box(boxPlot, fillColor("lightGray"), shrink(0.8)));
+	render(boxPlot);
+	
+	//render(box(boxPlot, fillColor("lightGray"), shrink(0.8)));
 }
 
 void Test2() {

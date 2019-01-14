@@ -35,8 +35,10 @@ private Color breadcrumLineColor = defaultFillColor;
 private Color breadcrumFillColor = color("whitesmoke");
 private Color breadcrumSelectableFontColor = headerFontColor;
 
-private Color subGridLineColor = breadcrumLineColor;
-private Color subGridFillColor = breadcrumFillColor;
+public Color subGridLineColor = breadcrumLineColor;
+public Color subGridFillColor = breadcrumFillColor;
+
+private Color boxPlotLineColor = color("black");
 
 // Toont een popup met een tooltip tekst.
 //   - gebruik bijv.: box(size(50),fillColor("red"), popup("Hello"))
@@ -149,30 +151,44 @@ public Figure dashBoard(Figure mainContent, Figure topRightContent, Figure botto
 			box(
 				vcat (
 					[
-						box(grid([[topRightContent]]), size(200), resizable(false)), 
-						box(grid([[bottomRightContent]]), size(200), resizable(false)),
+						box(grid([[topRightContent]])
+						, size(200)
+						//, resizable(false)
+						), 
+						box(grid([[bottomRightContent]]), size(200)
+						
+						//, resizable(false)
+						),
 						box(grid([[]]), resizable(true)) // Filler
 					],  
-					std(fillColor(subGridFillColor)), 
-					std(lineColor(subGridLineColor))
+					std(fillColor(subGridFillColor))
+					,std(lineColor(subGridLineColor))
 				),
-				width(200),
-				hresizable(false)
+				width(200)
+				,hresizable(false)
 			),	
 
 			// Hoofdgedeelte van het dashboard
-			box(grid([[mainContent]], std(lineColor(defaultLineColor))), lineColor(defaultFillColor), resizable(true)), 
+			box(grid([[mainContent]]
+			, std(lineColor(defaultLineColor)))
+			, lineColor(defaultFillColor)
+			, resizable(true)), 
 			
 			// Twee subpanels aan de rechterkant van het dashboard, gevolgd door een filler 
 			box(
 				vcat (
 					[
-						box(grid([[topRightContent]]), size(200), resizable(false)), 
-						box(grid([[bottomRightContent]]), size(200), resizable(false)),
+						box(grid([[topRightContent]])
+						, size(200)
+						//, resizable(false)
+						), 
+						box(grid([[bottomRightContent]]), size(200)
+						//, resizable(false)
+						),
 						box(grid([[]]), resizable(true)) // Filler
 					],  
-					std(fillColor(subGridFillColor)), 
-					std(lineColor(subGridLineColor))
+					std(fillColor(subGridFillColor))
+					,std(lineColor(subGridLineColor))
 				),
 				width(200),
 				hresizable(false)
@@ -213,9 +229,6 @@ public Figure page(Figure pageTitle, Figure content, Figure buttonGrid) {
 
 
 public Figure boxPlot(list[int] values, FProperty props...) {
-
-	return box(text("BOXPLOT"), fillColor(subGridFillColor), lineColor(subGridLineColor));
-
 	num median = median(values);
 	num q1 = percentile(values, 25);
 	num q3 = percentile(values, 75);
@@ -242,52 +255,53 @@ private Figure boxPlot(num startRange, num minimum, num q1, num median, num q3, 
  	// Grid opbouwen
  
  	// Eventueel kunnen we hier nog outliers wegschrijven
- 	row_endRange_maximum = [ box(vshrink(ratio_endRange_maximum), lineColor("White")) ];
+ 	row_endRange_maximum = [ box(vshrink(ratio_endRange_maximum), lineColor(subGridFillColor)) ];
 	row_maximum_q3  = [ 
 		grid(
 			[
-				[ box(fillColor("Black"), height(2), vresizable(false))
-				, box(fillColor("Black"), height(2), width(2), resizable(false))
-				, box(fillColor("Black"), height(2), vresizable(false)) 
+				[ box(fillColor(boxPlotLineColor), height(2), vresizable(false))
+				, box(fillColor(boxPlotLineColor), height(2), width(2), resizable(false))
+				, box(fillColor(boxPlotLineColor), height(2), vresizable(false)) 
 				],
-				[ box(lineColor("White"))
-				, box(lineColor("Black"), width(1), lineWidth(1), hresizable(false), lineStyle("dash"))
-				, box(lineColor("White")) ]
+				[ box(lineColor(subGridFillColor))
+				, box(lineColor(boxPlotLineColor), width(1), lineWidth(1), hresizable(false), lineStyle("dash"))
+				, box(lineColor(subGridFillColor)) ]
 			]
-		, vshrink(ratio_maximum_q3)) 
+		, vshrink(ratio_maximum_q3), lineColor(boxPlotLineColor)) 
 		];
     row_q3_median = [ 
     	grid (
     	[
-    		[ box() ]
-    		,[ box(height(1), vresizable(false), lineWidth(1)) ] // Om de mediaanlijn wat dikker aan te zetten
-    	], vshrink(ratio_q3_median))
+    		[ box(lineColor(boxPlotLineColor)) ]
+    		,[ box(height(1), vresizable(false), lineWidth(1), lineColor(boxPlotLineColor)) ] // Om de mediaanlijn wat dikker aan te zetten
+    	], vshrink(ratio_q3_median), lineColor(boxPlotLineColor))
     ];
-    row_median_q1 = [ box(vshrink(ratio_median_q1)) ];
+    row_median_q1 = [ box(vshrink(ratio_median_q1), lineColor(boxPlotLineColor)) ];
 
     row_q1_minimum = [ 
     	grid(
 			[
 				[ 
-				  box(fillColor("Black"), height(1), vresizable(false))
-				, box(fillColor("Black"), height(1), width(2), resizable(false))
-				, box(fillColor("Black"), height(1), vresizable(false)) 
+				  box(lineColor(boxPlotLineColor), height(1), vresizable(false))
+				, box(lineColor(boxPlotLineColor), height(1), width(2), resizable(false))
+				, box(lineColor(boxPlotLineColor), height(1), vresizable(false)) 
 				],
 				[ 
-				  box(lineColor("White"))
-				, box(lineColor("Black"), width(1), lineWidth(1), hresizable(false), lineStyle("dash"))
-				, box(lineColor("White")) ],
+				  box(lineColor(subGridFillColor))
+				, box(lineColor(boxPlotLineColor), width(1), lineWidth(1), hresizable(false), lineStyle("dash"))
+				, box(lineColor(subGridFillColor)) 
+				],
 				[ 
-				  box(fillColor("Black"), height(2), vresizable(false))
-				, box(fillColor("Black"), height(2), width(2), resizable(false))
-				, box(fillColor("Black"), height(2), vresizable(false)) 
+				  box(fillColor(boxPlotLineColor), height(2), vresizable(false))
+				, box(fillColor(boxPlotLineColor), height(2), width(2), resizable(false))
+				, box(fillColor(boxPlotLineColor), height(2), vresizable(false)) 
 				]
 			]
 		, vshrink(ratio_q1_minimum)
 		)
 		];
 	// Eventueel kunnen we hier nog outliers wegschrijven
-    row_minimum_startRange = [ box(lineColor("White"), vshrink(ratio_minimum_startRange)) ];
+    row_minimum_startRange = [ box(lineColor(subGridFillColor), vshrink(ratio_minimum_startRange)) ];
     
     // Uiteindelijke boxplot opbouwen vanuit de rijen 
 	Figure boxPlotContent = box(
@@ -301,6 +315,7 @@ private Figure boxPlot(num startRange, num minimum, num q1, num median, num q3, 
 		, row_minimum_startRange
 		]
 		));
+
 	
 	// TODO: Dit ongelooflijke lelijke stuk ombouwen. Dit kan echt niet...!!!!
 	
@@ -308,31 +323,32 @@ private Figure boxPlot(num startRange, num minimum, num q1, num median, num q3, 
 	
 	Figure axisGrid = box (grid(
 		[ 
-			[ box(text("<endRange>", top()), height(5),lineColor("White")), box(height(1), width(5), top(), resizable(false)) ]
-		  , [ box(top(), resizable(false),lineColor("White")), box(height(1), width(5), center(), resizable(false)) ]
-		  , [ box(top(), resizable(false),lineColor("White")), box(width(5),lineColor("White")) ]
-		  , [ box(top(), resizable(false),lineColor("White")), box(height(1), width(5), center(), resizable(false)) ]
-		  , [ box(top(), resizable(false),lineColor("White")), box(width(5),lineColor("White")) ]
-		  , [ box(top(), resizable(false),lineColor("White")), box(height(1), width(5), center(), resizable(false)) ]
-		  , [ box(top(), resizable(false),lineColor("White")), box(width(5),lineColor("White")) ]
-		  , [ box(top(), resizable(false),lineColor("White")), box(height(1), width(5), center(), resizable(false)) ]
-		  , [ box(top(), resizable(false),lineColor("White")), box(width(5),lineColor("White")) ]
-		  , [ box(top(), resizable(false),lineColor("White")), box(height(1), width(5), center(), resizable(false)) ]
-		  , [ box(top(), resizable(false),lineColor("White")), box(width(5),lineColor("White")) ]
-		  , [ box(top(), resizable(false),lineColor("White")), box(height(1), width(5), center(), resizable(false)) ]
-		  , [ box(top(), resizable(false),lineColor("White")), box(width(5),lineColor("White")) ]
-		  , [ box(top(), resizable(false),lineColor("White")), box(height(1), width(5), center(), resizable(false)) ]
-		  , [ box(top(), resizable(false),lineColor("White")), box(width(5),lineColor("White")) ]
-		  , [ box(top(), resizable(false),lineColor("White")), box(height(1), width(5), center(), resizable(false)) ]
-		  , [ box(top(), resizable(false),lineColor("White")), box(width(5),lineColor("White")) ]
-		  , [ box(top(), resizable(false),lineColor("White")), box(height(1), width(5), center(), resizable(false)) ]
-		  , [ box(top(), resizable(false),lineColor("White")), box(width(5),lineColor("White")) ]
-		  , [ box(text("<startRange>"), bottom(), resizable(false),lineColor("White")), box(height(1), width(5), bottom(), resizable(false)) ] 
-		], hgap(10)), width(20), hresizable(false),lineColor("White")
+			[ box(text("<endRange>", top()), height(5),lineColor(subGridFillColor)), box(height(1), width(5), top(), resizable(false), lineColor(boxPlotLineColor)) ]
+		  , [ box(top(), resizable(false),lineColor(subGridFillColor)), box(height(1), width(5), center(), resizable(false), lineColor(boxPlotLineColor)) ]
+		  , [ box(top(), resizable(false),lineColor(subGridFillColor)), box(width(5),lineColor(subGridFillColor)) ]
+		  , [ box(top(), resizable(false),lineColor(subGridFillColor)), box(height(1), width(5), center(), resizable(false), lineColor(boxPlotLineColor)) ]
+		  , [ box(top(), resizable(false),lineColor(subGridFillColor)), box(width(5),lineColor(subGridFillColor)) ]
+		  , [ box(top(), resizable(false),lineColor(subGridFillColor)), box(height(1), width(5), center(), resizable(false), lineColor(boxPlotLineColor)) ]
+		  , [ box(top(), resizable(false),lineColor(subGridFillColor)), box(width(5),lineColor(subGridFillColor)) ]
+		  , [ box(top(), resizable(false),lineColor(subGridFillColor)), box(height(1), width(5), center(), resizable(false), lineColor(boxPlotLineColor)) ]
+		  , [ box(top(), resizable(false),lineColor(subGridFillColor)), box(width(5),lineColor(subGridFillColor)) ]
+		  , [ box(top(), resizable(false),lineColor(subGridFillColor)), box(height(1), width(5), center(), resizable(false), lineColor(boxPlotLineColor)) ]
+		  , [ box(top(), resizable(false),lineColor(subGridFillColor)), box(width(5),lineColor(subGridFillColor)) ]
+		  , [ box(top(), resizable(false),lineColor(subGridFillColor)), box(height(1), width(5), center(), resizable(false), lineColor(boxPlotLineColor)) ]
+		  , [ box(top(), resizable(false),lineColor(subGridFillColor)), box(width(5),lineColor(subGridFillColor)) ]
+		  , [ box(top(), resizable(false),lineColor(subGridFillColor)), box(height(1), width(5), center(), resizable(false), lineColor(boxPlotLineColor)) ]
+		  , [ box(top(), resizable(false),lineColor(subGridFillColor)), box(width(5),lineColor(subGridFillColor)) ]
+		  , [ box(top(), resizable(false),lineColor(subGridFillColor)), box(height(1), width(5), center(), resizable(false), lineColor(boxPlotLineColor)) ]
+		  , [ box(top(), resizable(false),lineColor(subGridFillColor)), box(width(5),lineColor(subGridFillColor)) ]
+		  , [ box(top(), resizable(false),lineColor(subGridFillColor)), box(height(1), width(5), center(), resizable(false), lineColor(boxPlotLineColor)) ]
+		  , [ box(top(), resizable(false),lineColor(subGridFillColor)), box(width(5),lineColor(subGridFillColor)) ]
+		  , [ box(text("<startRange>"), bottom(), resizable(false),lineColor(subGridFillColor)), box(height(1), width(5), bottom(), resizable(false), lineColor(boxPlotLineColor)) ] 
+		], hgap(10)), width(20), hresizable(false),lineColor(subGridFillColor)
 		);
 	
-	Figure boxPlotTotal = box(grid([[axisGrid, boxPlotContent]], hgap(10)),lineColor("White"));
-	
+	Figure boxPlotTotal = box(grid([[axisGrid, boxPlotContent]], hgap(10), shrink(0.9))
+	,lineColor(subGridFillColor)
+	);
 	return boxPlotTotal;
 }
 
