@@ -4,7 +4,7 @@
 module utils::Cache
 
 // Voor het gerbuik van de alias ProjectInfoTuple.
-import visualisation::utils::VisUtils;
+import visualisation::DataTypes;
 // Voor het lezen en schrijven.
 import ValueIO;
 import IO;
