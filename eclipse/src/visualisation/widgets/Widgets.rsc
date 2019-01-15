@@ -38,7 +38,7 @@ private Color breadcrumSelectableFontColor = headerFontColor;
 public Color subGridLineColor = breadcrumLineColor;
 public Color subGridFillColor = breadcrumFillColor;
 
-private Color boxPlotLineColor = color("black");
+private Color boxPlotFillColor = color("lightsteelblue");
 
 // Toont een popup met een tooltip tekst.
 //   - gebruik bijv.: box(size(50),fillColor("red"), popup("Hello"))
@@ -151,21 +151,21 @@ public Figure dashBoard(Figure mainContent, Figure topRightContent, Figure botto
 			box(
 				vcat (
 					[
-						box(grid([[topRightContent]])
+						box(grid([[topRightContent]], std(lineColor(defaultLineColor)))
 						, size(200)
-						//, resizable(false)
+						, resizable(false)
 						), 
-						box(grid([[bottomRightContent]]), size(200)
-						
-						//, resizable(false)
+						box(grid([[bottomRightContent]], std(lineColor(defaultLineColor)))
+						, size(200)
+						, resizable(false)
 						),
 						box(grid([[]]), resizable(true)) // Filler
-					],  
-					std(fillColor(subGridFillColor))
-					,std(lineColor(subGridLineColor))
-				),
-				width(200)
-				,hresizable(false)
+					]
+					, std(fillColor(subGridFillColor))
+					, lineColor(subGridLineColor)
+				)
+				, width(200)
+				, hresizable(false)
 			),	
 
 			// Hoofdgedeelte van het dashboard
@@ -178,20 +178,21 @@ public Figure dashBoard(Figure mainContent, Figure topRightContent, Figure botto
 			box(
 				vcat (
 					[
-						box(grid([[topRightContent]])
+						box(grid([[topRightContent]], std(lineColor(defaultLineColor)))
 						, size(200)
-						//, resizable(false)
+						, resizable(false)
 						), 
-						box(grid([[bottomRightContent]]), size(200)
-						//, resizable(false)
+						box(grid([[bottomRightContent]], std(lineColor(defaultLineColor)))
+						, size(200)
+						, resizable(false)
 						),
 						box(grid([[]]), resizable(true)) // Filler
-					],  
-					std(fillColor(subGridFillColor))
-					,std(lineColor(subGridLineColor))
-				),
-				width(200),
-				hresizable(false)
+					]
+					, std(fillColor(subGridFillColor))
+					, lineColor(subGridLineColor)
+				)
+				, width(200)
+				, hresizable(false)
 			)	
 		]),
 		std(lineColor(defaultFillColor)),
@@ -222,12 +223,7 @@ public Figure page(Figure pageTitle, Figure content, Figure buttonGrid) {
 	return page(pageTitle, breadcrumPath([text("")]), content, buttonGrid);
 }
 
-
-
-// TODO --------------
-
-
-
+// Een boxplot
 public Figure boxPlot(list[int] values, FProperty props...) {
 	num median = median(values);
 	num q1 = percentile(values, 25);
@@ -242,114 +238,59 @@ public Figure boxPlot(list[int] values, FProperty props...) {
 }
 
 private Figure boxPlot(num startRange, num minimum, num q1, num median, num q3, num maximum, num endRange, num mean, FProperty props...) {	
-	num ratio = (endRange - startRange);
- 	
  	// Ratio's berekenen
- 	num ratio_endRange_maximum = percent((endRange - maximum), ratio) / 100.0;
- 	num ratio_maximum_q3 = percent((maximum - q3), ratio) / 100.0;
- 	num ratio_q3_median = percent((q3 - median), ratio) / 100.0;
- 	num ratio_median_q1 = percent((median - q1), ratio) / 100.0;
- 	num ratio_q1_minimum = percent((q1- minimum), ratio) / 100.0;
- 	num ratio_minimum_startRange = percent((minimum - startRange), ratio) / 100.0;
- 	
- 	// Grid opbouwen
- 
- 	// Eventueel kunnen we hier nog outliers wegschrijven
- 	row_endRange_maximum = [ box(vshrink(ratio_endRange_maximum), lineColor(subGridFillColor)) ];
-	row_maximum_q3  = [ 
-		grid(
-			[
-				[ box(fillColor(boxPlotLineColor), height(2), vresizable(false))
-				, box(fillColor(boxPlotLineColor), height(2), width(2), resizable(false))
-				, box(fillColor(boxPlotLineColor), height(2), vresizable(false)) 
-				],
-				[ box(lineColor(subGridFillColor))
-				, box(lineColor(boxPlotLineColor), width(1), lineWidth(1), hresizable(false), lineStyle("dash"))
-				, box(lineColor(subGridFillColor)) ]
-			]
-		, vshrink(ratio_maximum_q3), lineColor(boxPlotLineColor)) 
-		];
-    row_q3_median = [ 
-    	grid (
-    	[
-    		[ box(lineColor(boxPlotLineColor)) ]
-    		,[ box(height(1), vresizable(false), lineWidth(1), lineColor(boxPlotLineColor)) ] // Om de mediaanlijn wat dikker aan te zetten
-    	], vshrink(ratio_q3_median), lineColor(boxPlotLineColor))
-    ];
-    row_median_q1 = [ box(vshrink(ratio_median_q1), lineColor(boxPlotLineColor)) ];
+	num ratio = (endRange - startRange);
+ 	num ratio_endRange_maximum = percent((endRange - maximum), ratio);
+ 	num ratio_maximum_q3 = percent((maximum - q3), ratio);
+ 	num ratio_q3_median = percent((q3 - median), ratio);
+ 	num ratio_median_q1 = percent((median - q1), ratio);
+ 	num ratio_q1_minimum = percent((q1- minimum), ratio);
+ 	num ratio_minimum_startRange = percent((minimum - startRange), ratio);
 
-    row_q1_minimum = [ 
-    	grid(
-			[
-				[ 
-				  box(lineColor(boxPlotLineColor), height(1), vresizable(false))
-				, box(lineColor(boxPlotLineColor), height(1), width(2), resizable(false))
-				, box(lineColor(boxPlotLineColor), height(1), vresizable(false)) 
-				],
-				[ 
-				  box(lineColor(subGridFillColor))
-				, box(lineColor(boxPlotLineColor), width(1), lineWidth(1), hresizable(false), lineStyle("dash"))
-				, box(lineColor(subGridFillColor)) 
-				],
-				[ 
-				  box(fillColor(boxPlotLineColor), height(2), vresizable(false))
-				, box(fillColor(boxPlotLineColor), height(2), width(2), resizable(false))
-				, box(fillColor(boxPlotLineColor), height(2), vresizable(false)) 
-				]
-			]
-		, vshrink(ratio_q1_minimum)
-		)
-		];
-	// Eventueel kunnen we hier nog outliers wegschrijven
-    row_minimum_startRange = [ box(lineColor(subGridFillColor), vshrink(ratio_minimum_startRange)) ];
-    
-    // Uiteindelijke boxplot opbouwen vanuit de rijen 
-	Figure boxPlotContent = box(
-		grid(
+	// Afmetingen
+	int width = 50;
+	int height = 120;
+	int axisWidth = 25;
+	int axisHeight = height + 40;
+	
+	int h1 = round(height * ratio_endRange_maximum / 100);
+	int h2 = round(height * ratio_maximum_q3 / 100);
+	int h3 = round(height * ratio_q3_median / 100);
+	int h4 = round(height * ratio_median_q1 / 100);
+	int h5 = round(height * ratio_q1_minimum / 100);
+	int h6 = round(height * ratio_minimum_startRange / 100);
+
+	// Boxplot zelf
+	Figure bPlot = vcat(
 		[
-		  row_endRange_maximum
-		, row_maximum_q3
-		, row_q3_median
-		, row_median_q1
-		, row_q1_minimum
-		, row_minimum_startRange
-		]
-		));
-
-	
-	// TODO: Dit ongelooflijke lelijke stuk ombouwen. Dit kan echt niet...!!!!
-	
-	
-	
-	Figure axisGrid = box (grid(
-		[ 
-			[ box(text("<endRange>", top()), height(5),lineColor(subGridFillColor)), box(height(1), width(5), top(), resizable(false), lineColor(boxPlotLineColor)) ]
-		  , [ box(top(), resizable(false),lineColor(subGridFillColor)), box(height(1), width(5), center(), resizable(false), lineColor(boxPlotLineColor)) ]
-		  , [ box(top(), resizable(false),lineColor(subGridFillColor)), box(width(5),lineColor(subGridFillColor)) ]
-		  , [ box(top(), resizable(false),lineColor(subGridFillColor)), box(height(1), width(5), center(), resizable(false), lineColor(boxPlotLineColor)) ]
-		  , [ box(top(), resizable(false),lineColor(subGridFillColor)), box(width(5),lineColor(subGridFillColor)) ]
-		  , [ box(top(), resizable(false),lineColor(subGridFillColor)), box(height(1), width(5), center(), resizable(false), lineColor(boxPlotLineColor)) ]
-		  , [ box(top(), resizable(false),lineColor(subGridFillColor)), box(width(5),lineColor(subGridFillColor)) ]
-		  , [ box(top(), resizable(false),lineColor(subGridFillColor)), box(height(1), width(5), center(), resizable(false), lineColor(boxPlotLineColor)) ]
-		  , [ box(top(), resizable(false),lineColor(subGridFillColor)), box(width(5),lineColor(subGridFillColor)) ]
-		  , [ box(top(), resizable(false),lineColor(subGridFillColor)), box(height(1), width(5), center(), resizable(false), lineColor(boxPlotLineColor)) ]
-		  , [ box(top(), resizable(false),lineColor(subGridFillColor)), box(width(5),lineColor(subGridFillColor)) ]
-		  , [ box(top(), resizable(false),lineColor(subGridFillColor)), box(height(1), width(5), center(), resizable(false), lineColor(boxPlotLineColor)) ]
-		  , [ box(top(), resizable(false),lineColor(subGridFillColor)), box(width(5),lineColor(subGridFillColor)) ]
-		  , [ box(top(), resizable(false),lineColor(subGridFillColor)), box(height(1), width(5), center(), resizable(false), lineColor(boxPlotLineColor)) ]
-		  , [ box(top(), resizable(false),lineColor(subGridFillColor)), box(width(5),lineColor(subGridFillColor)) ]
-		  , [ box(top(), resizable(false),lineColor(subGridFillColor)), box(height(1), width(5), center(), resizable(false), lineColor(boxPlotLineColor)) ]
-		  , [ box(top(), resizable(false),lineColor(subGridFillColor)), box(width(5),lineColor(subGridFillColor)) ]
-		  , [ box(top(), resizable(false),lineColor(subGridFillColor)), box(height(1), width(5), center(), resizable(false), lineColor(boxPlotLineColor)) ]
-		  , [ box(top(), resizable(false),lineColor(subGridFillColor)), box(width(5),lineColor(subGridFillColor)) ]
-		  , [ box(text("<startRange>"), bottom(), resizable(false),lineColor(subGridFillColor)), box(height(1), width(5), bottom(), resizable(false), lineColor(boxPlotLineColor)) ] 
-		], hgap(10)), width(20), hresizable(false),lineColor(subGridFillColor)
-		);
-	
-	Figure boxPlotTotal = box(grid([[axisGrid, boxPlotContent]], hgap(10), shrink(0.9))
-	,lineColor(subGridFillColor)
+			// Filler
+			space(size(width, (axisHeight - height) / 2), resizable(false)), 
+			// Echte boxplot onderdelen
+			space(size(width, h1), resizable(false)),
+			box(size(width, 1), resizable(false)), 
+			box(size(1, h2), resizable(false), lineStyle("dash")), 
+			box(size(width, h3), resizable(false), fillColor(boxPlotFillColor)), 
+			box(size(width, h4), resizable(false), fillColor(boxPlotFillColor)), 
+			box(size(1, h5), resizable(false), lineStyle("dash")), 
+			box(size(width, 1), resizable(false)),
+			space(size(width, h6), resizable(false))
+		], 
+		size(width, height),
+		resizable(false)
 	);
-	return boxPlotTotal;
+	
+	// Lineaal
+	Figure axisGrid = box(
+		text(
+			"<endRange> .\n.\n.\n.\n.\n.\n.\n.\n.\n<startRange> .", 
+			ialign(1.0)
+		), 
+		size(axisWidth, height), 
+		resizable(false),
+		lineColor(subGridFillColor)
+	);
+	
+	return hcat([axisGrid, bPlot], hgap(10), size(1), resizable(false));
 }
 
 
