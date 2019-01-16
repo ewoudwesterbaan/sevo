@@ -26,16 +26,40 @@
 \end{description}
 
 \section{Samenwerking}
+De eerste iteratie is gebouwd op basis van een experiment van Martin, die tijdens de kerstdagen al was begonnen. Deze uitkomst hebben we als basis genomen en bepaald wat er toegevoegd en / of aangepas zou moeten worden. Vooral Martin heeft hier veel werk in verzet.
+Het cache mechanisme en een eerste versie van een zelfgemaakte boxplot is door Ewoud gemaakt, maar deze boxplot is later door Martin nog iets verbeterd. Rascal biedt nog geen boxplot aan (deze is nog in experiment fase).
+
 
 \section{Aannames}
 
+
 \section{Criteria}
+twee aestetisch en twee usability
+
+Aestetisch:
+Criteria met betrekking tot kleurgebruik zijn \cite{B}:
+\begin{enumerate}
+\item Gebruik zachte kleuren, tenzij je iets uit wilt lichten;
+\item Gebruik dezelfde kleur, tenzij dit is geassocieerd wordt met een andere betekenis;
+\item Gebruik een enkele, neutrale achtergrond kleur
+\end{enumerate}
+
+Usability:
+\subsection{Visual Information-Seeking Mantra}
+De Visual Information-Seeking Mantra is een usability principe \cite{A}. Dit principe schrijft voor dat eerst een overzicht gegeven moet worden, vervolgens inzoomen en filteren. Details moeten op aanvraag beschikbaar zijn.
+
+
 
 \section{Selectie van de architectural view}
 
-\section{Resultaten analyse}
 
-% \bibliographystyle{abbrv}
-% \bibliography{verslag_assignment2}
+\section{Resultaten analyse}
+De `Visual Information-Seeking Mantra' hebben we toegepast door de visualisatie te laten starten op project niveau. Door te klikken kan men een niveau inzoomen naar package en/ of klasse niveau. Dit is dan ook de hierarchie dat verwerkt is in de visualisatie. Het op aanvraag beschikbaar zijn van de details, zit verwerkt in de visualisaatie door alleen de waardes te geven van een metriek, wanneer met met de muis over een boxplot van een metriek gaat.
+
+De kleurstelling die we hebben toegepast is in de gehele visualisatie hetzelfde. Veel neutraal blauw. De achtergrond hebben we een neutrale lichte kleur gegeven. De achtergrond aan de zijkanten waar de boxplot staan, hebben we wel een andere kleur gegeven die iets donkerder is, maar nog steeds neutraal. Doordat dit een andere kleur is, associeert men hier een andere betekenis mee, wat in dit geval dus een detaillering is die niet voor het eerte gezicht nodig is. Wij willen hiermee bereiken dat men eerst geleid wordt naar de treeview, anders zou de gehele visualisatie te overweldigend over kunnen komen (DIT IS MISSCHIEN WAT TE BLABLA).
+
+
+\bibliographystyle{abbrv}
+\bibliography{verslag_assignment2}
 
 \end{document}
