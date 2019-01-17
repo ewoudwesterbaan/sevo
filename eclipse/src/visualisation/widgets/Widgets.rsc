@@ -40,6 +40,28 @@ public Color subGridFillColor = breadcrumFillColor;
 
 private Color boxPlotFillColor = color("lightsteelblue");
 
+// Geeft een pagina terug met een titel, een kruimelpad, inhoud (tree of treemap), en een buttongrid.
+public Figure page(Figure pageTitle, Figure breadcrumPath, Figure content, Figure buttonGrid) {
+	return box(
+		vcat([
+			// Titel en kruimelpad bovenaan de pagina
+			box(vcat([pageTitle, breadcrumPath]), vresizable(false)),
+			// Content 
+			box(grid([[content]], std(lineColor(defaultLineColor))), vresizable(true)),
+			// Buttongrid onderaan de pagina
+			box(buttonGrid, vresizable(false))
+		]),
+		std(lineColor(defaultFillColor)),
+		std(fontColor(defaultFontColor)),
+		resizable(true)
+	);
+}
+
+// Geeft een pagina terug met een titel, inhoud (text, tree of treemap), en een buttongrid.
+public Figure page(Figure pageTitle, Figure content, Figure buttonGrid) {
+	return page(pageTitle, breadcrumPath([text("")]), content, buttonGrid);
+}
+
 // Toont een popup met een tooltip tekst.
 //   - gebruik bijv.: box(size(50),fillColor("red"), popup("Hello"))
 public FProperty popup(str msg) {
@@ -201,26 +223,21 @@ public Figure dashBoard(Figure mainContent, Figure topRightContent, Figure botto
 	);
 }
 
-// Geeft een pagina terug met een titel, een kruimelpad, inhoud (tree of treemap), en een buttongrid.
-public Figure page(Figure pageTitle, Figure breadcrumPath, Figure content, Figure buttonGrid) {
-	return box(
-		vcat([
-			// Titel en kruimelpad bovenaan de pagina
-			box(vcat([pageTitle, breadcrumPath]), vresizable(false)),
-			// Content 
-			box(grid([[content]], std(lineColor(defaultLineColor))), vresizable(true)),
-			// Buttongrid onderaan de pagina
-			box(buttonGrid, vresizable(false))
-		]),
-		std(lineColor(defaultFillColor)),
-		std(fontColor(defaultFontColor)),
-		resizable(true)
-	);
-}
-
-// Geeft een pagina terug met een titel, inhoud (text, tree of treemap), en een buttongrid.
-public Figure page(Figure pageTitle, Figure content, Figure buttonGrid) {
-	return page(pageTitle, breadcrumPath([text("")]), content, buttonGrid);
+// Een stacked diagram voor complexity rates
+public Figure stackedDiagram(list[int] values, list[Color] colors) {
+	// Afmetingen
+	int width = 50;
+	num numHeight = 120.0;
+	int intHeight = round(numHeight);
+	num heightRatio = numHeight / sum(values);
+	
+	list[int] heights = [round(heightRatio * v) | v <- values];
+	list[Figure] boxes = [];
+	for(i <- [0..size(heights)]) {
+		boxes += box(space(), fillColor(colors[i]), size(width, heights[i]), resizable(false));
+	}
+	
+	return box(vcat(boxes), size(width, intHeight), resizable(false));
 }
 
 // Een boxplot
