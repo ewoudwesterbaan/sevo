@@ -82,12 +82,14 @@ private void renderPage(Figure breadcrumPath, Figure tree) {
 	Figure homeButton = button(void(){visualizeMetrics();}, "Home");
 	Figure treeMapViewButton = button(void(){showProjectTreeMap(projectInfo);}, "Switch naar TreeMap"); 
 	Figure buttonGrid = buttonGrid([homeButton, treeMapViewButton]);
-
-	Figure dashBoard = dashBoard(
-		tree, 
-		boxPlot([5, 19, 20, 20, 20, 20, 21, 18, 18, 22, 25, 18]), 
-		boxPlot([6, 7, 4, 9, 6, 2, 8, 6, 9, 6, 8, 9, 7, 3, 10, 5, 6, 7])
+	Figure boxPlot = boxPlot([6, 7, 4, 9, 6, 2, 8, 6, 9, 6, 8, 9, 7, 3, 10, 5, 6, 7]);
+	Figure stackedDiagram = stackedDiagram(
+		[5, 19, 10, 30, 7], 
+		[getComplexityRatingIndicationColor("++"), getComplexityRatingIndicationColor("+"), getComplexityRatingIndicationColor("0"), getComplexityRatingIndicationColor("-"), getComplexityRatingIndicationColor("--")],
+		["Bla x%", "Blie y%", "Hup z%", "Zus a%", "Zo b%"]
 	);
+
+	Figure dashBoard = dashBoard(tree, stackedDiagram, boxPlot);
 	
 	render(page(title, breadcrumPath, dashBoard, buttonGrid));
 }

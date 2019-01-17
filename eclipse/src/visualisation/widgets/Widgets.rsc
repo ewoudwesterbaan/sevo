@@ -224,20 +224,26 @@ public Figure dashBoard(Figure mainContent, Figure topRightContent, Figure botto
 }
 
 // Een stacked diagram voor complexity rates
-public Figure stackedDiagram(list[int] values, list[Color] colors) {
+public Figure stackedDiagram(list[int] values, list[Color] colors, list[str] infoTexts) {
 	// Afmetingen
-	int width = 50;
+	int diagramWidth = 50;
+	int textWidth = 50;
 	num numHeight = 120.0;
 	int intHeight = round(numHeight);
 	num heightRatio = numHeight / sum(values);
 	
 	list[int] heights = [round(heightRatio * v) | v <- values];
 	list[Figure] boxes = [];
-	for(i <- [0..size(heights)]) {
-		boxes += box(space(), fillColor(colors[i]), size(width, heights[i]), resizable(false));
+	for (i <- [0..size(heights)]) {
+		boxes += box(space(), fillColor(colors[i]), size(diagramWidth, heights[i]), resizable(false));
 	}
 	
-	return box(vcat(boxes), size(width, intHeight), resizable(false));
+	list[Figure] texts = [];
+	for (t <- infoTexts) {
+		texts += text(t);
+	}
+	
+	return hcat([vcat(texts), box(vcat(boxes), size(diagramWidth, intHeight), resizable(false))]);
 }
 
 // Een boxplot
