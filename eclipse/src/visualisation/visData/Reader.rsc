@@ -36,7 +36,7 @@ public ClassInfoMap getClassInfo(loc project) {
     for (Declaration ast <- createAstsFromEclipseProject(project, true)) {
     	loc classLocation = ast.src; 
     	TupLinesOfCode lines = getLinesOfCode(classLocation);
-    	ClassInfoTuple classInfo = <classLocation, "", "", "", lines.totalLines, lines.commentLines, lines.codeLines, []>;
+    	ClassInfoTuple classInfo = <classLocation, "", "", "", lines.totalLines, lines.commentLines, lines.codeLines, (), []>;
     	UnitInfoList units = [];
 
         visit(ast) {
@@ -70,6 +70,7 @@ public ClassInfoMap getClassInfo(loc project) {
         }
         classInfo.units = units;
         classInfo.complexityRating = getComplexityRankForClass(classInfo, complexities);
+        classInfo.riskCats = getRiskCatDistribution(classInfo.units, classInfo.codeLines);
         result += ("<classLocation>" : classInfo);
     }
     return result;

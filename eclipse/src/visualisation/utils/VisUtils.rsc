@@ -37,7 +37,7 @@ public Color getComplexityRatingIndicationColor(str rank) {
 	throw "Unexpected rank: <rank>";
 }
 
-// Geeft de kleur van een unit figure terug, op basis van de risicocategorie waarin de unit valt.
+// Geeft de kleur van een unit figure terug, op basis van de cyclomatic complexity van een unit.
 public Color getUnitRiskIndicationColor(int complexity) {
 	int simpleMax = getTupRiskCategoryByCategoryName("Simple").maxComplexity;
 	int moderateMax = getTupRiskCategoryByCategoryName("Moderate").maxComplexity;
@@ -45,6 +45,19 @@ public Color getUnitRiskIndicationColor(int complexity) {
 	if (complexity <= simpleMax) return simpleColor;
 	if (complexity <= moderateMax) return moderateColor;
 	if (complexity <= complexMax) return complexColor;
+	return untestableColor;
+}
+
+// Geeft de kleur terug op basis van het complexity risico (categorie) van een unit.
+public Color getUnitRiskIndicationColor(TupComplexityRiskCategory cat) {
+	return getUnitRiskIndicationColor(cat.categoryName);
+}
+
+// Geeft de kleur terug op basis van het complexity risico (categorienaam) van een unit.
+public Color getUnitRiskIndicationColor(str categoryName) {
+	if (categoryName == "Simple") return simpleColor;
+	if (categoryName == "Moderate") return moderateColor;
+	if (categoryName == "Complex") return complexColor;
 	return untestableColor;
 }
 

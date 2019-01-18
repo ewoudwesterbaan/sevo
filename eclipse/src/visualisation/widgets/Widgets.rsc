@@ -35,10 +35,12 @@ private Color breadcrumLineColor = defaultFillColor;
 private Color breadcrumFillColor = color("whitesmoke");
 private Color breadcrumSelectableFontColor = headerFontColor;
 
-public Color subGridLineColor = breadcrumLineColor;
-public Color subGridFillColor = breadcrumFillColor;
+private Color subGridLineColor = breadcrumLineColor;
+private Color subGridFillColor = breadcrumFillColor;
+private int subGridFontSize = 11;
 
 private Color boxPlotFillColor = color("lightsteelblue");
+private int boxplotFontSize = 12;
 
 // Geeft een pagina terug met een titel, een kruimelpad, inhoud (tree of treemap), en een buttongrid.
 public Figure page(Figure pageTitle, Figure breadcrumPath, Figure content, Figure buttonGrid) {
@@ -173,11 +175,11 @@ public Figure dashBoard(Figure mainContent, Figure topRightContent, Figure botto
 			box(
 				vcat (
 					[
-						box(grid([[topRightContent]], std(lineColor(defaultLineColor)))
+						box(grid([[topRightContent]], std(lineColor(defaultLineColor)), std(fontSize(subGridFontSize)))
 						, size(200)
 						, resizable(false)
 						), 
-						box(grid([[bottomRightContent]], std(lineColor(defaultLineColor)))
+						box(grid([[bottomRightContent]], std(lineColor(defaultLineColor)), std(fontSize(subGridFontSize)))
 						, size(200)
 						, resizable(false)
 						),
@@ -200,11 +202,11 @@ public Figure dashBoard(Figure mainContent, Figure topRightContent, Figure botto
 			box(
 				vcat (
 					[
-						box(grid([[topRightContent]], std(lineColor(defaultLineColor)))
+						box(grid([[topRightContent]], std(lineColor(defaultLineColor)), std(fontSize(subGridFontSize)))
 						, size(200)
 						, resizable(false)
 						), 
-						box(grid([[bottomRightContent]], std(lineColor(defaultLineColor)))
+						box(grid([[bottomRightContent]], std(lineColor(defaultLineColor)), std(fontSize(subGridFontSize)))
 						, size(200)
 						, resizable(false)
 						),
@@ -226,8 +228,8 @@ public Figure dashBoard(Figure mainContent, Figure topRightContent, Figure botto
 // Een stacked diagram voor complexity rates
 public Figure stackedDiagram(list[int] values, list[Color] colors, list[str] infoTexts) {
 	// Afmetingen
-	int diagramWidth = 50;
-	int textWidth = 50;
+	int diagramWidth = 30;
+	int textWidth = 70;
 	num numHeight = 120.0;
 	int intHeight = round(numHeight);
 	num heightRatio = numHeight / sum(values);
@@ -243,7 +245,10 @@ public Figure stackedDiagram(list[int] values, list[Color] colors, list[str] inf
 		texts += text(t);
 	}
 	
-	return hcat([vcat(texts), box(vcat(boxes), size(diagramWidth, intHeight), resizable(false))]);
+	return hcat([
+		vcat(texts, size(diagramWidth, intHeight)), 
+		box(vcat(boxes), size(diagramWidth, intHeight), resizable(false))
+	]);
 }
 
 // Een boxplot
@@ -306,7 +311,8 @@ private Figure boxPlot(num startRange, num minimum, num q1, num median, num q3, 
 	Figure axisGrid = box(
 		text(
 			"<endRange> .\n.\n.\n.\n.\n.\n.\n.\n.\n<startRange> .", 
-			ialign(1.0)
+			ialign(1.0),
+			fontSize(boxplotFontSize)
 		), 
 		size(axisWidth, height), 
 		resizable(false),

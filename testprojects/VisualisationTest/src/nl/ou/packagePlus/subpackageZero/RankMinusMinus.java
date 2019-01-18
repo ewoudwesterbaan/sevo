@@ -2,7 +2,7 @@ package nl.ou.packagePlus.subpackageZero;
 
 public class RankMinusMinus {
 	
-	public void complexity25(int level1, int level2) {
+	public void complexity21(int level1, int level2) {
 		if (level1 > level2 || level2 > level1 || (level1 > 9 && level2 < 10) || (level1 > 8 && level2 < 9) || (level1 > 9 && level2 < 7) || (level1 > 9 && level2 < 13) || (level1 > 10 && level2 < 6) || (level1 > 8 && level2 < 8)) {
 			switch (level1) {
 				case 1 : System.out.println("1"); break;

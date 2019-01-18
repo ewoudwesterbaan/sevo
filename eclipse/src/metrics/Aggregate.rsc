@@ -9,7 +9,7 @@ import Set;
 import List;
 import Map;
 
-// Een map met het gemiddeld aantal regels code per risicocategorie (simple, moderate, high, ...)
+// Een map met het (gemiddeld) aantal regels code per risicocategorie (simple, moderate, high, ...)
 public alias RiskCatDistributionMap = map[TupComplexityRiskCategory category, real lines];
 
 // Tuple voor unit size categorie
