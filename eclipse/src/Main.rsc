@@ -44,7 +44,7 @@ public void main() {
 	RelComplexities complexities = cyclomaticComplexity(project);
 	
 	println("\nAggregeren gegevens (unit size and complexity) ...");
-	ComplexityDistributionMap cdMap = getComplexityDistribution(project);
+	RiskCatDistributionMap cdMap = getRiskCatDistribution(project);
 	for (entry <- cdMap) {
 		println("- Categorie <entry.categoryName> (<entry.description>): <cdMap[entry]>%");
 	}

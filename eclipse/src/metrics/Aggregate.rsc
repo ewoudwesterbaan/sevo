@@ -9,8 +9,8 @@ import Set;
 import List;
 import Map;
 
-// Een map met het gemiddeld aantal regels code per complexiteitscategorie (simple, moderate, high, ...)
-public alias ComplexityDistributionMap = map[TupComplexityRiskCategory category, real lines];
+// Een map met het gemiddeld aantal regels code per risicocategorie (simple, moderate, high, ...)
+public alias RiskCatDistributionMap = map[TupComplexityRiskCategory category, real lines];
 
 // Tuple voor unit size categorie
 public alias TupUnitSizeCategory = tuple[str categoryName, str description, int minLines, int maxLines];
@@ -32,12 +32,12 @@ public alias UnitSizeDistributionMap = map[TupUnitSizeCategory category, real li
 // Produceert een verdeling van de complexity. Per risicocategorie (simple, moderate, high, ...)
 // wordt op basis van de regels code in het hele systeem, afgezet tegen de regels code per unit 
 // (methode/constructor) een overzicht gegenereerd.
-// Geeft een ComplexityDistributionMap terug met per risicocategorie een percentage. Dit percentage is
+// Geeft een RiskCatDistributionMap terug met per risicocategorie een percentage. Dit percentage is
 // het aantal coderegels in verhouding tot het totaal aantal coderegels per categorie.
-public ComplexityDistributionMap getComplexityDistribution(loc project) {
+public RiskCatDistributionMap getRiskCatDistribution(loc project) {
 
 	// Een map waarin we het totaal aantal LOC van alle units per complexiteitscategorie bijhouden
-	ComplexityDistributionMap distributionMap = (rc : 0.0 | rc <- riskCategories);
+	RiskCatDistributionMap distributionMap = (rc : 0.0 | rc <- riskCategories);
 
 	// Alle coderegels van alle units tezamen	
 	int sysLinesOfCode = sumOfUnitSizeMetrics(project).codeLines;

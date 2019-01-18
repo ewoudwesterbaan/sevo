@@ -106,7 +106,7 @@ public PkgInfoMap getPkgInfoMapFromClassInfoMap(ClassInfoMap classInfos) {
 // Maakt uit een PkgInfoMap een ProjectInfoTuple. 
 public ProjectInfoTuple getProjectInfoTupleFromPkgInfoMap(loc project, PkgInfoMap pkgInfos) {
 	str projName = "<project>"[11..-1];
-	str complexityRating = getComplexityRank(getComplexityDistribution(project));
+	str complexityRating = getComplexityRank(getRiskCatDistribution(project));
 	RelLinesOfCode volumeMetrics = volumeMetrics(project);
 	int totalLines = sum(volumeMetrics.totalLines);
 	int commentLines = sum(volumeMetrics.commentLines);
@@ -120,7 +120,7 @@ private str getComplexityRankForClass(ClassInfoTuple classInfo, RelComplexities 
 	UnitInfoList units = classInfo.units;
 
 	// Een map waarin we het totaal aantal LOC van alle units per complexiteitscategorie bijhouden
-	ComplexityDistributionMap distributionMap = (rc : 0.0 | rc <- riskCategories);
+	RiskCatDistributionMap distributionMap = (rc : 0.0 | rc <- riskCategories);
 	for (unit <- units) {
 		str categoryName = head([complexity.riskCategory  | complexity <- complexities, 0 == compareLocations(unit.location, complexity.location)]);
 		TupComplexityRiskCategory riskCategory = getTupRiskCategoryByCategoryName(categoryName);
@@ -146,7 +146,7 @@ private str getComplexityRankForPackage(PkgInfoTuple pkgInfo, RelComplexities co
 	}
 	
 	// Een map waarin we het totaal aantal LOC van alle units per complexiteitscategorie bijhouden
-	ComplexityDistributionMap distributionMap = (rc : 0.0 | rc <- riskCategories);
+	RiskCatDistributionMap distributionMap = (rc : 0.0 | rc <- riskCategories);
 	for (unit <- units) {
 		str categoryName = head([complexity.riskCategory  | complexity <- complexities, 0 == compareLocations(unit.location, complexity.location)]);
 		TupComplexityRiskCategory riskCategory = getTupRiskCategoryByCategoryName(categoryName);

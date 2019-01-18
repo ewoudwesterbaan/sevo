@@ -14,7 +14,7 @@ private loc project = |project://ComplexityTest/|;
 
 // Test de methode metrics::Aggregate::getComplexityDistribution
 test bool testGetComplexityRating() {
-    ComplexityDistributionMap cdMap = getComplexityDistribution(project);
+    RiskCatDistributionMap cdMap = getRiskCatDistribution(project);
     
     real simplePerc = (34 * 100) / 161.0;
     real moderatePerc =  (22 * 100) / 161.0;
@@ -125,7 +125,7 @@ test bool testGetTupUnitSizeCategoryByCategoryName() {
 	return result;
 }
 
-private bool assertComplexityDist(ComplexityDistributionMap cdMap, real perc, str categoryName, str msg) {
+private bool assertComplexityDist(RiskCatDistributionMap cdMap, real perc, str categoryName, str msg) {
 	TupComplexityRiskCategory cat = getTupRiskCategoryByCategoryName(categoryName);
 	return assertEqual(perc, cdMap[cat], msg);
 }

@@ -13,7 +13,7 @@ public alias TupComplexityRankCategory = tuple[Rank rank, int maxRelativeLOCMode
 public alias LstComplexityRankCategories = list[TupComplexityRankCategory];
 
 // Ranking categorieen
-public LstComplexityRankCategories riskRankCategories = [
+public LstComplexityRankCategories complexityRankCategories = [
 	<"++", 25, 0, 0>,
 	<"+", 30, 5, 0>,
 	<"0", 40, 10, 0>,
@@ -22,11 +22,11 @@ public LstComplexityRankCategories riskRankCategories = [
 ];
 
 // Bepaalt de rank van de software op basis van de complexiteit
-public Rank getComplexityRank(ComplexityDistributionMap cdMap) {
+public Rank getComplexityRank(RiskCatDistributionMap cdMap) {
 	real percModerate = cdMap[getTupRiskCategoryByCategoryName("Moderate")];
 	real percComplex = cdMap[getTupRiskCategoryByCategoryName("Complex")];
 	real percUntestable = cdMap[getTupRiskCategoryByCategoryName("Untestable")];
-	return head([rc.rank | rc <- riskRankCategories, percModerate <= rc.maxRelativeLOCModerate && percComplex <= rc.maxRelativeLOCComplex && percUntestable <= rc.maxRelativeLOCUntestable]);
+	return head([rc.rank | rc <- complexityRankCategories, percModerate <= rc.maxRelativeLOCModerate && percComplex <= rc.maxRelativeLOCComplex && percUntestable <= rc.maxRelativeLOCUntestable]);
 }
 
 // Bepaalt de rank van de applicatie, gegeven de duplicatiepercentage
