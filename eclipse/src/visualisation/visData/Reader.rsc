@@ -1,17 +1,17 @@
 //
 // Verantwoordelijk voor het lezen van structuren uit een project.
 //
-module utils::Reader
+module visualisation::visData::Reader
 
-// Voor het ophalen van complexiteit en rank.
+// Voor het ophalen van metrieken.
 import metrics::Complexity;
 import metrics::Rate;
 import metrics::Aggregate;
 import metrics::Volume;
 import utils::Utils;
 
-// Voor de aliases
-import visualisation::DataTypes;
+// Voor de aliases en datatypes t.b.v. visualisatie
+import visualisation::visData::DataTypes;
 
 // Voor het ophalen van klassen en methoden uit een project:
 import lang::java::m3::Core;
@@ -24,7 +24,9 @@ import IO;
 
 private RelComplexities complexities;
 
-// Haalt alle methoden en constructoren op, per java-klasse, voor het hele project.
+// Verzamelt de gegevens van alle klassen in het project, die van belang zijn voor de visualisatie.
+// Haalt alle methoden en constructoren op per java-klasse, bepaalt het aantal regels, de complexiteit,
+// risico categorieen van de units, complexity rank, etc.
 public ClassInfoMap getClassInfo(loc project) {
 	complexities = cyclomaticComplexity(project);
 
@@ -116,35 +118,34 @@ public ProjectInfoTuple getProjectInfoTupleFromPkgInfoMap(loc project, PkgInfoMa
 
 // Bepaalt de complexity rank/rating op klasseniveau.
 private str getComplexityRankForClass(ClassInfoTuple classInfo, RelComplexities complexities) {
-	int classCodeLines = classInfo.codeLines;
-	UnitInfoList units = classInfo.units;
+	// Bepaal de relatieve verdeling van de risico categorieen
+	RiskCatDistributionMap distributionMap = getRiskCatDistribution(classInfo.units, classInfo.codeLines);
 
-	// Een map waarin we het totaal aantal LOC van alle units per complexiteitscategorie bijhouden
-	RiskCatDistributionMap distributionMap = (rc : 0.0 | rc <- riskCategories);
-	for (unit <- units) {
-		str categoryName = head([complexity.riskCategory  | complexity <- complexities, 0 == compareLocations(unit.location, complexity.location)]);
-		TupComplexityRiskCategory riskCategory = getTupRiskCategoryByCategoryName(categoryName);
-		distributionMap[riskCategory] += unit.codeLines;
-	}
-	
-	// We hebben nu een distributionMap met per risicocategorie het aantal unitcoderegels.
-	// Bepaal nu de ratio/distributie van de regels per complexiteitscategorie
-	for (key <- distributionMap.category) {
-		distributionMap[key] = (distributionMap[key] * 100) / classCodeLines;
-	}
+	// Bepaal de complexity rank bij de gevonden verdeling
 	return getComplexityRank(distributionMap);
 }
 
 // Bepaalt de complexity rank/rating op packageniveau.
 private str getComplexityRankForPackage(PkgInfoTuple pkgInfo, RelComplexities complexities) {
 	// Verzamel alle units van de hele package, en bereken de codelines voor de hele package
-	int packageCodeLines = 0;
 	UnitInfoList units = [];
+	int packageCodeLines = 0;
 	for (ClassInfoTuple classInfo <- range(pkgInfo.classInfos)) {
 		units += classInfo.units;
 		packageCodeLines += classInfo.codeLines;
 	}
 	
+	// Bepaal de relatieve verdeling van de risico categorieen
+	RiskCatDistributionMap distributionMap = getRiskCatDistribution(units, packageCodeLines);
+
+	// Bepaal de complexity rank bij de gevonden verdeling
+	return getComplexityRank(distributionMap);
+}
+
+// Bepaalt de relatieve verdeling van de risico categorieen (simple, moderate, complex en untestable) over alle coderegels.
+//   - units: de units in een class, package of project
+//   - totalCodeLines: het totaal aantal coderegels in zo'n class, package of project
+private RiskCatDistributionMap getRiskCatDistribution(UnitInfoList units, int totalCodeLines) {
 	// Een map waarin we het totaal aantal LOC van alle units per complexiteitscategorie bijhouden
 	RiskCatDistributionMap distributionMap = (rc : 0.0 | rc <- riskCategories);
 	for (unit <- units) {
@@ -156,9 +157,10 @@ private str getComplexityRankForPackage(PkgInfoTuple pkgInfo, RelComplexities co
 	// We hebben nu een distributionMap met per risicocategorie het aantal unitcoderegels.
 	// Bepaal nu de ratio/distributie van de regels per complexiteitscategorie
 	for (key <- distributionMap.category) {
-		distributionMap[key] = (distributionMap[key] * 100) / packageCodeLines;
+		distributionMap[key] = (distributionMap[key] * 100) / totalCodeLines;
 	}
-	return getComplexityRank(distributionMap);
+	
+	return distributionMap;
 }
 
 

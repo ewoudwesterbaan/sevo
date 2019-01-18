@@ -9,12 +9,10 @@ import Set;
 import Map;
 
 import visualisation::PolyMetricTreeView;
-import visualisation::PolyMetricTreeMapView;
 import visualisation::widgets::Widgets;
-import visualisation::DataTypes;
+import visualisation::visData::DataTypes;
+import visualisation::visData::Cache;
 import visualisation::utils::VisUtils;
-
-import utils::Cache;
 
 import IO;
 
@@ -25,8 +23,7 @@ private loc project = |project://VisualisationTest/|;
 //private loc project = |project://JabberPoint/|;
 
 // Start de visualisatie van metrics.
-// Laadt eerst het project.
-// Toont dan een scherm met twee buttons, eentje voor elke view die we kennen.
+// Laadt eerst het project, en toont dan het introductiescherm met uitleg.
 public void visualizeMetrics() {
 	// Data inladen...
 	Figure loading = text (
@@ -40,7 +37,7 @@ public void visualizeMetrics() {
 	render(grid([[loading]], gap(20), vsize(300), hsize(400), resizable(false)));
 	ProjectInfoTuple projectInfo = readProject(project);
 
-	// Twee buttons voor de verschillende views: Tree view resp. TreeMap view.
+	// Introscherm tonen
 	Figure title = pageTitle("Polymetrische visualisatie van <projectInfo.projName>");
 	Figure descr = text(
 		"Deze toepassing toont een dashboard met een aantal panels. Het hoofdpanel toont een polymetrische\n" + 

@@ -9,10 +9,9 @@ import Set;
 import Map;
 
 import View;
-import visualisation::PolyMetricTreeMapView;
 import visualisation::widgets::Widgets;
 import visualisation::utils::VisUtils;
-import visualisation::DataTypes;
+import visualisation::visData::DataTypes;
 
 import IO;
 
@@ -103,8 +102,7 @@ private void renderPage(Figure breadcrumPath, Figure tree, Figure boxPlot, Figur
 	Figure title = pageTitle("<projectInfo.projName> - Polymetric Tree");
 	
 	Figure homeButton = button(void(){visualizeMetrics();}, "Home");
-	Figure treeMapViewButton = button(void(){showProjectTreeMap(projectInfo);}, "Switch naar TreeMap"); 
-	Figure buttonGrid = buttonGrid([homeButton, treeMapViewButton]);
+	Figure buttonGrid = buttonGrid([homeButton]);
 	Figure dashBoard = dashBoard(tree, stackedDiagram, boxPlot);
 	
 	render(page(title, breadcrumPath, dashBoard, buttonGrid));

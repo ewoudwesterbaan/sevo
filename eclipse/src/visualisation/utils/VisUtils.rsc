@@ -13,7 +13,7 @@ import IO;
 import metrics::Complexity;
 
 // Voor de data types en aliassen
-import visualisation::DataTypes;
+import visualisation::visData::DataTypes;
 
 private Color simpleColor = color("limegreen");
 private Color moderateColor = color("gold");

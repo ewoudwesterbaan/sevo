@@ -1,14 +1,14 @@
 //
 // Verantwoordelijk voor het lezen en schrijven van de cache.
 // 
-module utils::Cache
+module visualisation::visData::Cache
 
-// Voor het gerbuik van de alias ProjectInfoTuple.
-import visualisation::DataTypes;
+import visualisation::visData::DataTypes;
+import visualisation::visData::Reader;
+
 // Voor het lezen en schrijven.
 import ValueIO;
 import IO;
-import utils::Reader;
 
 // Rootdirectory voor de opslag (user home).
 private loc path = |home:///|;
