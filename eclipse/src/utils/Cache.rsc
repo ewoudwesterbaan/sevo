@@ -51,11 +51,15 @@ public ProjectInfoTuple readProject(loc projectLocation) {
 
 public ProjectInfoTuple readProject(loc projectLocation, bool forceReadFromSource) {
 	str projectName = "<projectLocation>"[11..-1];
+	println("Laden project <projectName>.");
 	if (projectIsCached(projectName) && !forceReadFromSource) {
+		println("Projectgegevens in cache gevonden. Projectgegevens uit cache worden gebruikt.");
 		return projectInfo = readFromCache(projectName);
 	} else {
+		println("Projectgegevens niet in cache gevonden. Project wordt geladen en gecached.");
 		projectInfo = getProjectInfoTupleFromPkgInfoMap(projectLocation, getPkgInfoMapFromClassInfoMap(getClassInfo(projectLocation)));
 		writeToCache(projectInfo);
+		println("Project <projectName> is geladen.");
 		return projectInfo;
 	};
 }

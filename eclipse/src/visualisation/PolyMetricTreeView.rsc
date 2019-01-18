@@ -36,7 +36,14 @@ public void showProjectTree(ProjectInfoTuple projInfo) {
 	
 	// Render een pagina met de boom
 	Figure bc1 = breadcrumElement(projectInfo.projName);
-	renderPage(breadcrumPath([bc1]), createTree(root, leaves));
+	Figure boxPlot = boxPlot([6, 7, 4, 9, 6, 2, 8, 6, 9, 6, 8, 9, 7, 3, 10, 5, 6, 7]);
+	Figure stackedDiagram = stackedDiagram(
+		[5, 19, 10, 30, 7], 
+		[getComplexityRatingIndicationColor("++"), getComplexityRatingIndicationColor("+"), getComplexityRatingIndicationColor("0"), getComplexityRatingIndicationColor("-"), getComplexityRatingIndicationColor("--")],
+		["Bla x%", "Blie y%", "Hup z%", "Zus a%", "Zo b%"]
+	);
+	
+	renderPage(breadcrumPath([bc1]), createTree(root, leaves), boxPlot, stackedDiagram);
 }
 
 // Toont een boom van een package met de bijbehorende klassen.
@@ -54,7 +61,15 @@ private void showPackageTree(str pkgName) {
 	// Render een pagina met de boom
 	Figure bc1 = breadcrumElement(void(){showProjectTree(projectInfo);}, projectInfo.projName);
 	Figure bc2 = breadcrumElement(pkgName);
-	renderPage(breadcrumPath([bc1, bc2]), createTree(root, leaves));
+
+	Figure boxPlot = boxPlot([6, 7, 4, 9, 6, 2, 8, 6, 9, 6, 8, 9, 7, 3, 10, 5, 6, 7]);
+	Figure stackedDiagram = stackedDiagram(
+		[5, 19, 10, 30, 7], 
+		[getComplexityRatingIndicationColor("++"), getComplexityRatingIndicationColor("+"), getComplexityRatingIndicationColor("0"), getComplexityRatingIndicationColor("-"), getComplexityRatingIndicationColor("--")],
+		["Bla x%", "Blie y%", "Hup z%", "Zus a%", "Zo b%"]
+	);
+
+	renderPage(breadcrumPath([bc1, bc2]), createTree(root, leaves), boxPlot, stackedDiagram);
 }
 
 // Toont een boom van een klasse met de bijbehorende methoden.
@@ -72,23 +87,24 @@ private void showClassTree(str pkgName, str classId) {
 	Figure bc1 = breadcrumElement(void(){showProjectTree(projectInfo);}, projectInfo.projName);
 	Figure bc2 = breadcrumElement(void(){showPackageTree(pkgName);}, pkgName);
 	Figure bc3 = breadcrumElement(classInfo.className);
-	renderPage(breadcrumPath([bc1, bc2, bc3]), createTree(root, leaves));
-}
-
-// Rendert een pagina.
-private void renderPage(Figure breadcrumPath, Figure tree) {
-	Figure title = pageTitle("<projectInfo.projName> - Polymetric Tree");
 	
-	Figure homeButton = button(void(){visualizeMetrics();}, "Home");
-	Figure treeMapViewButton = button(void(){showProjectTreeMap(projectInfo);}, "Switch naar TreeMap"); 
-	Figure buttonGrid = buttonGrid([homeButton, treeMapViewButton]);
 	Figure boxPlot = boxPlot([6, 7, 4, 9, 6, 2, 8, 6, 9, 6, 8, 9, 7, 3, 10, 5, 6, 7]);
 	Figure stackedDiagram = stackedDiagram(
 		[5, 19, 10, 30, 7], 
 		[getComplexityRatingIndicationColor("++"), getComplexityRatingIndicationColor("+"), getComplexityRatingIndicationColor("0"), getComplexityRatingIndicationColor("-"), getComplexityRatingIndicationColor("--")],
 		["Bla x%", "Blie y%", "Hup z%", "Zus a%", "Zo b%"]
 	);
+	
+	renderPage(breadcrumPath([bc1, bc2, bc3]), createTree(root, leaves), boxPlot, stackedDiagram);
+}
 
+// Rendert een pagina.
+private void renderPage(Figure breadcrumPath, Figure tree, Figure boxPlot, Figure stackedDiagram) {
+	Figure title = pageTitle("<projectInfo.projName> - Polymetric Tree");
+	
+	Figure homeButton = button(void(){visualizeMetrics();}, "Home");
+	Figure treeMapViewButton = button(void(){showProjectTreeMap(projectInfo);}, "Switch naar TreeMap"); 
+	Figure buttonGrid = buttonGrid([homeButton, treeMapViewButton]);
 	Figure dashBoard = dashBoard(tree, stackedDiagram, boxPlot);
 	
 	render(page(title, breadcrumPath, dashBoard, buttonGrid));

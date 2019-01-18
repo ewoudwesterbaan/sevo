@@ -43,13 +43,20 @@ public void visualizeMetrics() {
 	// Twee buttons voor de verschillende views: Tree view resp. TreeMap view.
 	Figure title = pageTitle("Polymetrische visualisatie van <projectInfo.projName>");
 	Figure descr = text(
-		"Deze toepassing ondersteunt twee verschillende polymetrische views. Maak een keuze door\n" + 
-		"op een van de onderstaande knoppen te klikken. Tijdens het gebruik kan op elk gewenst \n" + 
-		"moment van view worden gewisseld.",
+		"Deze toepassing toont een dashboard met een aantal panels. Het hoofdpanel toont een polymetrische\n" + 
+		"visualisatie van het project <projectInfo.projName>. Op het hoogste niveau worden alle packages van\n" + 
+		"de applicatie getoond. Het project en de packages worden gevisualiseerd als nodes in een boom. De\n" + 
+		"kleur van een node is een indicatie van de complexity rating, en de grootte van een node zegt iets\n" + 
+		"over het aantal lines of code. Door boven een package te hoveren met de muis, kan een popup worden\n" + 
+		"geactiveerd met gedetaileerde informatie over de desbetreffende node. Door op een package te klikken\n" + 
+		"kan worden ingezoomd: van het package worden alle klassen getoond, wederom in een boomstructuur, en met\n" + 
+		"dezelfde kleur- en groottefuncties. Door op een klasse te klikken kan nog een niveau worden ingezoomd\n" + 
+		"naar de methoden bij die klasse. Uitzoomen kan met shift-klik op de nodes, of door in het kruimelpad\n" + 
+		"bovensaan het scherm te klikken.\n\n" + 
+		"De subpanels tonen aanvullende informatie die is gerelateerd aan het niveau waarop is ingezoomd. TODO...",
 		fontSize(14)
 	); 
-	Figure treeViewButton = button(void(){showProjectTree(projectInfo);}, "Polymetric Tree");
-	Figure treeMapViewButton = button(void(){showProjectTreeMap(projectInfo);}, "Polymetric TreeMap");
-	Figure buttonGrid = buttonGrid([treeViewButton, treeMapViewButton]);
+	Figure treeViewButton = button(void(){showProjectTree(projectInfo);}, "Naar dashboard");
+	Figure buttonGrid = buttonGrid([treeViewButton]);
 	render(page(title, descr, buttonGrid));
 }

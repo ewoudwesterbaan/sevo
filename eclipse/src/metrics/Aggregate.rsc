@@ -29,7 +29,7 @@ public LstUnitSizeCategories unitSizeCategories = [
 // Een map met het gemiddeld aantal regels code per in het systeem per unit size category
 public alias UnitSizeDistributionMap = map[TupUnitSizeCategory category, real lines];
 
-// Produceert een verdeling van de complexity. Per complexiteitscategorie (simple, moderate, high, ...)
+// Produceert een verdeling van de complexity. Per risicocategorie (simple, moderate, high, ...)
 // wordt op basis van de regels code in het hele systeem, afgezet tegen de regels code per unit 
 // (methode/constructor) een overzicht gegenereerd.
 // Geeft een ComplexityDistributionMap terug met per risicocategorie een percentage. Dit percentage is
