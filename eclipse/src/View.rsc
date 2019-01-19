@@ -23,7 +23,7 @@ private loc project = |project://VisualisationTest/|;
 //private loc project = |project://JabberPoint/|;
 
 // Start de visualisatie van metrics.
-// Laadt eerst het project, en toont dan het dashboard.
+// Laadt eerst het project, en toont dan het dashboard voor het project.
 public void visualizeMetrics() {
 	// Data inladen...
 	Figure loading = text (
@@ -37,6 +37,7 @@ public void visualizeMetrics() {
 	render(grid([[loading]], gap(20), vsize(300), hsize(400), resizable(false)));
 	ProjectInfoTuple projectInfo = readProject(project);
 
-	// Dashboard tonen (polymetric tree view)
-	showProjectTree(projectInfo);
+	// Dashboard tonen voor het projectniveau (polymetric tree view)
+	// Binnen deze view kan worden ingezoomed naar onderliggende views.
+	showProjectView(projectInfo);
 }

@@ -24,7 +24,7 @@ private ProjectInfoTuple projectInfo;
 // methode in deze module wordt aangeroepen (en ook de enige public methode). Hier vindt daarom de
 // initialisatie plaats van het private aatribuut projectInfo, die in andere private methoden wordt
 // gebruikt.
-public void showProjectTree(ProjectInfoTuple projInfo) {
+public void showProjectView(ProjectInfoTuple projInfo) {
 	// Eenmalig vullen van de private attributen
 	projectInfo = projInfo;
 
@@ -38,18 +38,19 @@ public void showProjectTree(ProjectInfoTuple projInfo) {
 	
 	// Render een pagina met de boom
 	Figure bc1 = breadcrumElement(projectInfo.projName);
-	Figure boxPlot = boxPlot([6, 7, 4, 9, 6, 2, 8, 6, 9, 6, 8, 9, 7, 3, 10, 5, 6, 7]);
+	Figure boxPlot = boxPlot("bPlot", [6, 7, 4, 9, 6, 2, 8, 6, 9, 6, 8, 9, 7, 3, 10, 5, 6, 7]);
 	Figure stackedDiagram = stackedDiagram(
+		"sDiagram",
 		[5, 19, 10, 30, 7], 
-		[getComplexityRatingIndicationColor("++"), getComplexityRatingIndicationColor("+"), getComplexityRatingIndicationColor("0"), getComplexityRatingIndicationColor("-"), getComplexityRatingIndicationColor("--")],
+		[getComplexityRatingIndicationColor("--"), getComplexityRatingIndicationColor("-"), getComplexityRatingIndicationColor("0"), getComplexityRatingIndicationColor("+"), getComplexityRatingIndicationColor("++")],
 		["Bla x%", "Blie y%", "Hup z%", "Zus a%", "Zo b%"]
 	);
 	
-	renderPage(breadcrumPath([bc1]), createTree(root, leaves), boxPlot, stackedDiagram);
+	renderPage(breadcrumPath([bc1]), createTree(root, leaves), stackedDiagram, boxPlot, stackedDiagram, boxPlot);
 }
 
 // Toont een boom van een package met de bijbehorende klassen.
-private void showPackageTree(str pkgName) {
+private void showPackageView(str pkgName) {
 	PkgInfoTuple pkgInfo = projectInfo.pkgInfos[pkgName];
 
 	// De root van de tree representeert de package. We stellen de root hier samen.
@@ -61,21 +62,22 @@ private void showPackageTree(str pkgName) {
 	for (classInfo <- range(classInfos)) leaves += createClassFigure(classInfo, true);
 	
 	// Render een pagina met de boom
-	Figure bc1 = breadcrumElement(void(){showProjectTree(projectInfo);}, projectInfo.projName);
+	Figure bc1 = breadcrumElement(void(){showProjectView(projectInfo);}, projectInfo.projName);
 	Figure bc2 = breadcrumElement(pkgName);
 
-	Figure boxPlot = boxPlot([6, 7, 4, 9, 6, 2, 8, 6, 9, 6, 8, 9, 7, 3, 10, 5, 6, 7]);
+	Figure boxPlot = boxPlot("bPlot2", [6, 7, 4, 9, 6, 2, 8, 6, 9, 6, 8, 9, 7, 3, 10, 5, 6, 7]);
 	Figure stackedDiagram = stackedDiagram(
+		"sDiagram2",
 		[5, 19, 10, 30, 7], 
-		[getComplexityRatingIndicationColor("++"), getComplexityRatingIndicationColor("+"), getComplexityRatingIndicationColor("0"), getComplexityRatingIndicationColor("-"), getComplexityRatingIndicationColor("--")],
+		[getComplexityRatingIndicationColor("--"), getComplexityRatingIndicationColor("-"), getComplexityRatingIndicationColor("0"), getComplexityRatingIndicationColor("+"), getComplexityRatingIndicationColor("++")],
 		["Bla x%", "Blie y%", "Hup z%", "Zus a%", "Zo b%"]
 	);
 
-	renderPage(breadcrumPath([bc1, bc2]), createTree(root, leaves), boxPlot, stackedDiagram);
+	renderPage(breadcrumPath([bc1, bc2]), createTree(root, leaves), stackedDiagram, boxPlot, stackedDiagram, boxPlot);
 }
 
 // Toont een boom van een klasse met de bijbehorende methoden.
-private void showClassTree(str pkgName, str classId) {
+private void showClassView(str pkgName, str classId) {
 	ClassInfoTuple classInfo = projectInfo.pkgInfos[pkgName].classInfos[classId];
 	
 	// De root van de tree representeert de klasse. We stellen de root hier samen.
@@ -86,31 +88,31 @@ private void showClassTree(str pkgName, str classId) {
 	for (unit <- classInfo.units) leaves += createUnitFigure(unit);
 
 	// Stel een kruimelpad voor de pagina samen om te kunnen navigeren
-	Figure bc1 = breadcrumElement(void(){showProjectTree(projectInfo);}, projectInfo.projName);
-	Figure bc2 = breadcrumElement(void(){showPackageTree(pkgName);}, pkgName);
+	Figure bc1 = breadcrumElement(void(){showProjectView(projectInfo);}, projectInfo.projName);
+	Figure bc2 = breadcrumElement(void(){showPackageView(pkgName);}, pkgName);
 	Figure bc3 = breadcrumElement(classInfo.className);
 	
 	// Stel een boxplot samen met ... TODO
-	Figure boxPlot = boxPlot([6, 7, 4, 9, 6, 2, 8, 6, 9, 6, 8, 9, 7, 3, 10, 5, 6, 7]); // TODO
+	Figure boxPlot = boxPlot("bPlot3", [6, 7, 4, 9, 6, 2, 8, 6, 9, 6, 8, 9, 7, 3, 10, 5, 6, 7]); // TODO
 	
 	// Stel een stackedDiagram samen met de risk category informatie voor deze klasse
-	Figure stackedDiagram = createRiskCatStackedDiagram(classInfo);
+	Figure stackedDiagram = createRiskCatStackedDiagram("sDgr3", classInfo);
 	
 	// Render een pagina 
-	renderPage(breadcrumPath([bc1, bc2, bc3]), createTree(root, leaves), boxPlot, stackedDiagram);
+	renderPage(breadcrumPath([bc1, bc2, bc3]), createTree(root, leaves), stackedDiagram, boxPlot, stackedDiagram, boxPlot);
 }
 
 // Rendert een pagina.
-private void renderPage(Figure breadcrumPath, Figure tree, Figure boxPlot, Figure stackedDiagram) {
+private void renderPage(Figure breadcrumPath, Figure tree, Figure topLeftFigure, Figure bottomLeftFigure, Figure topRightFigure, Figure bottomRightFigure) {
 	Figure title = pageTitle("<projectInfo.projName> - Polymetric Tree");
 	Figure homeButton = button(void(){visualizeMetrics();}, "Home");
-	Figure dashBoard = dashBoard(tree, stackedDiagram, boxPlot);
+	Figure dashBoard = dashBoard(tree, topLeftFigure, bottomLeftFigure, topRightFigure, bottomRightFigure);
 	render(page(title, breadcrumPath, dashBoard));
 }
 
 // Maakt een stacked diagram met de informatie over de verdeling van coderegels in de units over de
 // verschillende risk categories (complexiteit).
-private Figure createRiskCatStackedDiagram(ClassInfoTuple classInfo) {
+private Figure createRiskCatStackedDiagram(str title, ClassInfoTuple classInfo) {
 	list[int] values = [];
 	list[str] infoTexts = [];
 	list[Color] colors = [];
@@ -139,7 +141,7 @@ private Figure createRiskCatStackedDiagram(ClassInfoTuple classInfo) {
 	colors += color("gray");
 	
 	// Maak het stack diagram
-	return stackedDiagram(values, colors, infoTexts);
+	return stackedDiagram(title, values, colors, infoTexts);
 }
 
 // Maakt een boom met de opgegeven root en leaves.
@@ -226,7 +228,7 @@ private FProperty handlePackageClick(str pkgName) {
 		if (modifiers[modShift()]) return false;
 		if (modifiers[modCtrl()]) return false;
 		if (modifiers[modAlt()]) return false;
-		showPackageTree(pkgName);
+		showPackageView(pkgName);
 		return true;
 	});
 }
@@ -235,7 +237,7 @@ private FProperty handlePackageClick(str pkgName) {
 private FProperty handlePackageShiftClick() {
 	return onMouseDown(bool (int butnr, map[KeyModifier,bool] modifiers) {
 		if (modifiers[modShift()]) {
-			showProjectTree(projectInfo);
+			showProjectView(projectInfo);
 			return true;
 		}
 		return false;
@@ -248,7 +250,7 @@ private FProperty handleClassClick(str pkgName, str classId) {
 		if (modifiers[modShift()]) return false;
 		if (modifiers[modCtrl()]) return false;
 		if (modifiers[modAlt()]) return false;
-		showClassTree(pkgName, classId);
+		showClassView(pkgName, classId);
 		return true;
 	});
 }
@@ -257,7 +259,7 @@ private FProperty handleClassClick(str pkgName, str classId) {
 private FProperty handleClassShiftClick(str pkgName) {
 	return onMouseDown(bool (int butnr, map[KeyModifier,bool] modifiers) {
 		if (modifiers[modShift()]) {
-			showPackageTree(pkgName);
+			showPackageView(pkgName);
 			return true;
 		}
 		return false;

@@ -22,6 +22,12 @@ private Color popupFontColor = rgb(30, 30, 30);
 private Color headerFillColor = color("aliceblue");
 private Color headerFontColor = color("steelblue");
 private Color headerLineColor = defaultFillColor;
+private int headerFontSize = 25;
+
+private Color subHeaderFillColor = headerFillColor;
+private Color subHeaderFontColor = headerFontColor;
+private Color subHeaderLineColor = headerLineColor;
+private int subHeaderFontSize = 14;
 
 private Color footerFillColor = headerFillColor;
 private Color footerFontColor = headerFontColor;
@@ -93,13 +99,31 @@ public Figure pageTitle(str titleText){
 			titleText, 
 			fontColor(headerFontColor),
 			fontBold(true),
-			fontSize(25),
+			fontSize(headerFontSize),
 			resizable(false),
 			vsize(70)
 		),
 		fillColor(headerFillColor),
 		lineColor(headerLineColor),
 		vsize(70),
+		vresizable(false)
+	);
+}
+
+// Een subtitel.
+public Figure subTitle(str titleText){
+	return box(
+		text(
+			titleText, 
+			fontColor(subHeaderFontColor),
+			fontBold(true),
+			fontSize(subHeaderFontSize),
+			resizable(false),
+			vsize(20)
+		),
+		fillColor(subHeaderFillColor),
+		lineColor(subHeaderLineColor),
+		vsize(20),
 		vresizable(false)
 	);
 }
@@ -151,17 +175,10 @@ private FProperty handleBreadcrumClick(void () vcallback) {
 	});
 }
 
-// Geeft een buttongrid terug met daarop de meegegeven buttons
-public Figure buttonGrid(list[Figure] buttons) {
-	return box(
-		grid([buttons], gap(20), resizable(false), size(75, 75)), 
-		fillColor(footerFillColor),
-		lineColor(footerLineColor),
-		vresizable(false)
-	);
-}
-
-public Figure dashBoard(Figure mainContent, Figure topRightContent, Figure bottomRightContent) {
+// Toont een dasboard met meerdere panels/grids
+//   - hoofdgedeelte voor een tree view o.i.d.
+//   - vier subpanels voor stacked diagrams, boxplots, o.i.d.
+public Figure dashBoard(Figure mainContent, Figure topLeftContent, Figure bottomLeftContent, Figure topRightContent, Figure bottomRightContent) {
 	return box(
 		hcat([
 			// Hoofdgedeelte van het dashboard
@@ -174,11 +191,11 @@ public Figure dashBoard(Figure mainContent, Figure topRightContent, Figure botto
 			box(
 				vcat (
 					[
-						box(grid([[topRightContent]], std(lineColor(defaultLineColor)), std(fontSize(subGridFontSize)))
+						box(grid([[topLeftContent]], std(lineColor(defaultLineColor)), std(fontSize(subGridFontSize)))
 						, size(200)
 						, resizable(false)
 						), 
-						box(grid([[bottomRightContent]], std(lineColor(defaultLineColor)), std(fontSize(subGridFontSize)))
+						box(grid([[bottomLeftContent]], std(lineColor(defaultLineColor)), std(fontSize(subGridFontSize)))
 						, size(200)
 						, resizable(false)
 						),
@@ -217,7 +234,7 @@ public Figure dashBoard(Figure mainContent, Figure topRightContent, Figure botto
 }
 
 // Een stacked diagram voor complexity rates
-public Figure stackedDiagram(list[int] values, list[Color] colors, list[str] infoTexts) {
+public Figure stackedDiagram(str title, list[int] values, list[Color] colors, list[str] infoTexts) {
 	// Afmetingen
 	int diagramWidth = 30;
 	int textWidth = 70;
@@ -236,14 +253,17 @@ public Figure stackedDiagram(list[int] values, list[Color] colors, list[str] inf
 		texts += text(t);
 	}
 	
-	return hcat([
-		vcat(texts, size(diagramWidth, intHeight)), 
-		box(vcat(boxes), size(diagramWidth, intHeight), resizable(false))
+	return vcat([
+		subTitle(title), 
+		hcat([
+			vcat(texts, size(diagramWidth, intHeight)), 
+			box(vcat(boxes), size(diagramWidth, intHeight), resizable(false))
+		])
 	]);
 }
 
 // Een boxplot
-public Figure boxPlot(list[int] values, FProperty props...) {
+public Figure boxPlot(str title, list[int] values, FProperty props...) {
 	num median = median(values);
 	num q1 = percentile(values, 25);
 	num q3 = percentile(values, 75);
@@ -253,10 +273,10 @@ public Figure boxPlot(list[int] values, FProperty props...) {
 	num startRange = analysis::statistics::Descriptive::min(values);
 	num endRange = analysis::statistics::Descriptive::max(values);
 	num mean = mean(values);
-	return boxPlot(startRange, minimum, q1, median, q3, maximum, endRange, mean, props);
+	return boxPlot(title, startRange, minimum, q1, median, q3, maximum, endRange, mean, props);
 }
 
-private Figure boxPlot(num startRange, num minimum, num q1, num median, num q3, num maximum, num endRange, num mean, FProperty props...) {	
+public Figure boxPlot(str title, num startRange, num minimum, num q1, num median, num q3, num maximum, num endRange, num mean, FProperty props...) {	
  	// Ratio's berekenen
 	num ratio = (endRange - startRange);
  	num ratio_endRange_maximum = percent((endRange - maximum), ratio);
@@ -310,7 +330,16 @@ private Figure boxPlot(num startRange, num minimum, num q1, num median, num q3, 
 		lineColor(subGridFillColor)
 	);
 	
-	return hcat([axisGrid, bPlot], hgap(10), size(1), resizable(false));
+	return vcat([
+		subTitle(title), 
+		hcat([
+			axisGrid, 
+			bPlot
+		], 
+		hgap(10), 
+		size(1), 
+		resizable(false))
+	]);
 }
 
 
