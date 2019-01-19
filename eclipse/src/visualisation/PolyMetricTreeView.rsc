@@ -46,7 +46,7 @@ public void showProjectView(ProjectInfoTuple projInfo) {
 		["Bla x%", "Blie y%", "Hup z%", "Zus a%", "Zo b%"]
 	);
 	
-	renderPage(breadcrumPath([bc1]), createTree(root, leaves), stackedDiagram, boxPlot, stackedDiagram, boxPlot);
+	renderPage(breadcrumPath([bc1]), createTree(root, leaves), boxPlot, stackedDiagram, boxPlot, stackedDiagram);
 }
 
 // Toont een boom van een package met de bijbehorende klassen.
@@ -65,7 +65,7 @@ private void showPackageView(str pkgName) {
 	Figure bc1 = breadcrumElement(void(){showProjectView(projectInfo);}, projectInfo.projName);
 	Figure bc2 = breadcrumElement(pkgName);
 
-	Figure boxPlot = boxPlot("bPlot2", [6, 7, 4, 9, 6, 2, 8, 6, 9, 6, 8, 9, 7, 3, 10, 5, 6, 7]);
+	Figure boxPlot = boxPlot("testplot", [1, 4, 8, 9, 49, 51]);
 	Figure stackedDiagram = stackedDiagram(
 		"sDiagram2",
 		[5, 19, 10, 30, 7], 
@@ -73,7 +73,7 @@ private void showPackageView(str pkgName) {
 		["Bla x%", "Blie y%", "Hup z%", "Zus a%", "Zo b%"]
 	);
 
-	renderPage(breadcrumPath([bc1, bc2]), createTree(root, leaves), stackedDiagram, boxPlot, stackedDiagram, boxPlot);
+	renderPage(breadcrumPath([bc1, bc2]), createTree(root, leaves), boxPlot, stackedDiagram, boxPlot, stackedDiagram);
 }
 
 // Toont een boom van een klasse met de bijbehorende methoden.
@@ -92,14 +92,17 @@ private void showClassView(str pkgName, str classId) {
 	Figure bc2 = breadcrumElement(void(){showPackageView(pkgName);}, pkgName);
 	Figure bc3 = breadcrumElement(classInfo.className);
 	
-	// Stel een boxplot samen met ... TODO
-	Figure boxPlot = boxPlot("bPlot3", [6, 7, 4, 9, 6, 2, 8, 6, 9, 6, 8, 9, 7, 3, 10, 5, 6, 7]); // TODO
+	// Stel een boxplot samen voor codeLines
+	Figure codeLinesBoxplot = boxPlot("Coderegels per unit", [unit.codeLines | unit <- classInfo.units]);
+
+	// Stel een boxplot samen voor complexity
+	Figure complexityBoxplot = boxPlot("Complexity per unit", [unit.complexity | unit <- classInfo.units]);
 	
 	// Stel een stackedDiagram samen met de risk category informatie voor deze klasse
 	Figure stackedDiagram = createRiskCatStackedDiagram("Risico distributie", classInfo);
 	
 	// Render een pagina 
-	renderPage(breadcrumPath([bc1, bc2, bc3]), createTree(root, leaves), stackedDiagram, boxPlot, stackedDiagram, boxPlot);
+	renderPage(breadcrumPath([bc1, bc2, bc3]), createTree(root, leaves), codeLinesBoxplot, text(""), complexityBoxplot, stackedDiagram);
 }
 
 // Rendert een pagina.

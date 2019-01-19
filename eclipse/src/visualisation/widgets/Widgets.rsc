@@ -6,7 +6,8 @@ import vis::KeySym;
 
 import util::Math;
 import List;
-import analysis::statistics::Descriptive;
+
+import visualisation::utils::VisUtils;
 
 import IO;
 
@@ -262,42 +263,41 @@ public Figure stackedDiagram(str title, list[int] values, list[Color] colors, li
 	]);
 }
 
-// Een boxplot
+// Een boxplot voor een serie waarden.
+//   - title: een titeltekst die boven het boxplot moet worden getoond 
+//   - values: een serie waarden
+//   - props: properties voor het figuur (optioneel)
 public Figure boxPlot(str title, list[int] values, FProperty props...) {
-	num median = median(values);
-	num q1 = percentile(values, 25);
-	num q3 = percentile(values, 75);
-	num qr = q3 - q1;
-	num minimum = q1 - (1.5 * qr);
-	num maximum = q3 + (1.5 * qr);
-	num startRange = analysis::statistics::Descriptive::min(values);
-	num endRange = analysis::statistics::Descriptive::max(values);
-	num mean = mean(values);
-	return boxPlot(title, startRange, minimum, q1, median, q3, maximum, endRange, mean, props);
+	params = getBoxplotParams(values);
+	return boxPlot(title, params.startRange, params.q1, params.median, params.q3, params.endRange, props);
 }
 
-public Figure boxPlot(str title, num startRange, num minimum, num q1, num median, num q3, num maximum, num endRange, num mean, FProperty props...) {	
+// Een boxplot op basis van een aantal parameters.
+//   - title: een titeltekst die boven het boxplot moet worden getoond 
+//   - startRange: de laagste waarde
+//   - q1: het eerste kwartiel
+//   - median: de mediaan
+//   - q3: het derde kwartiel
+//   - endRange: de hoogste waarde
+//   - props: properties voor het figuur (optioneel)
+public Figure boxPlot(str title, num startRange, num q1, num median, num q3, num endRange, FProperty props...) {	
  	// Ratio's berekenen
 	num ratio = (endRange - startRange);
- 	num ratio_endRange_maximum = percent((endRange - maximum), ratio);
- 	num ratio_maximum_q3 = percent((maximum - q3), ratio);
+ 	num ratio_endRange_q3 = percent((endRange - q3), ratio);
  	num ratio_q3_median = percent((q3 - median), ratio);
  	num ratio_median_q1 = percent((median - q1), ratio);
- 	num ratio_q1_minimum = percent((q1- minimum), ratio);
- 	num ratio_minimum_startRange = percent((minimum - startRange), ratio);
-
+ 	num ratio_q1_startRange = percent((q1 - startRange), ratio);
+ 	
 	// Afmetingen
 	int width = 50;
 	int height = 120;
 	int axisWidth = 25;
-	int axisHeight = height + 40;
+	int axisHeight = height + 30;
 	
-	int h1 = round(height * ratio_endRange_maximum / 100);
-	int h2 = round(height * ratio_maximum_q3 / 100);
-	int h3 = round(height * ratio_q3_median / 100);
-	int h4 = round(height * ratio_median_q1 / 100);
-	int h5 = round(height * ratio_q1_minimum / 100);
-	int h6 = round(height * ratio_minimum_startRange / 100);
+	int h1 = round(height * ratio_endRange_q3 / 100);
+	int h2 = round(height * ratio_q3_median / 100);
+	int h3 = round(height * ratio_median_q1 / 100);
+	int h4 = round(height * ratio_q1_startRange / 100);
 
 	// Boxplot zelf
 	Figure bPlot = vcat(
@@ -305,15 +305,16 @@ public Figure boxPlot(str title, num startRange, num minimum, num q1, num median
 			// Filler
 			space(size(width, (axisHeight - height) / 2), resizable(false)), 
 			// Echte boxplot onderdelen
-			space(size(width, h1), resizable(false)),
 			box(size(width, 1), resizable(false)), 
-			box(size(1, h2), resizable(false), lineStyle("dash")), 
+			box(size(1, h1), resizable(false), lineStyle("dash")), 
+			box(size(width, h2), resizable(false), fillColor(boxPlotFillColor)), 
 			box(size(width, h3), resizable(false), fillColor(boxPlotFillColor)), 
-			box(size(width, h4), resizable(false), fillColor(boxPlotFillColor)), 
-			box(size(1, h5), resizable(false), lineStyle("dash")), 
+			box(size(1, h4), resizable(false), lineStyle("dash")), 
 			box(size(width, 1), resizable(false)),
-			space(size(width, h6), resizable(false))
+			// Filler
+			space(size(width, (axisHeight - height) / 2), resizable(false)) 
 		], 
+		popup("Boxplot <title>.\nStartwaarde = <startRange>, \n1e kwartiel = <q1>, \nMediaan = <median>, \n3e kwartiel = <q3>, \nEindwaarde = <endRange>."),
 		size(width, height),
 		resizable(false)
 	);

@@ -3,6 +3,9 @@ module visualisation::utils::VisUtils
 import vis::Figure;
 import vis::Render;
 
+import util::Math;
+import analysis::statistics::Descriptive;
+
 import List;
 import Set;
 import Map;
@@ -59,5 +62,37 @@ public Color getUnitRiskIndicationColor(str categoryName) {
 	if (categoryName == "Moderate") return moderateColor;
 	if (categoryName == "Complex") return complexColor;
 	return untestableColor;
+}
+
+// Bepaalt de parameters voor een pboxplot, op basis van een lijst van waarden
+//   - values: een lijst van waarden waarvan een boxplot moet worden gemaakt
+public tuple[num startRange, num q1, num median, num q3, num endRange] getBoxplotParams(list[int] values) {
+	// De uitzonderingen
+	if (size(values) == 0) {
+		return <0.0, 0.0, 0.0, 0.0, 0.0>;
+	}
+	if (size(values) == 1) {
+		num v = head(values);
+		return <v, v, v, v, v>;
+	}
+
+	// Sorteer de values
+	values = sort(values);
+	
+	// Bepaal de mediaan
+	num median_ = median(values);
+	
+	// Deel de waarden op in twee helften: v1 en v2
+	tuple[list[int] first, list[int] last] splitted = split(values);
+	list[int] v1 = splitted.first;
+	list[int] v2 = splitted.last;
+	if (size(v2) > size(v1)) v2 = tail(v2);
+	
+	// Bepaal de kwartielen q1 en q3 (beide de mediaan van resp. de eerste helft en de tweede helft van de waardenlijst).
+	num q1 = median(v1);
+	num q3 = median(v2);
+
+	// Geef het resultaat terug
+	return <head(v1), q1, median_, q3, last(v2)>;
 }
 
