@@ -171,7 +171,13 @@ public Figure buttonGrid(list[Figure] buttons) {
 public Figure dashBoard(Figure mainContent, Figure topRightContent, Figure bottomRightContent) {
 	return box(
 		hcat([
-			// Twee subpanels aan de linkerkant van het dashboard, gevolgd door een filler 
+			// Hoofdgedeelte van het dashboard
+			box(grid([[mainContent]]
+			, std(lineColor(defaultLineColor)))
+			, lineColor(defaultFillColor)
+			, resizable(true)), 
+			
+			// Vier subpanels aan de rechterkant van het dashboard 
 			box(
 				vcat (
 					[
@@ -191,14 +197,6 @@ public Figure dashBoard(Figure mainContent, Figure topRightContent, Figure botto
 				, width(200)
 				, hresizable(false)
 			),	
-
-			// Hoofdgedeelte van het dashboard
-			box(grid([[mainContent]]
-			, std(lineColor(defaultLineColor)))
-			, lineColor(defaultFillColor)
-			, resizable(true)), 
-			
-			// Twee subpanels aan de rechterkant van het dashboard, gevolgd door een filler 
 			box(
 				vcat (
 					[
