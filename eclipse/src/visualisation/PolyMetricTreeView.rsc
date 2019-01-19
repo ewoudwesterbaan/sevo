@@ -118,7 +118,7 @@ private Figure createRiskCatStackedDiagram(ClassInfoTuple classInfo) {
 	// Sorteer de risicocategorieen, zodat ze in de juiste volgorde in het diagram verschijnen
 	list[TupComplexityRiskCategory] riskCats = sort(toList(domain(classInfo.riskCats)), 
 		bool(TupComplexityRiskCategory a, TupComplexityRiskCategory b) { 
-			return a.minComplexity < b.minComplexity; 
+			return a.minComplexity > b.minComplexity; 
 		}
 	);
 	
