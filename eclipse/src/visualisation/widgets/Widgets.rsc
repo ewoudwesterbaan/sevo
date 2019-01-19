@@ -42,26 +42,19 @@ private int subGridFontSize = 11;
 private Color boxPlotFillColor = color("lightsteelblue");
 private int boxplotFontSize = 12;
 
-// Geeft een pagina terug met een titel, een kruimelpad, inhoud (tree of treemap), en een buttongrid.
-public Figure page(Figure pageTitle, Figure breadcrumPath, Figure content, Figure buttonGrid) {
+// Geeft een pagina terug met een titel, een kruimelpad, en inhoud (dashboard met een tree en een aantal subgrids).
+public Figure page(Figure pageTitle, Figure breadcrumPath, Figure content) {
 	return box(
 		vcat([
 			// Titel en kruimelpad bovenaan de pagina
 			box(vcat([pageTitle, breadcrumPath]), vresizable(false)),
 			// Content 
-			box(grid([[content]], std(lineColor(defaultLineColor))), vresizable(true)),
-			// Buttongrid onderaan de pagina
-			box(buttonGrid, vresizable(false))
+			box(grid([[content]], std(lineColor(defaultLineColor))), vresizable(true))
 		]),
 		std(lineColor(defaultFillColor)),
 		std(fontColor(defaultFontColor)),
 		resizable(true)
 	);
-}
-
-// Geeft een pagina terug met een titel, inhoud (text, tree of treemap), en een buttongrid.
-public Figure page(Figure pageTitle, Figure content, Figure buttonGrid) {
-	return page(pageTitle, breadcrumPath([text("")]), content, buttonGrid);
 }
 
 // Toont een popup met een tooltip tekst.

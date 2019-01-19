@@ -104,9 +104,8 @@ private void showClassTree(str pkgName, str classId) {
 private void renderPage(Figure breadcrumPath, Figure tree, Figure boxPlot, Figure stackedDiagram) {
 	Figure title = pageTitle("<projectInfo.projName> - Polymetric Tree");
 	Figure homeButton = button(void(){visualizeMetrics();}, "Home");
-	Figure buttonGrid = buttonGrid([homeButton]);
 	Figure dashBoard = dashBoard(tree, stackedDiagram, boxPlot);
-	render(page(title, breadcrumPath, dashBoard, buttonGrid));
+	render(page(title, breadcrumPath, dashBoard));
 }
 
 // Maakt een stacked diagram met de informatie over de verdeling van coderegels in de units over de
