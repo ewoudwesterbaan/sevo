@@ -260,7 +260,8 @@ public Figure stackedDiagram(str title, list[int] values, list[Color] colors, li
 		hcat([
 			vcat([text(details, ialign(1.0))], size(diagramWidth, intHeight)), 
 			box(vcat(boxes), size(diagramWidth, intHeight), resizable(false))
-		])
+		]),
+		space(resizable(true)) // Filler
 	]);
 }
 
@@ -341,7 +342,8 @@ public Figure boxPlot(str title, num startRange, num q1, num median, num q3, num
 		], 
 		hgap(10), 
 		size(1), 
-		resizable(false))
+		resizable(false)),
+		space(resizable(true)) // Filler
 	]);
 }
 
