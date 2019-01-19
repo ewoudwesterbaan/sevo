@@ -256,6 +256,7 @@ public Figure stackedDiagram(str title, list[int] values, list[Color] colors, li
 	
 	return vcat([
 		subTitle(title), 
+		space(resizable(true)), // Filler
 		hcat([
 			vcat([text(details, ialign(1.0))], size(diagramWidth, intHeight)), 
 			box(vcat(boxes), size(diagramWidth, intHeight), resizable(false))
@@ -333,6 +334,7 @@ public Figure boxPlot(str title, num startRange, num q1, num median, num q3, num
 	
 	return vcat([
 		subTitle(title), 
+		space(resizable(true)), // Filler
 		hcat([
 			axisGrid, 
 			bPlot

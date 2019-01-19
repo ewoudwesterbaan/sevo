@@ -94,15 +94,23 @@ private void showClassView(str pkgName, str classId) {
 	
 	// Stel een boxplot samen voor codeLines
 	Figure codeLinesBoxplot = boxPlot("Coderegels per unit", [unit.codeLines | unit <- classInfo.units]);
-
 	// Stel een boxplot samen voor complexity
 	Figure complexityBoxplot = boxPlot("Complexity per unit", [unit.complexity | unit <- classInfo.units]);
 	
+	// Stel een stackedDiagram samen met de unit size informatie voor deze klasse
+	Figure unitSizeStackedDiagram = createUnitSizeStackedDiagram("UnitSize distributie", classInfo);
 	// Stel een stackedDiagram samen met de risk category informatie voor deze klasse
-	Figure stackedDiagram = createRiskCatStackedDiagram("Risico distributie", classInfo);
+	Figure riskCatStackedDiagram = createRiskCatStackedDiagram("Risico distributie", classInfo);
 	
 	// Render een pagina 
-	renderPage(breadcrumPath([bc1, bc2, bc3]), createTree(root, leaves), codeLinesBoxplot, text(""), complexityBoxplot, stackedDiagram);
+	renderPage(
+		breadcrumPath([bc1, bc2, bc3]), 
+		createTree(root, leaves), 
+		codeLinesBoxplot, 
+		unitSizeStackedDiagram, 
+		complexityBoxplot, 
+		riskCatStackedDiagram
+	);
 }
 
 // Rendert een pagina.
@@ -145,6 +153,12 @@ private Figure createRiskCatStackedDiagram(str title, ClassInfoTuple classInfo) 
 	
 	// Maak het stack diagram
 	return stackedDiagram(title, values, colors, infoTexts);
+}
+
+// Maakt een stacked diagram met de informatie over de verdeling van unit size over de units.
+private Figure createUnitSizeStackedDiagram(str title, ClassInfoTuple classInfo) {
+	// TODO
+	return text("UnitSize diagram");
 }
 
 // Maakt een boom met de opgegeven root en leaves.
