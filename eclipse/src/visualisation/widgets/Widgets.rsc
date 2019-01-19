@@ -264,16 +264,17 @@ public Figure stackedDiagram(str title, list[int] values, list[Color] colors, li
 
 // Een boxplot
 public Figure boxPlot(str title, list[int] values, FProperty props...) {
-	num median = median(values);
-	num q1 = percentile(values, 25);
-	num q3 = percentile(values, 75);
+	// num median = median(values);
+	list[int] sortedList = sort(values);
+	num q1 = median(sortedList[ .. size(sortedList)/2]);
+	num q3 =  median(sortedList[size(sortedList)/2 + 1.. ]);
 	num qr = q3 - q1;
-	num minimum = q1 - (1.5 * qr);
-	num maximum = q3 + (1.5 * qr);
-	num startRange = analysis::statistics::Descriptive::min(values);
-	num endRange = analysis::statistics::Descriptive::max(values);
+	num minimum = analysis::statistics::Descriptive::min(values);
+	num maximum = analysis::statistics::Descriptive::max(values);
+	num startRange = 0; // q1 - (1.5 * qr);
+	num endRange = 1.1 * maximum; //q3 + (1.5 * qr);
 	num mean = mean(values);
-	return boxPlot(title, startRange, minimum, q1, median, q3, maximum, endRange, mean, props);
+	return boxPlot(title, startRange, minimum, q1, median(values), q3, maximum, endRange, mean, props);
 }
 
 public Figure boxPlot(str title, num startRange, num minimum, num q1, num median, num q3, num maximum, num endRange, num mean, FProperty props...) {	
