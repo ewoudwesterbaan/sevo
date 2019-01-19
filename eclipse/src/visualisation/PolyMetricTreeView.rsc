@@ -96,7 +96,7 @@ private void showClassView(str pkgName, str classId) {
 	Figure boxPlot = boxPlot("bPlot3", [6, 7, 4, 9, 6, 2, 8, 6, 9, 6, 8, 9, 7, 3, 10, 5, 6, 7]); // TODO
 	
 	// Stel een stackedDiagram samen met de risk category informatie voor deze klasse
-	Figure stackedDiagram = createRiskCatStackedDiagram("sDgr3", classInfo);
+	Figure stackedDiagram = createRiskCatStackedDiagram("Risico distributie", classInfo);
 	
 	// Render een pagina 
 	renderPage(breadcrumPath([bc1, bc2, bc3]), createTree(root, leaves), stackedDiagram, boxPlot, stackedDiagram, boxPlot);

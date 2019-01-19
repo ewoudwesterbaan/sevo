@@ -247,16 +247,16 @@ public Figure stackedDiagram(str title, list[int] values, list[Color] colors, li
 	for (i <- [0..size(heights)]) {
 		boxes += box(space(), fillColor(colors[i]), size(diagramWidth, heights[i]), resizable(false));
 	}
-	
-	list[Figure] texts = [];
+
+	str details = "";	
 	for (t <- infoTexts) {
-		texts += text(t);
+		details += "<t>\n\n";
 	}
 	
 	return vcat([
 		subTitle(title), 
 		hcat([
-			vcat(texts, size(diagramWidth, intHeight)), 
+			vcat([text(details, ialign(1.0))], size(diagramWidth, intHeight)), 
 			box(vcat(boxes), size(diagramWidth, intHeight), resizable(false))
 		])
 	]);
