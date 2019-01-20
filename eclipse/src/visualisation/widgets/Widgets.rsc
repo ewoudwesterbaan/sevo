@@ -276,7 +276,38 @@ public Figure stackedDiagram(str title, list[int] values, list[Color] colors, li
 //   - props: properties voor het figuur (optioneel)
 public Figure boxPlot(str title, list[int] values, FProperty props...) {
 	params = getBoxplotParams(values);
+	if (params.endRange == params.startRange) return flatBox(title, params.endRange, props);
 	return boxPlot(title, params.startRange, params.q1, params.median, params.q3, params.endRange, props);
+}
+
+// Een "boxplot" van een lijst met maar 1 waarde. Dit levert een lijn op.
+private Figure flatBox(str title, num val, FProperty proprs...) {
+	// Afmetingen
+	int width = 50;
+	int height = 120;
+	
+	Figure bPlot = vcat([
+			space(resizable(true)), 
+			box(size(width, 1), resizable(false)), 
+			space(resizable(true)) 
+		], 
+		popup("Boxplot <title>.\nStartwaarde = <val>, \n1e kwartiel = <val>, \nMediaan = <val>, \n3e kwartiel = <val>, \nEindwaarde = <val>."),
+		size(width, height),
+		resizable(false)
+	);
+
+	return vcat([
+		subTitle(title), 
+		space(resizable(true)), // Filler
+		hcat([
+			text("<val> .", ialign(1.0), fontSize(boxplotFontSize)), 
+			bPlot
+		], 
+		hgap(10), 
+		size(1), 
+		resizable(false)),
+		space(resizable(true)) // Filler
+	]);
 }
 
 // Een boxplot op basis van een aantal parameters.
@@ -287,7 +318,7 @@ public Figure boxPlot(str title, list[int] values, FProperty props...) {
 //   - q3: het derde kwartiel
 //   - endRange: de hoogste waarde
 //   - props: properties voor het figuur (optioneel)
-public Figure boxPlot(str title, num startRange, num q1, num median, num q3, num endRange, FProperty props...) {	
+private Figure boxPlot(str title, num startRange, num q1, num median, num q3, num endRange, FProperty props...) {	
  	// Ratio's berekenen
 	num ratio = (endRange - startRange);
  	num ratio_endRange_q3 = percent((endRange - q3), ratio);
