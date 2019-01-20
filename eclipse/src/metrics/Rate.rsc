@@ -29,6 +29,11 @@ public Rank getComplexityRank(RiskCatDistributionMap cdMap) {
 	return head([rc.rank | rc <- complexityRankCategories, percModerate <= rc.maxRelativeLOCModerate && percComplex <= rc.maxRelativeLOCComplex && percUntestable <= rc.maxRelativeLOCUntestable]);
 }
 
+// Geeft de rank categorie terug op basis van de naam
+public TupComplexityRankCategory getTupRankCategoryByRank(str rank) {
+	return head([cat | cat <- complexityRankCategories, cat.rank == rank]);
+}
+
 // Bepaalt de rank van de applicatie, gegeven de duplicatiepercentage
 public str getDuplicationRank(num percentage) {
 	if (percentage < 3) return "++";

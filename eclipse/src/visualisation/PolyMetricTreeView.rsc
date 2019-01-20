@@ -11,6 +11,7 @@ import util::Math;
 
 import metrics::Complexity;
 import metrics::Aggregate;
+import metrics::Rate;
 
 import View;
 import visualisation::widgets::Widgets;
@@ -39,9 +40,9 @@ public void showProjectView(ProjectInfoTuple projInfo) {
 	
 	// Render een pagina met de boom
 	Figure bc1 = breadcrumElement(projectInfo.projName);
-	Figure boxPlot = boxPlot("bPlot", [6, 7, 4, 9, 6, 2, 8, 6, 9, 6, 8, 9, 7, 3, 10, 5, 6, 7]);
+	Figure boxPlot = boxPlot("TODO ...", [6, 7, 4, 9, 6, 2, 8, 6, 9, 6, 8, 9, 7, 3, 10, 5, 6, 7]);
 	Figure stackedDiagram = stackedDiagram(
-		"sDiagram",
+		"TODO ...",
 		[5, 19, 10, 30, 7], 
 		[getComplexityRatingIndicationColor("--"), getComplexityRatingIndicationColor("-"), getComplexityRatingIndicationColor("0"), getComplexityRatingIndicationColor("+"), getComplexityRatingIndicationColor("++")],
 		["Bla x%", "Blie y%", "Hup z%", "Zus a%", "Zo b%"]
@@ -66,15 +67,14 @@ private void showPackageView(str pkgName) {
 	Figure bc1 = breadcrumElement(void(){showProjectView(projectInfo);}, projectInfo.projName);
 	Figure bc2 = breadcrumElement(pkgName);
 
-	Figure boxPlot = boxPlot("testplot", [1, 4, 8, 9, 49, 51]);
-	Figure stackedDiagram = stackedDiagram(
-		"sDiagram2",
-		[5, 19, 10, 30, 7], 
-		[getComplexityRatingIndicationColor("--"), getComplexityRatingIndicationColor("-"), getComplexityRatingIndicationColor("0"), getComplexityRatingIndicationColor("+"), getComplexityRatingIndicationColor("++")],
-		["Bla x%", "Blie y%", "Hup z%", "Zus a%", "Zo b%"]
-	);
+	// Tijdelijk boxplot ... TODO: stel hier twee boxplost samen: een voor complexity en een voor size
+	Figure boxPlot = boxPlot("TODO ...", [1, 4, 8, 9, 49, 51]);
+	
+	// Stel een stackedDiagram samen met de complexity rank distributie voor deze package
+	Figure complexityRankStackedDiagram = createComplexityRankStackedDiagram("Complexity rank dist.", pkgInfo);
+	// TODO: stel een stacked diagram samen voor de unit sizes ....
 
-	renderPage(breadcrumPath([bc1, bc2]), createTree(root, leaves), boxPlot, legendText("Large", color("lightsteelblue")), boxPlot, stackedDiagram);
+	renderPage(breadcrumPath([bc1, bc2]), createTree(root, leaves), boxPlot, complexityRankStackedDiagram, boxPlot, complexityRankStackedDiagram);
 }
 
 // Toont een boom van een klasse met de bijbehorende methoden.
@@ -122,11 +122,36 @@ private void renderPage(Figure breadcrumPath, Figure tree, Figure topLeftFigure,
 	render(page(title, breadcrumPath, dashBoard));
 }
 
+// Maakt een stacked diagram met informatie over de verdeling van de coderegels in de classes van 
+// een package over de verschillende complexity ranks (++, +, 0, -, --).
+private Figure createComplexityRankStackedDiagram(str title, PkgInfoTuple pkgInfo) {
+	// Sorteer de risicocategorieen, zodat ze in de juiste volgorde in het diagram verschijnen
+	list[TupComplexityRankCategory] sortedComplexityRanks = sort(toList(domain(pkgInfo.complexityRanks)), 
+		bool(TupComplexityRankCategory a, TupComplexityRankCategory b) { 
+			return a.maxRelativeLOCModerate > b.maxRelativeLOCModerate; 
+		}
+	);
+	
+	// Verzamel de gegevens
+	list[int] values = [];
+	list[str] infoTexts = [];
+	list[Color] colors = [];
+	for (cat <- sortedComplexityRanks) {
+		real perc = round(pkgInfo.complexityRanks[cat], 0.01); 
+		infoTexts += "Rank <cat.rank>: <perc>%";
+		values += round(perc);
+		colors += getComplexityRatingIndicationColor(cat.rank);
+	}
+	
+	// Maak het stack diagram
+	return stackedDiagram(title, values, colors, infoTexts);
+}
+
 // Maakt een stacked diagram met de informatie over de verdeling van coderegels in de units over de
 // verschillende risk categories (complexiteit).
 private Figure createRiskCatStackedDiagram(str title, ClassInfoTuple classInfo) {
 	// Sorteer de risicocategorieen, zodat ze in de juiste volgorde in het diagram verschijnen
-	list[TupComplexityRiskCategory] riskCats = sort(toList(domain(classInfo.riskCats)), 
+	list[TupComplexityRiskCategory] sortedRiskCats = sort(toList(domain(classInfo.riskCats)), 
 		bool(TupComplexityRiskCategory a, TupComplexityRiskCategory b) { 
 			return a.minComplexity > b.minComplexity; 
 		}
@@ -136,7 +161,7 @@ private Figure createRiskCatStackedDiagram(str title, ClassInfoTuple classInfo) 
 	list[int] values = [];
 	list[str] infoTexts = [];
 	list[Color] colors = [];
-	for (cat <- riskCats) {
+	for (cat <- sortedRiskCats) {
 		real perc = round(classInfo.riskCats[cat], 0.01); 
 		infoTexts += "<cat.categoryName>: <perc>%";
 		values += round(perc);

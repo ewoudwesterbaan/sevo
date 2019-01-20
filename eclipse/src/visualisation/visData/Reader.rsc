@@ -89,7 +89,7 @@ public PkgInfoMap getPkgInfoMapFromClassInfoMap(ClassInfoMap classInfos) {
 			int totalLines = classInfo.totalLines;
 			int commentLines = classInfo.commentLines;
 			int codeLines = classInfo.codeLines;
-			PkgInfoTuple pkgInfo = <pkgName, complexityRating, totalLines, commentLines, codeLines, (classId : classInfos[classId])>;
+			PkgInfoTuple pkgInfo = <pkgName, complexityRating, totalLines, commentLines, codeLines, (), (), (classId : classInfos[classId])>;
 			result += (pkgName : pkgInfo);
 		} else {
 			result[pkgName].classInfos += (classId : classInfo);
@@ -99,9 +99,13 @@ public PkgInfoMap getPkgInfoMapFromClassInfoMap(ClassInfoMap classInfos) {
 		}
 	}
 	
-	// Nu alle info per package verzameld is, kunnen we de complexityRating bijwerken.
+	// Nu alle info per package verzameld is, kunnen we de complexityRating, complexityRanks en unitSizeCats bijwerken.
 	for (pkgName <- result) {
 		result[pkgName].complexityRating = getComplexityRankForPackage(result[pkgName], complexities);
+		result[pkgName].complexityRanks = getComplexitRankDistribution(range(result[pkgName].classInfos));
+		pkgUnits = [];
+		for (classInfo <- range(result[pkgName].classInfos)) pkgUnits += classInfo.units;
+    	result[pkgName].unitSizeCats = getUnitSizeDistribution(pkgUnits);
 	}
 	
 	return result;
@@ -115,7 +119,12 @@ public ProjectInfoTuple getProjectInfoTupleFromPkgInfoMap(loc project, PkgInfoMa
 	int totalLines = sum(volumeMetrics.totalLines);
 	int commentLines = sum(volumeMetrics.commentLines);
 	int codeLines = sum(volumeMetrics.codeLines);
-	return <project, projName, complexityRating, totalLines, commentLines, codeLines, pkgInfos>;
+	
+	// TODO: bepaal de distributies 
+	//result.complexityRanks = getComplexitRankDistribution(range(pkgInfos));
+    //result.unitSizeCats = getUnitSizeDistribution(getUnits(project);
+
+	return <project, projName, complexityRating, totalLines, commentLines, codeLines, (), (), pkgInfos>;
 }
 
 // Bepaalt de complexity rank/rating op klasseniveau.
@@ -173,6 +182,29 @@ private UnitSizeDistributionMap getUnitSizeDistribution(UnitInfoList units) {
 	int totalCodeLines = sum([0] + [unit.codeLines | unit <- units]);
 	RelLinesOfCode unitSizes = {<unit.location, unit.totalLines, unit.commentLines, unit.codeLines> | unit <- units};
 	return getUnitSizeDistribution(totalCodeLines, unitSizes);
+}
+
+// Bepaalt de relatieve verdeling van de complexity ranks (++, +, 0, -, --) over alle class-coderegels.
+//   - classInfos: een lijst van ClassInfo tupels die alle classes in een package of project representeren
+private ComplexityRankDistributionMap getComplexitRankDistribution(set[ClassInfoTuple] classInfos) {
+	// Totaal aantal codeLines van alle classes bij elkaar
+	int totalCodeLines = sum([0] + [classInfo.codeLines | classInfo <- classInfos]);
+
+	// Een map waarin we het totaal aantal LOC van alle classes per categorie bijhouden
+	ComplexityRankDistributionMap distributionMap = (rc : 0.0 | rc <- complexityRankCategories);
+	for (classInfo <- classInfos) {
+		TupComplexityRankCategory rankCategory = getTupRankCategoryByRank(classInfo.complexityRating);
+		distributionMap[rankCategory] += classInfo.codeLines;
+	}
+
+	// We hebben nu een distributionMap met per complexityRank het aantal classcoderegels.
+	// Bepaal nu de ratio/distributie van de regels per rank.
+	for (key <- distributionMap.category) {
+		if (totalCodeLines == 0) distributionMap[key] = 0.0;
+		else distributionMap[key] = (distributionMap[key] * 100) / totalCodeLines;
+	}
+
+	return distributionMap;
 }
 
 

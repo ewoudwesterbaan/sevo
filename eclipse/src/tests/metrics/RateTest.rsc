@@ -10,6 +10,16 @@ import IO;
 import Set;
 import List;
 
+// Test de methode metrics::Rate::getTupRankCategoryByRank
+test bool testGetTupRankCategoryByRank() {
+	bool result = assertEqual("++", getTupRankCategoryByRank("++").rank, "Unexpected rank");
+	result = result && assertEqual("+", getTupRankCategoryByRank("+").rank, "Unexpected rank");
+	result = result && assertEqual("0", getTupRankCategoryByRank("0").rank, "Unexpected rank");
+	result = result && assertEqual("-", getTupRankCategoryByRank("-").rank, "Unexpected rank");
+	result = result && assertEqual("--", getTupRankCategoryByRank("--").rank, "Unexpected rank");
+	return result;
+}
+
 // Test de methode metrics::Rate::getComplexityRank
 test bool testGetComplexityRank_PlusPlus() {
 	RiskCatDistributionMap cdMap = (
