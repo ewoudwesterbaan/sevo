@@ -91,10 +91,8 @@ public UnitSizeDistributionMap getUnitSizeDistribution(int sysLinesOfCode, RelLi
 	// We hebben nu een distributionMap met per groottecategorie het aantal unitcoderegels.
 	// Bepaal nu de ratio/distributie van de regels per groottecategorie
 	for (key <- distributionMap.category) {
-		try
-			distributionMap[key] = (distributionMap[key] * 100) / sysLinesOfCode;
-		catch 
-			ArithmeticException("Division undefined"): distributionMap[key] = 0.0;
+		if (sysLinesOfCode == 0) distributionMap[key] = 0.0;
+		else distributionMap[key] = (distributionMap[key] * 100) / sysLinesOfCode;
 	}
 	
 	return distributionMap;

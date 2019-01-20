@@ -160,10 +160,8 @@ private RiskCatDistributionMap getRiskCatDistribution(UnitInfoList units) {
 	// We hebben nu een distributionMap met per risicocategorie het aantal unitcoderegels.
 	// Bepaal nu de ratio/distributie van de regels per complexiteitscategorie
 	for (key <- distributionMap.category) {
-		try
-			distributionMap[key] = (distributionMap[key] * 100) / totalCodeLines;
-		catch 
-			ArithmeticException("Division undefined"): distributionMap[key] = 0.0;
+		if (totalCodeLines == 0) distributionMap[key] = 0.0;
+		else distributionMap[key] = (distributionMap[key] * 100) / totalCodeLines;
 	}
 	
 	return distributionMap;

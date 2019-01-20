@@ -130,8 +130,18 @@ public Figure subTitle(str titleText){
 	);
 }
 
+// Een text met een kleurindicatie in een cirkel ernaast.
 public Figure legendText(str theText, Color theColor) {
-	return hcat([text(theText), ellipse(width(10), height(10), resizable(false), fillColor(theColor))]);
+	return box(
+		hcat([
+			space(hresizable(true)), // Filler
+			text(theText), 
+			ellipse(width(10), height(10), resizable(false), fillColor(theColor))
+		], gap(10)),
+		lineColor(subGridFillColor),
+		hsize(round(subPanelSize*0.6)),
+		resizable(false)
+	);
 }
 
 // Een breadcrum figure.
@@ -239,7 +249,7 @@ public Figure dashBoard(Figure mainContent, Figure topLeftContent, Figure bottom
 	);
 }
 
-// Een stacked diagram voor complexity rates
+// Een stacked diagram voor complexity rates en unit sizes
 public Figure stackedDiagram(str title, list[int] values, list[Color] colors, list[str] infoTexts) {
 	// Afmetingen
 	int diagramWidth = 30;
@@ -248,25 +258,27 @@ public Figure stackedDiagram(str title, list[int] values, list[Color] colors, li
 	int intHeight = round(numHeight);
 	num heightRatio = numHeight / sum(values);
 	
+	// Diagram
 	list[int] heights = [round(heightRatio * v) | v <- values];
 	list[Figure] boxes = [];
 	for (i <- [0..size(heights)]) {
 		boxes += box(space(), fillColor(colors[i]), size(diagramWidth, heights[i]), resizable(false));
 	}
 
-	str details = "";	
-	for (t <- infoTexts) {
-		details += "<t>\n\n";
+	// Tekst
+	list[Figure] details = [space(size(1), hresizable(false))];
+	for (i <- [0..size(infoTexts)]) {
+		details += legendText(infoTexts[i], colors[i]);
 	}
+	details += space(size(1), hresizable(false));
 	
+	// Samenvoegen en resultaat retourneren
 	return vcat([
 		subTitle(title), 
-		space(resizable(true)), // Filler
 		hcat([
-			vcat([text(details, ialign(1.0))], size(diagramWidth, intHeight)), 
+			vcat(details, size(textWidth, intHeight)), 
 			box(vcat(boxes), size(diagramWidth, intHeight), resizable(false))
-		]),
-		space(resizable(true)) // Filler
+		])
 	]);
 }
 
@@ -299,10 +311,7 @@ private Figure flatBox(str title, num val, FProperty proprs...) {
 	return vcat([
 		subTitle(title), 
 		space(resizable(true)), // Filler
-		hcat([
-			text("<val> .", ialign(1.0), fontSize(boxplotFontSize)), 
-			bPlot
-		], 
+		hcat([text("<val> .", ialign(1.0), fontSize(boxplotFontSize)), bPlot], 
 		hgap(10), 
 		size(1), 
 		resizable(false)),
@@ -359,11 +368,7 @@ private Figure boxPlot(str title, num startRange, num q1, num median, num q3, nu
 	
 	// Lineaal
 	Figure axisGrid = box(
-		text(
-			"<endRange> .\n.\n.\n.\n.\n.\n.\n.\n.\n<startRange> .", 
-			ialign(1.0),
-			fontSize(boxplotFontSize)
-		), 
+		text("<endRange> .\n.\n.\n.\n.\n.\n.\n.\n.\n<startRange> .", ialign(1.0), fontSize(boxplotFontSize)), 
 		size(axisWidth, height), 
 		resizable(false),
 		lineColor(subGridFillColor)
@@ -372,10 +377,7 @@ private Figure boxPlot(str title, num startRange, num q1, num median, num q3, nu
 	return vcat([
 		subTitle(title), 
 		space(resizable(true)), // Filler
-		hcat([
-			axisGrid, 
-			bPlot
-		], 
+		hcat([axisGrid, bPlot], 
 		hgap(10), 
 		size(1), 
 		resizable(false)),
