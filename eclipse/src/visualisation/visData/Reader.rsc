@@ -36,7 +36,7 @@ public ClassInfoMap getClassInfo(loc project) {
     for (Declaration ast <- createAstsFromEclipseProject(project, true)) {
     	loc classLocation = ast.src; 
     	TupLinesOfCode lines = getLinesOfCode(classLocation);
-    	ClassInfoTuple classInfo = <classLocation, "", "", "", lines.totalLines, lines.commentLines, lines.codeLines, (), []>;
+    	ClassInfoTuple classInfo = <classLocation, "", "", "", lines.totalLines, lines.commentLines, lines.codeLines, (), (), []>;
     	UnitInfoList units = [];
 
         visit(ast) {
@@ -70,7 +70,8 @@ public ClassInfoMap getClassInfo(loc project) {
         }
         classInfo.units = units;
         classInfo.complexityRating = getComplexityRankForClass(classInfo, complexities);
-        classInfo.riskCats = getRiskCatDistribution(classInfo.units, classInfo.codeLines);
+        classInfo.riskCats = getRiskCatDistribution(classInfo.units);
+        classInfo.unitSizeCats = getUnitSizeDistribution(classInfo.units);
         result += ("<classLocation>" : classInfo);
     }
     return result;
@@ -120,7 +121,7 @@ public ProjectInfoTuple getProjectInfoTupleFromPkgInfoMap(loc project, PkgInfoMa
 // Bepaalt de complexity rank/rating op klasseniveau.
 private str getComplexityRankForClass(ClassInfoTuple classInfo, RelComplexities complexities) {
 	// Bepaal de relatieve verdeling van de risico categorieen
-	RiskCatDistributionMap distributionMap = getRiskCatDistribution(classInfo.units, classInfo.codeLines);
+	RiskCatDistributionMap distributionMap = getRiskCatDistribution(classInfo.units);
 
 	// Bepaal de complexity rank bij de gevonden verdeling
 	return getComplexityRank(distributionMap);
@@ -137,7 +138,7 @@ private str getComplexityRankForPackage(PkgInfoTuple pkgInfo, RelComplexities co
 	}
 	
 	// Bepaal de relatieve verdeling van de risico categorieen
-	RiskCatDistributionMap distributionMap = getRiskCatDistribution(units, packageCodeLines);
+	RiskCatDistributionMap distributionMap = getRiskCatDistribution(units);
 
 	// Bepaal de complexity rank bij de gevonden verdeling
 	return getComplexityRank(distributionMap);
@@ -145,9 +146,10 @@ private str getComplexityRankForPackage(PkgInfoTuple pkgInfo, RelComplexities co
 
 // Bepaalt de relatieve verdeling van de risico categorieen (simple, moderate, complex en untestable) over alle coderegels.
 //   - units: de units in een class, package of project
-//   - totalCodeLines: het totaal aantal coderegels in zo'n class, package of project
-private RiskCatDistributionMap getRiskCatDistribution(UnitInfoList units, int totalCodeLines) {
-	// Een map waarin we het totaal aantal LOC van alle units per complexiteitscategorie bijhouden
+private RiskCatDistributionMap getRiskCatDistribution(UnitInfoList units) {
+	int totalCodeLines = sum([unit.codeLines | unit <- units]);
+
+	// Een map waarin we het totaal aantal LOC van alle units per categorie bijhouden
 	RiskCatDistributionMap distributionMap = (rc : 0.0 | rc <- riskCategories);
 	for (unit <- units) {
 		str categoryName = head([complexity.riskCategory  | complexity <- complexities, 0 == compareLocations(unit.location, complexity.location)]);
@@ -162,6 +164,14 @@ private RiskCatDistributionMap getRiskCatDistribution(UnitInfoList units, int to
 	}
 	
 	return distributionMap;
+}
+
+// Bepaalt de relatieve verdeling van de unit size categorieen (small, medium, ...) over alle coderegels.
+//   - units: de units in een class, package of project
+private UnitSizeDistributionMap getUnitSizeDistribution(UnitInfoList units) {
+	int totalCodeLines = sum([unit.codeLines | unit <- units]);
+	RelLinesOfCode unitSizes = {<unit.location, unit.totalLines, unit.commentLines, unit.codeLines> | unit <- units};
+	return getUnitSizeDistribution(totalCodeLines, unitSizes);
 }
 
 

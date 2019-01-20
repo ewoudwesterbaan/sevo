@@ -21,13 +21,19 @@ import visualisation::visData::DataTypes;
 private Color simpleColor = color("limegreen");
 private Color moderateColor = color("gold");
 private Color complexColor = color("darkorange");
-private Color untestableColor = color("crimson");
+private Color untestableColor = color("red");
 
 private Color rankPlusPlusColor = simpleColor;
 private Color rankPlusColor = color("yellowgreen");
 private Color rankZeroColor = moderateColor;
 private Color rankMinusColor = color("orange");
 private Color rankMinusMinusColor = untestableColor;
+
+private Color smallSizeColor = color("white");
+private Color mediumSizeColor = color("aliceblue");
+private Color largeSizeColor = color("lightsteelblue");
+private Color veryLargeSizeColor = color("steelblue");
+private Color insaneSizeColor = color("midnightblue");
 
 // Geeft de kleur van een figure terug, op basis van de complexity rating waarin het project valt.
 //   - rank: de risico rank (++, +, 0, -, --)
@@ -62,6 +68,15 @@ public Color getUnitRiskIndicationColor(str categoryName) {
 	if (categoryName == "Moderate") return moderateColor;
 	if (categoryName == "Complex") return complexColor;
 	return untestableColor;
+}
+
+// Geeft de kleur terug op basis van de grootte-categorienaam van een unit.
+public Color getUnitSizeIndicationColor(str categoryName) {
+	if (categoryName == "Small") return smallSizeColor;
+	if (categoryName == "Medium") return mediumSizeColor;
+	if (categoryName == "Large") return largeSizeColor;
+	if (categoryName == "Very large") return veryLargeSizeColor;
+	return insaneSizeColor;
 }
 
 // Bepaalt de parameters voor een pboxplot, op basis van een lijst van waarden

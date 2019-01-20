@@ -45,6 +45,7 @@ private Color breadcrumSelectableFontColor = headerFontColor;
 private Color subGridLineColor = breadcrumLineColor;
 private Color subGridFillColor = breadcrumFillColor;
 private int subGridFontSize = 11;
+private int subPanelSize = 220;
 
 private Color boxPlotFillColor = color("lightsteelblue");
 private int boxplotFontSize = 12;
@@ -129,6 +130,10 @@ public Figure subTitle(str titleText){
 	);
 }
 
+public Figure legendText(str theText, Color theColor) {
+	return hcat([text(theText), ellipse(width(10), height(10), resizable(false), fillColor(theColor))]);
+}
+
 // Een breadcrum figure.
 public Figure breadcrumPath(list[Figure] breadcrumElements) {
 	return box(
@@ -193,11 +198,11 @@ public Figure dashBoard(Figure mainContent, Figure topLeftContent, Figure bottom
 				vcat (
 					[
 						box(grid([[topLeftContent]], std(lineColor(defaultLineColor)), std(fontSize(subGridFontSize)))
-						, size(200)
+						, size(subPanelSize)
 						, resizable(false)
 						), 
 						box(grid([[bottomLeftContent]], std(lineColor(defaultLineColor)), std(fontSize(subGridFontSize)))
-						, size(200)
+						, size(subPanelSize)
 						, resizable(false)
 						),
 						box(grid([[]]), resizable(true)) // Filler
@@ -205,18 +210,18 @@ public Figure dashBoard(Figure mainContent, Figure topLeftContent, Figure bottom
 					, std(fillColor(subGridFillColor))
 					, lineColor(subGridLineColor)
 				)
-				, width(200)
+				, width(subPanelSize)
 				, hresizable(false)
 			),	
 			box(
 				vcat (
 					[
 						box(grid([[topRightContent]], std(lineColor(defaultLineColor)), std(fontSize(subGridFontSize)))
-						, size(200)
+						, size(subPanelSize)
 						, resizable(false)
 						), 
 						box(grid([[bottomRightContent]], std(lineColor(defaultLineColor)), std(fontSize(subGridFontSize)))
-						, size(200)
+						, size(subPanelSize)
 						, resizable(false)
 						),
 						box(grid([[]]), resizable(true)) // Filler
@@ -224,7 +229,7 @@ public Figure dashBoard(Figure mainContent, Figure topLeftContent, Figure bottom
 					, std(fillColor(subGridFillColor))
 					, lineColor(subGridLineColor)
 				)
-				, width(200)
+				, width(subPanelSize)
 				, hresizable(false)
 			)	
 		]),

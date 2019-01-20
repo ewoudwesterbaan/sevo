@@ -10,6 +10,7 @@ import Map;
 import util::Math;
 
 import metrics::Complexity;
+import metrics::Aggregate;
 
 import View;
 import visualisation::widgets::Widgets;
@@ -73,7 +74,7 @@ private void showPackageView(str pkgName) {
 		["Bla x%", "Blie y%", "Hup z%", "Zus a%", "Zo b%"]
 	);
 
-	renderPage(breadcrumPath([bc1, bc2]), createTree(root, leaves), boxPlot, stackedDiagram, boxPlot, stackedDiagram);
+	renderPage(breadcrumPath([bc1, bc2]), createTree(root, leaves), boxPlot, legendText("Large", color("lightsteelblue")), boxPlot, stackedDiagram);
 }
 
 // Toont een boom van een klasse met de bijbehorende methoden.
@@ -115,7 +116,7 @@ private void showClassView(str pkgName, str classId) {
 
 // Rendert een pagina.
 private void renderPage(Figure breadcrumPath, Figure tree, Figure topLeftFigure, Figure bottomLeftFigure, Figure topRightFigure, Figure bottomRightFigure) {
-	Figure title = pageTitle("<projectInfo.projName> - Polymetric Tree");
+	Figure title = pageTitle(projectInfo.projName);
 	Figure homeButton = button(void(){visualizeMetrics();}, "Home");
 	Figure dashBoard = dashBoard(tree, topLeftFigure, bottomLeftFigure, topRightFigure, bottomRightFigure);
 	render(page(title, breadcrumPath, dashBoard));
@@ -124,10 +125,6 @@ private void renderPage(Figure breadcrumPath, Figure tree, Figure topLeftFigure,
 // Maakt een stacked diagram met de informatie over de verdeling van coderegels in de units over de
 // verschillende risk categories (complexiteit).
 private Figure createRiskCatStackedDiagram(str title, ClassInfoTuple classInfo) {
-	list[int] values = [];
-	list[str] infoTexts = [];
-	list[Color] colors = [];
-	
 	// Sorteer de risicocategorieen, zodat ze in de juiste volgorde in het diagram verschijnen
 	list[TupComplexityRiskCategory] riskCats = sort(toList(domain(classInfo.riskCats)), 
 		bool(TupComplexityRiskCategory a, TupComplexityRiskCategory b) { 
@@ -136,20 +133,15 @@ private Figure createRiskCatStackedDiagram(str title, ClassInfoTuple classInfo) 
 	);
 	
 	// Verzamel de gegevens
-	real uncategorized = 100.0;
+	list[int] values = [];
+	list[str] infoTexts = [];
+	list[Color] colors = [];
 	for (cat <- riskCats) {
 		real perc = round(classInfo.riskCats[cat], 0.01); 
-		uncategorized -= perc;
 		infoTexts += "<cat.categoryName>: <perc>%";
 		values += round(perc);
 		colors += getUnitRiskIndicationColor(cat);
 	}
-	// Uncategorized zijn de regels die wel in een klasse zitten, maar niet in units. 
-	// Deze regels zijn dus niet onderdeel van een risico categorie, omdat zo'n categorie
-	// betrekking heeft op de codeLines in de units zelf.
-	infoTexts += "Uncategorized: <uncategorized>%";
-	values += round(uncategorized);
-	colors += color("gray");
 	
 	// Maak het stack diagram
 	return stackedDiagram(title, values, colors, infoTexts);
@@ -157,8 +149,26 @@ private Figure createRiskCatStackedDiagram(str title, ClassInfoTuple classInfo) 
 
 // Maakt een stacked diagram met de informatie over de verdeling van unit size over de units.
 private Figure createUnitSizeStackedDiagram(str title, ClassInfoTuple classInfo) {
-	// TODO
-	return text("UnitSize diagram");
+	// Sorteer de categorieen, zodat ze in de juiste volgorde in het diagram verschijnen
+	list[TupUnitSizeCategory] unitSizeCats = sort(toList(domain(classInfo.unitSizeCats)), 
+		bool(TupUnitSizeCategory a, TupUnitSizeCategory b) { 
+			return a.minLines > b.minLines; 
+		}
+	);
+	
+	// Verzamel de gegevens
+	list[int] values = [];
+	list[str] infoTexts = [];
+	list[Color] colors = [];
+	for (cat <- unitSizeCats) {
+		real perc = round(classInfo.unitSizeCats[cat], 0.01); 
+		infoTexts += "<cat.categoryName>: <perc>%";
+		values += round(perc);
+		colors += getUnitSizeIndicationColor(cat.categoryName);
+	}
+	
+	// Maak het stack diagram
+	return stackedDiagram(title, values, colors, infoTexts);
 }
 
 // Maakt een boom met de opgegeven root en leaves.
