@@ -31,30 +31,41 @@ Het cache mechanisme en een eerste versie van een zelfgemaakte boxplot is door E
 
 
 \section{Aannames}
-
+\begin{description}
+\item[Data is consistent] We gaan ervan uit dat de data waar de visualisatie op maken, dezelfde is als de data uit assignment 1.
+\end{description}
 
 \section{Criteria}
-(Tufte) Voorkom vertekeningen in waarnemingen
-(Tufte) Aantal informatiedragende dimensies
+Aantal criteria met betrekking tot esthetiek en gebruiksvriendelijkheid:
+\begin{enumerate}
+\item Voorkom vertekeningen in waarnemingen \cite{tufte2014visual} p.56. Hiermee wordt bedoelt dat de fysieke grootte van een object in verhouding moet staan met de werkelijk numerieke waarde. Een verkeerde verhouding noemt Tufte de `Lie Factor'.
+\item Aantal informatiedragende dimensies mag niet groter zijn dan het aantal dimensies in de data \cite{tufte2014visual} p.71. Tufte geeft aan dat het gebruik van meerdere dimensies ten opzichte van het aantal dimensies dat de data bevat, leidt tot misleiding en fouten in het ontwerp.
 
-Criteria met betrekking tot kleurgebruik zijn \cite{B}:
+\item Stephen Few geeft enkele criteria met betrekking tot kleurgebruik \cite{B}:
 \begin{enumerate}
 \item Gebruik zachte kleuren, tenzij je iets uit wilt lichten;
-\item Gebruik dezelfde kleur, tenzij dit is geassocieerd wordt met een andere betekenis;
-\item Gebruik een enkele, neutrale achtergrond kleur
+\item Gebruik dezelfde kleur, tenzij dit geassocieerd wordt met een andere betekenis;
+\item Gebruik een enkele, neutrale achtergrond kleur.
 \end{enumerate}
 
-De Visual Information-Seeking Mantra is schrijft voor dat eerst een overzicht gegeven moet worden, vervolgens inzoomen en filteren. Details moeten op aanvraag beschikbaar zijn \cite{A}.
-
+\item Ben Shneiderman heeft voor usability de `Visual Information-Seeking Mantra` beschreven. Deze theorie houdt in dat eerst een overzicht gegeven moet worden, vervolgens men moet kunnen inzoomen en filteren. Details moeten op aanvraag beschikbaar zijn \cite{A}. Tufte geeft ook een zelfde principe: `reveal the data at several levels of detail, from a broad overview to the fine structure` \cite{tufte2014visual} p. 13.
+\end{enumerate}
 
 
 \section{Selectie van de architectural view}
+Het doel van de visualisatie is de kwaliteit van een applicatie op basis van complexiteit en unitsize te laten zien. Het grootste deel van het scherm bestaat uit een Treeview. We hebben hier voor een treeview gekozen, omdat we daarin meerdere metrieken kwijt kunnen; de complexiteitwaarde getoond met kleur,  unitsize in grootte, en de hierarchie van de applicatie doormiddel van de leaves. Om het overzicht te bewaren, laat de treeview niet direct waardes zien. Interactief is ingebouwd op de volgende manieren: 1) men kan inzoomen door op een klasse of package te klikken 2) men kan uitzoomen door een shift+klik te doen op een parent node. Het meest gedetailleerde niveau is een methode of constructor.
+
+Om een overzicht te geven waar men zich in de hierarchie van de applicatie bevindt, hebben wordt een kruimelpad getoond. Men kan uitzoomen, door op het gewenst niveau te klikken. De klikbare delen hebben een andere kleur (blauw) niet-klikbare delen (zwart).
+
+De zijkant bevat een panel met inzicht in de verdeling van waardes. Een stackedbar biedt inzicht in de verdeling van de waardes in het geselecteerde niveau. Naast deze stackedbar zijn de percentages zichtbaar. Een boxplot geeft de verdeling aan van waardes. Een mouse-over laat een popup zien van de waardes (min, q0, q1, mediaan, q3, q4, max en het gemiddelde).
+Een stacked bar en boxplot wordt getoond voor zowel complexiteit als unitsize.
 
 
 \section{Resultaten analyse}
-De `Visual Information-Seeking Mantra' hebben we toegepast door de visualisatie te laten starten op project niveau. Door te klikken kan men een niveau inzoomen naar package en/ of klasse niveau. Dit is dan ook de hierarchie dat verwerkt is in de visualisatie. Het op aanvraag beschikbaar zijn van de details, zit verwerkt in de visualisaatie door alleen de waardes te geven van een metriek, wanneer met met de muis over een boxplot van een metriek gaat.
+De `Visual Information-Seeking Mantra' hebben we toegepast door de visualisatie te laten starten op project niveau. Door te klikken kan men een niveau inzoomen naar package en/ of klasse niveau. Dit is dan ook de hierarchie dat verwerkt is in de visualisatie. Het op aanvraag beschikbaar zijn van de details, zit verwerkt in de visualisatie door alleen de waardes te geven van een metriek, wanneer met met de muis over een boxplot van een metriek gaat.
 
 De kleurstelling die we hebben toegepast is in de gehele visualisatie hetzelfde. Veel neutraal blauw. De achtergrond hebben we een neutrale lichte kleur gegeven. De achtergrond aan de zijkanten waar de boxplot staan, hebben we wel een andere kleur gegeven die iets donkerder is, maar nog steeds neutraal. Doordat dit een andere kleur is, associeert men hier een andere betekenis mee, wat in dit geval dus een detaillering is die niet voor het eerte gezicht nodig is. Wij willen hiermee bereiken dat men eerst geleid wordt naar de treeview, anders zou de gehele visualisatie te overweldigend over kunnen komen (DIT IS MISSCHIEN WAT TE BLABLA).
+
 
 
 \bibliographystyle{abbrv}

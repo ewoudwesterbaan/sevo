@@ -147,7 +147,7 @@ private str getComplexityRankForPackage(PkgInfoTuple pkgInfo, RelComplexities co
 // Bepaalt de relatieve verdeling van de risico categorieen (simple, moderate, complex en untestable) over alle coderegels.
 //   - units: de units in een class, package of project
 private RiskCatDistributionMap getRiskCatDistribution(UnitInfoList units) {
-	int totalCodeLines = sum([unit.codeLines | unit <- units]);
+	int totalCodeLines = sum([0] + [unit.codeLines | unit <- units]);
 
 	// Een map waarin we het totaal aantal LOC van alle units per categorie bijhouden
 	RiskCatDistributionMap distributionMap = (rc : 0.0 | rc <- riskCategories);
@@ -160,7 +160,10 @@ private RiskCatDistributionMap getRiskCatDistribution(UnitInfoList units) {
 	// We hebben nu een distributionMap met per risicocategorie het aantal unitcoderegels.
 	// Bepaal nu de ratio/distributie van de regels per complexiteitscategorie
 	for (key <- distributionMap.category) {
-		distributionMap[key] = (distributionMap[key] * 100) / totalCodeLines;
+		try
+			distributionMap[key] = (distributionMap[key] * 100) / totalCodeLines;
+		catch 
+			ArithmeticException("Division undefined"): distributionMap[key] = 0.0;
 	}
 	
 	return distributionMap;
@@ -169,7 +172,7 @@ private RiskCatDistributionMap getRiskCatDistribution(UnitInfoList units) {
 // Bepaalt de relatieve verdeling van de unit size categorieen (small, medium, ...) over alle coderegels.
 //   - units: de units in een class, package of project
 private UnitSizeDistributionMap getUnitSizeDistribution(UnitInfoList units) {
-	int totalCodeLines = sum([unit.codeLines | unit <- units]);
+	int totalCodeLines = sum([0] + [unit.codeLines | unit <- units]);
 	RelLinesOfCode unitSizes = {<unit.location, unit.totalLines, unit.commentLines, unit.codeLines> | unit <- units};
 	return getUnitSizeDistribution(totalCodeLines, unitSizes);
 }
