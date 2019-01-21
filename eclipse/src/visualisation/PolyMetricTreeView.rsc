@@ -70,11 +70,19 @@ private void showPackageView(str pkgName) {
 	// Tijdelijk boxplot ... TODO: stel hier twee boxplost samen: een voor complexity en een voor size
 	Figure boxPlot = boxPlot("TODO ...", [1, 4, 8, 9, 49, 51]);
 	
+	// Stel een stackedDiagram samen met de unit size informatie voor deze klasse
+	Figure unitSizeStackedDiagram = createUnitSizeStackedDiagram("UnitSize distributie", pkgInfo.unitSizeCats);
 	// Stel een stackedDiagram samen met de complexity rank distributie voor deze package
 	Figure complexityRankStackedDiagram = createComplexityRankStackedDiagram("Complexity rank dist.", pkgInfo);
-	// TODO: stel een stacked diagram samen voor de unit sizes ....
 
-	renderPage(breadcrumPath([bc1, bc2]), createTree(root, leaves), boxPlot, complexityRankStackedDiagram, boxPlot, complexityRankStackedDiagram);
+	renderPage(
+		breadcrumPath([bc1, bc2]), 
+		createTree(root, leaves), 
+		boxPlot, 
+		unitSizeStackedDiagram, 
+		boxPlot, 
+		complexityRankStackedDiagram
+	);
 }
 
 // Toont een boom van een klasse met de bijbehorende methoden.
@@ -99,7 +107,7 @@ private void showClassView(str pkgName, str classId) {
 	Figure complexityBoxplot = boxPlot("Complexity per unit", [unit.complexity | unit <- classInfo.units]);
 	
 	// Stel een stackedDiagram samen met de unit size informatie voor deze klasse
-	Figure unitSizeStackedDiagram = createUnitSizeStackedDiagram("UnitSize distributie", classInfo);
+	Figure unitSizeStackedDiagram = createUnitSizeStackedDiagram("UnitSize distributie", classInfo.unitSizeCats);
 	// Stel een stackedDiagram samen met de risk category informatie voor deze klasse
 	Figure riskCatStackedDiagram = createRiskCatStackedDiagram("Risico distributie", classInfo);
 	
@@ -173,9 +181,9 @@ private Figure createRiskCatStackedDiagram(str title, ClassInfoTuple classInfo) 
 }
 
 // Maakt een stacked diagram met de informatie over de verdeling van unit size over de units.
-private Figure createUnitSizeStackedDiagram(str title, ClassInfoTuple classInfo) {
+private Figure createUnitSizeStackedDiagram(str title, UnitSizeDistributionMap unitSizeCats) {
 	// Sorteer de categorieen, zodat ze in de juiste volgorde in het diagram verschijnen
-	list[TupUnitSizeCategory] unitSizeCats = sort(toList(domain(classInfo.unitSizeCats)), 
+	list[TupUnitSizeCategory] sortedUnitSizeCats = sort(toList(domain(unitSizeCats)), 
 		bool(TupUnitSizeCategory a, TupUnitSizeCategory b) { 
 			return a.minLines > b.minLines; 
 		}
@@ -185,8 +193,8 @@ private Figure createUnitSizeStackedDiagram(str title, ClassInfoTuple classInfo)
 	list[int] values = [];
 	list[str] infoTexts = [];
 	list[Color] colors = [];
-	for (cat <- unitSizeCats) {
-		real perc = round(classInfo.unitSizeCats[cat], 0.01); 
+	for (cat <- sortedUnitSizeCats) {
+		real perc = round(unitSizeCats[cat], 0.01); 
 		infoTexts += "<cat.categoryName>: <perc>%";
 		values += round(perc);
 		colors += getUnitSizeIndicationColor(cat.categoryName);
