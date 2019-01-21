@@ -45,7 +45,7 @@ public void showProjectView(ProjectInfoTuple projInfo) {
 	Figure boxPlot = boxPlot("TODO ...", [1, 4, 8, 9, 49, 51]);
 
 	// Stel een stackedDiagram samen met de unit size informatie voor dit project
-	Figure unitSizeStackedDiagram = createUnitSizeStackedDiagram("UnitSize distributie", projInfo.unitSizeCats);
+	Figure unitSizeStackedDiagram = createUnitSizeStackedDiagram("Unit size distributie", projInfo.unitSizeCats);
 	// Stel een stackedDiagram samen met de complexity rank distributie voor ditt project
 	Figure complexityRankStackedDiagram = createComplexityRankStackedDiagram("Complexity rank dist.", projInfo.complexityRanks);
 	
@@ -79,7 +79,7 @@ private void showPackageView(str pkgName) {
 	Figure boxPlot = boxPlot("TODO ...", [1, 4, 8, 9, 49, 51]);
 	
 	// Stel een stackedDiagram samen met de unit size informatie voor deze package
-	Figure unitSizeStackedDiagram = createUnitSizeStackedDiagram("UnitSize distributie", pkgInfo.unitSizeCats);
+	Figure unitSizeStackedDiagram = createUnitSizeStackedDiagram("Unit size distributie", pkgInfo.unitSizeCats);
 	// Stel een stackedDiagram samen met de complexity rank distributie voor deze package
 	Figure complexityRankStackedDiagram = createComplexityRankStackedDiagram("Complexity rank dist.", pkgInfo.complexityRanks);
 
@@ -115,7 +115,7 @@ private void showClassView(str pkgName, str classId) {
 	Figure complexityBoxplot = boxPlot("Complexity per unit", [unit.complexity | unit <- classInfo.units]);
 	
 	// Stel een stackedDiagram samen met de unit size informatie voor deze klasse
-	Figure unitSizeStackedDiagram = createUnitSizeStackedDiagram("UnitSize distributie", classInfo.unitSizeCats);
+	Figure unitSizeStackedDiagram = createUnitSizeStackedDiagram("Unit size distributie", classInfo.unitSizeCats);
 	// Stel een stackedDiagram samen met de risk category informatie voor deze klasse
 	Figure riskCatStackedDiagram = createRiskCatStackedDiagram("Risico distributie", classInfo);
 	
@@ -336,22 +336,22 @@ private FProperty handleClassShiftClick(str pkgName) {
 
 // Bepaalt de grootte van een unit op basis van de lines of code
 private int getUnitSize(int codeLines) {
-	return min([200, 25 + codeLines / 2]);
+	return min([250, 10 + codeLines]);
 }
 
 // Bepaalt de grootte van een class op basis van de lines of code
 private int getClassSize(int codeLines) {
-	return min([200, 25 + codeLines / 6]);
+	return min([250, 10 + codeLines / 4]);
 }
 
 // Bepaalt de grootte van een package op basis van de lines of code
 private int getPackageSize(int codeLines) {
-	return min([200, 25 + codeLines / 18]);
+	return min([250, 10 + codeLines / 8]);
 }
 
 // Bepaalt de grootte van een project op basis van de lines of code
 private int getProjectSize(int codeLines) {
-	return min([200, 25 + codeLines / 100]);
+	return min([250, 10 + codeLines / 16]);
 }
 
 
