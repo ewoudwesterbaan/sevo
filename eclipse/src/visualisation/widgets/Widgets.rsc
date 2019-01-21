@@ -45,7 +45,7 @@ private Color breadcrumSelectableFontColor = headerFontColor;
 private Color subGridLineColor = breadcrumLineColor;
 private Color subGridFillColor = breadcrumFillColor;
 private int subGridFontSize = 11;
-private int subPanelSize = 220;
+private int subPanelSize = 240;
 
 private Color boxPlotFillColor = color("lightsteelblue");
 private int boxplotFontSize = 12;
