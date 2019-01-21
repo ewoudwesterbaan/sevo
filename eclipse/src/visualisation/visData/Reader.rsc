@@ -120,11 +120,16 @@ public ProjectInfoTuple getProjectInfoTupleFromPkgInfoMap(loc project, PkgInfoMa
 	int commentLines = sum(volumeMetrics.commentLines);
 	int codeLines = sum(volumeMetrics.codeLines);
 	
-	// TODO: bepaal de distributies 
-	//result.complexityRanks = getComplexitRankDistribution(range(pkgInfos));
-    //result.unitSizeCats = getUnitSizeDistribution(getUnits(project);
-
-	return <project, projName, complexityRating, totalLines, commentLines, codeLines, (), (), pkgInfos>;
+	// Bepaal de distributies (complexity ranks en unit sizes) 
+	classInfos = {};
+	for (pkgInfo <- range(pkgInfos)) classInfos += range(pkgInfo.classInfos);
+	ComplexityRankDistributionMap complexityRanks = getComplexitRankDistribution(classInfos);
+	pkgUnits = [];
+	for (classInfo <- classInfos) pkgUnits += classInfo.units;
+    UnitSizeDistributionMap unitSizeCats = getUnitSizeDistribution(pkgUnits);
+	
+	// Voeg alle verzamelde info samen in een tupel, en retourneer deze.
+	return <project, projName, complexityRating, totalLines, commentLines, codeLines, complexityRanks, unitSizeCats, pkgInfos>;
 }
 
 // Bepaalt de complexity rank/rating op klasseniveau.

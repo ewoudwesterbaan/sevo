@@ -40,15 +40,23 @@ public void showProjectView(ProjectInfoTuple projInfo) {
 	
 	// Render een pagina met de boom
 	Figure bc1 = breadcrumElement(projectInfo.projName);
-	Figure boxPlot = boxPlot("TODO ...", [6, 7, 4, 9, 6, 2, 8, 6, 9, 6, 8, 9, 7, 3, 10, 5, 6, 7]);
-	Figure stackedDiagram = stackedDiagram(
-		"TODO ...",
-		[5, 19, 10, 30, 7], 
-		[getComplexityRatingIndicationColor("--"), getComplexityRatingIndicationColor("-"), getComplexityRatingIndicationColor("0"), getComplexityRatingIndicationColor("+"), getComplexityRatingIndicationColor("++")],
-		["Bla x%", "Blie y%", "Hup z%", "Zus a%", "Zo b%"]
-	);
 	
-	renderPage(breadcrumPath([bc1]), createTree(root, leaves), boxPlot, stackedDiagram, boxPlot, stackedDiagram);
+	// Tijdelijk boxplot ... TODO: stel hier twee boxplost samen: een voor complexity en een voor size
+	Figure boxPlot = boxPlot("TODO ...", [1, 4, 8, 9, 49, 51]);
+
+	// Stel een stackedDiagram samen met de unit size informatie voor dit project
+	Figure unitSizeStackedDiagram = createUnitSizeStackedDiagram("UnitSize distributie", projInfo.unitSizeCats);
+	// Stel een stackedDiagram samen met de complexity rank distributie voor ditt project
+	Figure complexityRankStackedDiagram = createComplexityRankStackedDiagram("Complexity rank dist.", projInfo.complexityRanks);
+	
+	renderPage(
+		breadcrumPath([bc1]), 
+		createTree(root, leaves), 
+		boxPlot, 
+		unitSizeStackedDiagram, 
+		boxPlot, 
+		complexityRankStackedDiagram
+	);
 }
 
 // Toont een boom van een package met de bijbehorende klassen.
@@ -70,10 +78,10 @@ private void showPackageView(str pkgName) {
 	// Tijdelijk boxplot ... TODO: stel hier twee boxplost samen: een voor complexity en een voor size
 	Figure boxPlot = boxPlot("TODO ...", [1, 4, 8, 9, 49, 51]);
 	
-	// Stel een stackedDiagram samen met de unit size informatie voor deze klasse
+	// Stel een stackedDiagram samen met de unit size informatie voor deze package
 	Figure unitSizeStackedDiagram = createUnitSizeStackedDiagram("UnitSize distributie", pkgInfo.unitSizeCats);
 	// Stel een stackedDiagram samen met de complexity rank distributie voor deze package
-	Figure complexityRankStackedDiagram = createComplexityRankStackedDiagram("Complexity rank dist.", pkgInfo);
+	Figure complexityRankStackedDiagram = createComplexityRankStackedDiagram("Complexity rank dist.", pkgInfo.complexityRanks);
 
 	renderPage(
 		breadcrumPath([bc1, bc2]), 
@@ -132,9 +140,9 @@ private void renderPage(Figure breadcrumPath, Figure tree, Figure topLeftFigure,
 
 // Maakt een stacked diagram met informatie over de verdeling van de coderegels in de classes van 
 // een package over de verschillende complexity ranks (++, +, 0, -, --).
-private Figure createComplexityRankStackedDiagram(str title, PkgInfoTuple pkgInfo) {
+private Figure createComplexityRankStackedDiagram(str title, ComplexityRankDistributionMap complexityRanks) {
 	// Sorteer de risicocategorieen, zodat ze in de juiste volgorde in het diagram verschijnen
-	list[TupComplexityRankCategory] sortedComplexityRanks = sort(toList(domain(pkgInfo.complexityRanks)), 
+	list[TupComplexityRankCategory] sortedComplexityRanks = sort(toList(domain(complexityRanks)), 
 		bool(TupComplexityRankCategory a, TupComplexityRankCategory b) { 
 			return a.maxRelativeLOCModerate > b.maxRelativeLOCModerate; 
 		}
@@ -145,7 +153,7 @@ private Figure createComplexityRankStackedDiagram(str title, PkgInfoTuple pkgInf
 	list[str] infoTexts = [];
 	list[Color] colors = [];
 	for (cat <- sortedComplexityRanks) {
-		real perc = round(pkgInfo.complexityRanks[cat], 0.01); 
+		real perc = round(complexityRanks[cat], 0.01); 
 		infoTexts += "Rank <cat.rank>: <perc>%";
 		values += round(perc);
 		colors += getComplexityRatingIndicationColor(cat.rank);
