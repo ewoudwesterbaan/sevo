@@ -78,7 +78,7 @@ private void showPackageView(str pkgName, str colorPalletteName) {
 	for (classInfo <- range(classInfos)) leaves += createClassFigure(classInfo, true, colorPalletteName);
 	
 	// Render een pagina met de boom
-	Figure bc1 = breadcrumElement(void(){showProjectView(projectInfo);}, projectInfo.projName);
+	Figure bc1 = breadcrumElement(void(){showProjectView(projectInfo, colorPalletteName);}, projectInfo.projName);
 	Figure bc2 = breadcrumElement(pkgName);
 
 	// Stel een boxplot samen voor codeLines
@@ -113,7 +113,7 @@ private void showClassView(str pkgName, str classId, str colorPalletteName) {
 	for (unit <- classInfo.units) leaves += createUnitFigure(unit, colorPalletteName);
 
 	// Stel een kruimelpad voor de pagina samen om te kunnen navigeren
-	Figure bc1 = breadcrumElement(void(){showProjectView(projectInfo);}, projectInfo.projName);
+	Figure bc1 = breadcrumElement(void(){showProjectView(projectInfo, colorPalletteName);}, projectInfo.projName);
 	Figure bc2 = breadcrumElement(void(){showPackageView(pkgName, colorPalletteName);}, pkgName);
 	Figure bc3 = breadcrumElement(classInfo.className);
 	
