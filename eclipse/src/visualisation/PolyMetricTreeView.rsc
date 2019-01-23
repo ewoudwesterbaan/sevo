@@ -41,8 +41,10 @@ public void showProjectView(ProjectInfoTuple projInfo) {
 	// Render een pagina met de boom
 	Figure bc1 = breadcrumElement(projectInfo.projName);
 	
-	// Tijdelijk boxplot ... TODO: stel hier twee boxplost samen: een voor complexity en een voor size
-	Figure boxPlot = boxPlot("TODO ...", [1, 4, 8, 9, 49, 51]);
+	// Stel een boxplot samen voor codeLines
+	Figure codeLinesBoxplot = boxPlot("Coderegels per unit", [unit.codeLines | unit <- getUnitsFromProjectInfo(projectInfo)]);
+	// Stel een boxplot samen voor complexity
+	Figure complexityBoxplot = boxPlot("Complexity per unit", [unit.complexity | unit <- getUnitsFromProjectInfo(projectInfo)]);
 
 	// Stel een stackedDiagram samen met de unit size informatie voor dit project
 	Figure unitSizeStackedDiagram = createUnitSizeStackedDiagram("Unit size distributie", projInfo.unitSizeCats);
@@ -52,9 +54,9 @@ public void showProjectView(ProjectInfoTuple projInfo) {
 	renderPage(
 		breadcrumPath([bc1]), 
 		createTree(root, leaves), 
-		boxPlot, 
+		codeLinesBoxplot, 
 		unitSizeStackedDiagram, 
-		boxPlot, 
+		complexityBoxplot, 
 		complexityRankStackedDiagram
 	);
 }
@@ -75,8 +77,10 @@ private void showPackageView(str pkgName) {
 	Figure bc1 = breadcrumElement(void(){showProjectView(projectInfo);}, projectInfo.projName);
 	Figure bc2 = breadcrumElement(pkgName);
 
-	// Tijdelijk boxplot ... TODO: stel hier twee boxplost samen: een voor complexity en een voor size
-	Figure boxPlot = boxPlot("TODO ...", [1, 4, 8, 9, 49, 51]);
+	// Stel een boxplot samen voor codeLines
+	Figure codeLinesBoxplot = boxPlot("Coderegels per unit", [unit.codeLines | unit <- getUnitsFromPkgInfo(pkgInfo)]);
+	// Stel een boxplot samen voor complexity
+	Figure complexityBoxplot = boxPlot("Complexity per unit", [unit.complexity | unit <- getUnitsFromPkgInfo(pkgInfo)]);
 	
 	// Stel een stackedDiagram samen met de unit size informatie voor deze package
 	Figure unitSizeStackedDiagram = createUnitSizeStackedDiagram("Unit size distributie", pkgInfo.unitSizeCats);
@@ -86,9 +90,9 @@ private void showPackageView(str pkgName) {
 	renderPage(
 		breadcrumPath([bc1, bc2]), 
 		createTree(root, leaves), 
-		boxPlot, 
+		codeLinesBoxplot, 
 		unitSizeStackedDiagram, 
-		boxPlot, 
+		complexityBoxplot, 
 		complexityRankStackedDiagram
 	);
 }
@@ -332,6 +336,20 @@ private FProperty handleClassShiftClick(str pkgName) {
 		}
 		return false;
 	});
+}
+
+// Haalt een lijst van units per package op
+private UnitInfoList getUnitsFromPkgInfo(PkgInfoTuple pkgInfo) {
+	UnitInfoList units = [];
+	for (classInfo <- range(pkgInfo.classInfos)) units += classInfo.units;
+	return units;
+}
+
+// Haalt een lijst van units per project op
+private UnitInfoList getUnitsFromProjectInfo(ProjectInfoTuple projectInfo) {
+	UnitInfoList units = [];
+	for (pkgInfo <- range(projectInfo.pkgInfos)) units += getUnitsFromPkgInfo(pkgInfo);
+	return units;
 }
 
 // Bepaalt de grootte van een unit op basis van de lines of code

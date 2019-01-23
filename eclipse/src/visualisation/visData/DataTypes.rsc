@@ -45,7 +45,7 @@ public alias PkgInfoTuple = tuple[
 	int codeLines,                                 // Het aantal regels code in de package (excl. blanco regels en commentaar)
 	ComplexityRankDistributionMap complexityRanks, // Relatief aantal class-codeLines per complexity rank (++, +, 0, -, --) in deze package.
 	UnitSizeDistributionMap unitSizeCats,          // Relatief aantal unit-codeLines per unit size categorie (small, medium, ...) in deze package.
-	ClassInfoMap classInfos                        // De lijst met alle classes in deze package
+	ClassInfoMap classInfos                        // De map met alle classes in deze package
 ];
 public alias PkgInfoMap = map[str pkgId, PkgInfoTuple pkgInfo];
 
@@ -59,5 +59,5 @@ public alias ProjectInfoTuple = tuple[
 	int codeLines,                                 // Het aantal regels code in het hele project (excl. blanco regels en commentaarregels)
 	ComplexityRankDistributionMap complexityRanks, // Relatief aantal package-codeLines per complexity rank (++, +, 0, -, --) in dit project.
 	UnitSizeDistributionMap unitSizeCats,          // Relatief aantal unit-codeLines per unit size categorie (small, medium, ...) in dit project.
-	PkgInfoMap pkgInfos                            // De lijst met alle packages in het project. 
+	PkgInfoMap pkgInfos                            // De map met alle packages in het project. 
 ];
