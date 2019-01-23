@@ -18,65 +18,127 @@ import metrics::Complexity;
 // Voor de data types en aliassen
 import visualisation::visData::DataTypes;
 
-private Color simpleColor = color("limegreen");
-private Color moderateColor = color("gold");
-private Color complexColor = color("darkorange");
-private Color untestableColor = color("red");
+private alias ColorPallette = tuple[
+	Color simpleColor,
+	Color moderateColor,
+	Color complexColor,
+	Color untestableColor,
 
-private Color rankPlusPlusColor = simpleColor;
-private Color rankPlusColor = color("yellowgreen");
-private Color rankZeroColor = moderateColor;
-private Color rankMinusColor = color("orange");
-private Color rankMinusMinusColor = untestableColor;
+	Color rankPlusPlusColor,
+	Color rankPlusColor,
+	Color rankZeroColor,
+	Color rankMinusColor,
+	Color rankMinusMinusColor,
+	
+	Color smallSizeColor,
+	Color mediumSizeColor,
+	Color largeSizeColor,
+	Color veryLargeSizeColor,
+	Color insaneSizeColor
+];
+private alias ColorMap = map[str palletteName, ColorPallette palette];
 
-private Color smallSizeColor = color("white");
-private Color mediumSizeColor = color("aliceblue");
-private Color largeSizeColor = color("lightsteelblue");
-private Color veryLargeSizeColor = color("steelblue");
-private Color insaneSizeColor = color("midnightblue");
+private ColorMap colorMap = (
+	"default" : <
+		color("limegreen"),
+		color("gold"),
+		color("darkorange"),
+		color("red"),
+		
+		color("limegreen"),
+		color("yellowgreen"),
+		color("gold"),
+		color("orange"),
+		color("red"),
+		
+		color("white"),
+		color("aliceblue"),
+		color("lightsteelblue"),
+		color("steelblue"),
+		color("midnightblue")
+	>,
+	"BW" : <
+		rgb(255, 255, 255),
+		rgb(200, 200, 200),
+		rgb(120, 120, 120),
+		rgb(0,0,0),
+		
+		rgb(255, 255, 255),
+		rgb(220, 220, 220),
+		rgb(170, 170, 170),
+		rgb(120, 120, 120),
+		rgb(0, 0, 0),
+		
+		rgb(255, 255, 255),
+		rgb(210, 210, 210),
+		rgb(160, 160, 160),
+		rgb(100, 100, 100),
+		rgb(0, 0, 0)
+	>
+); 
 
 // Geeft de kleur van een figure terug, op basis van de complexity rating waarin het project valt.
 //   - rank: de risico rank (++, +, 0, -, --)
 public Color getComplexityRatingIndicationColor(str rank) {
-	if (rank == "++") return rankPlusPlusColor;
-	if (rank == "+") return rankPlusColor;
-	if (rank == "0") return rankZeroColor;
-	if (rank == "-") return rankMinusColor;
-	if (rank == "--") return rankMinusMinusColor;
+	return getComplexityRatingIndicationColor(rank, "default");
+}
+
+public Color getComplexityRatingIndicationColor(str rank, str palletteName) {
+	if (rank == "++") return colorMap[palletteName].rankPlusPlusColor;
+	if (rank == "+") return colorMap[palletteName].rankPlusColor;
+	if (rank == "0") return colorMap[palletteName].rankZeroColor;
+	if (rank == "-") return colorMap[palletteName].rankMinusColor;
+	if (rank == "--") return colorMap[palletteName].rankMinusMinusColor;
 	throw "Unexpected rank: <rank>";
 }
 
 // Geeft de kleur van een unit figure terug, op basis van de cyclomatic complexity van een unit.
 public Color getUnitRiskIndicationColor(int complexity) {
+	return getUnitRiskIndicationColor(complexity, "default");
+}
+
+public Color getUnitRiskIndicationColor(int complexity, str palletteName) {
 	int simpleMax = getTupRiskCategoryByCategoryName("Simple").maxComplexity;
 	int moderateMax = getTupRiskCategoryByCategoryName("Moderate").maxComplexity;
 	int complexMax = getTupRiskCategoryByCategoryName("Complex").maxComplexity;
-	if (complexity <= simpleMax) return simpleColor;
-	if (complexity <= moderateMax) return moderateColor;
-	if (complexity <= complexMax) return complexColor;
-	return untestableColor;
+	if (complexity <= simpleMax) return colorMap[palletteName].simpleColor;
+	if (complexity <= moderateMax) return colorMap[palletteName].moderateColor;
+	if (complexity <= complexMax) return colorMap[palletteName].complexColor;
+	return colorMap[palletteName].untestableColor;
 }
 
 // Geeft de kleur terug op basis van het complexity risico (categorie) van een unit.
 public Color getUnitRiskIndicationColor(TupComplexityRiskCategory cat) {
-	return getUnitRiskIndicationColor(cat.categoryName);
+	return getUnitRiskIndicationColor(cat, "default");
+}
+
+public Color getUnitRiskIndicationColor(TupComplexityRiskCategory cat, str palletteName) {
+	return getUnitRiskIndicationColor(cat.categoryName, palletteName);
 }
 
 // Geeft de kleur terug op basis van het complexity risico (categorienaam) van een unit.
 public Color getUnitRiskIndicationColor(str categoryName) {
-	if (categoryName == "Simple") return simpleColor;
-	if (categoryName == "Moderate") return moderateColor;
-	if (categoryName == "Complex") return complexColor;
-	return untestableColor;
+	return getUnitRiskIndicationColor(categoryName, "default");
+}
+
+public Color getUnitRiskIndicationColor(str categoryName, str palletteName) {
+	if (categoryName == "Simple") return colorMap[palletteName].simpleColor;
+	if (categoryName == "Moderate") return colorMap[palletteName].moderateColor;
+	if (categoryName == "Complex") return colorMap[palletteName].complexColor;
+	return colorMap[palletteName].untestableColor;
 }
 
 // Geeft de kleur terug op basis van de grootte-categorienaam van een unit.
 public Color getUnitSizeIndicationColor(str categoryName) {
-	if (categoryName == "Small") return smallSizeColor;
-	if (categoryName == "Medium") return mediumSizeColor;
-	if (categoryName == "Large") return largeSizeColor;
-	if (categoryName == "Very large") return veryLargeSizeColor;
-	return insaneSizeColor;
+	return getUnitSizeIndicationColor(categoryName, "default");
+}
+
+public Color getUnitSizeIndicationColor(str categoryName, str palletteName) {
+	if (categoryName == "Small") return colorMap[palletteName].smallSizeColor;
+	if (categoryName == "Medium") return colorMap[palletteName].mediumSizeColor;
+	if (categoryName == "Large") return colorMap[palletteName].largeSizeColor;
+	if (categoryName == "Very large") return colorMap[palletteName].veryLargeSizeColor;
+	return colorMap[palletteName].insaneSizeColor;
 }
 
 // Bepaalt de parameters voor een pboxplot, op basis van een lijst van waarden

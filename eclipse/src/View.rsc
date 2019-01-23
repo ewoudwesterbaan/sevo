@@ -25,6 +25,13 @@ private loc project = |project://VisualisationTest/|;
 // Start de visualisatie van metrics.
 // Laadt eerst het project, en toont dan het dashboard voor het project.
 public void visualizeMetrics() {
+	visualizeMetrics("default");
+}
+
+public void visualizeMetrics(str colorPallette) {
+	// Voorkom foutmeldingen wanneer een ongeldig kleurpallet wordt meegegeven
+	if (colorPallette != "BW") colorPallette = "default";
+
 	// Data inladen...
 	Figure loading = text (
 		"Project Laden ...",
@@ -39,5 +46,5 @@ public void visualizeMetrics() {
 
 	// Dashboard tonen voor het projectniveau (polymetric tree view)
 	// Binnen deze view kan worden ingezoomed naar onderliggende views.
-	showProjectView(projectInfo);
+	showProjectView(projectInfo, colorPallette);
 }
