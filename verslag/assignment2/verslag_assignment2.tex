@@ -33,7 +33,7 @@ Het cache mechanisme en een eerste versie van een zelfgemaakte boxplot is door E
 \section{Aannames}
 \begin{description}
 \item[Data is consistent] We gaan ervan uit dat de data waar de visualisatie op maken, dezelfde is als de data uit assignment 1. Voor de visualisatie gebruiken we niet de duplicatiemetrieken.
-\item[Kleurenblindheid en grijstinten] De visualisatie is niet gemaakt voor mensen met kleurenblindheid of voor het afdrukken in grijstinten.
+\item[Kleurenblindheid en grijstinten] We gaan er van uit dat mensen met kleurenblindheid wel grijstinten kunnen onderscheiden.
 \end{description}
 
 \section{Criteria}
@@ -61,30 +61,38 @@ Het doel van onze visualisatie is de kwaliteit van een applicatie op basis van c
   \caption{Overview}
   \label{fig:overview}
 \end{figure}
-
-Het grootste deel van het scherm bestaat uit een treeview. We hebben voor een treeview gekozen, omdat we daar meerdere metrieken in kwijt kunnen; de complexiteitwaarde wordt getoond in kleur, unitsize in grootte, en de hiërarchie van de applicatie doormiddel van de structuur van de figuur (Figuur \ref{fig:overview}: \textcircled{2}). Om het overzicht te bewaren, laat de treeview niet direct waardes zien, maar zijn deze in een popup van een element (package, klasse of methode) te zien wanneer men met de muis hier overheen gaat, zie Figuur \ref{fig:treeview_popup}. Interactiviteit is ingebouwd op de volgende manieren: 1) men kan inzoomen door op een klasse of package te klikken 2) men kan uitzoomen door een shift+klik te doen op een parent node. Het meest gedetailleerde niveau is een methode of constructor.
-
+ 
+Het grootste deel van het scherm bestaat uit een treeview. We hebben voor een treeview gekozen, omdat we daar meerdere metrieken in kwijt kunnen; de complexiteitwaarde wordt getoond in kleur, unitsize in grootte, en de hiërarchie van de applicatie doormiddel van de structuur van de figuur (Figuur \ref{fig:overview}: \textcircled{2}). 
 \begin{figure}[h]
   \includegraphics[width=\linewidth]{images/treeview_with_popup.png}
   \caption{Treeview met popup}
   \label{fig:treeview_popup}
 \end{figure}
+Om het overzicht te bewaren, laat de treeview niet direct waardes zien, maar zijn deze in een popup van een element (package, klasse of methode) te zien wanneer men met de muis hier overheen gaat, zie Figuur \ref{fig:treeview_popup}. Interactiviteit is ingebouwd op de volgende manieren: 1) men kan inzoomen door op een klasse of package te klikken 2) men kan uitzoomen door een shift+klik te doen op een parent node. Het meest gedetailleerde niveau is een methode of constructor.
 
 Om een overzicht te geven waar men zich in de hiërarchie van de applicatie bevindt, wordt een kruimelpad getoond (Figuur \ref{fig:overview}: \textcircled{1}). Men kan uitzoomen door op het gewenst niveau te klikken. De klikbare delen hebben een andere kleur (blauw) dan niet-klikbare delen (zwart).
-\begin{figure}[ht]
+\begin{figure}[h]
 \centering
-  \includegraphics{images/boxplot_popup.png}
+  \includegraphics[width=5cm]{images/boxplot_popup.png}
   \caption{Boxplot met popup}
   \label{fig:boxplot_popup}
 \end{figure}
 
 
 De zijkant bevat een paneel met inzicht in de verdeling van waardes. Een stackedbar biedt inzicht in de verhouding van de classificaties in het geselecteerde niveau. Naast deze stackedbar zijn de percentages zichtbaar. Een boxplot geeft de verdeling van waardes. Een mouse-over laat een popup zien van de waardes (minimum, 1e kwartiel, mediaan, 3e kwartiel en maximum), zie Figuur \ref{fig:boxplot_popup}.
-Een stacked bar en boxplot worden getoond voor complexiteit en unitsize (Figuur \ref{fig:overview}: \textcircled{3}\textcircled{4}\textcircled{5}\textcircled{6}).
+Een stacked bar en boxplot worden getoond voor complexiteit en unitsize (Figuur \ref{fig:overview}: \textcircled{3}) en laten waardes zien voor het geselecteerde niveau.
 
+De visualisatie hebben we ook bruikbaar gemaakt voor mensen die minder goed kleuren kunnen onderscheiden. Door een zwart-wit functionaliteit te activeren, worden de kleuren rood, oranje, geel en groen vervangen door grijstinten, zie Figuure \ref{fig:overview_blackwhite}.
+\begin{figure}[h]
+\centering
+  \includegraphics[width=\linewidth]{images/overview_blackwhite.png}
+  \caption{Overview in grijstinten}
+  \label{fig:overview_blackwhite}
+\end{figure}
 
 \section{Resultaten analyse}
-Het voorkomen van vertekeningen hebben we minder goed toegepast. De grootte van de boxes in de treeview zijn hier een voorbeeld van, zo ook de punten aan de zijkant van de boxplot, dit zijn er altijd 10 en dat kan misleidend zijn.
+Vertekeningen van waarnemingen hebben we niet toegepast bij de grootte van de boxes in de treeview. De visualisatie wordt onleesbaar als we dit wel zouden toepassen. Een voorbeeld is een klasse waar een methode inzit met een unitsize van één en een methode met een unitsize van 200.
+Een ander voorbeeld zijn de punten aan de zijkant van de boxplot, dit zijn er altijd 10 en dat kan misleidend zijn.
 
 Het aantal informatie dragende dimensies hebben we wel goed toegepast. De boxplotten en stackedbars zijn een 1-dimensionale weergave van een metriek. In de treeview worden twee dimensies weergegeven doormiddel van kleur en grootte. 
 
