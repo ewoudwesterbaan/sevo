@@ -27,7 +27,7 @@
 
 \section{Samenwerking}
 De eerste iteratie is gebouwd op basis van een experiment van Martin, die tijdens de kerstdagen al was begonnen. Deze uitkomst hebben we als basis genomen en bepaald wat toegevoegd en/of aangepast zou moeten worden. Vooral Martin heeft hier veel werk in verzet.
-Het cache mechanisme schrijft berekende data weg naar schijf en leest deze weer in bij het opstarten van de applicatie. Dit bevordert de snelheid van opstarten. Dit mechanisme en een eerste versie van een zelfgemaakte boxplot is door Ewoud gemaakt, maar deze boxplot is later door Martin nog iets verbeterd. Rascal biedt nog geen boxplot aan (deze is nog in experimentele fase).
+Het cache mechanisme en een eerste versie van een zelfgemaakte boxplot is door Ewoud gemaakt, maar deze boxplot is later door Martin nog iets verbeterd. Rascal biedt nog geen boxplot aan (deze is nog in experimentele fase).
 
 
 \section{Aannames}
@@ -36,7 +36,7 @@ Het cache mechanisme schrijft berekende data weg naar schijf en leest deze weer 
 \item[Kleurenblindheid en grijstinten] We gaan er van uit dat mensen met kleurenblindheid wel grijstinten kunnen onderscheiden.
 \end{description}
 
-\section{Criteria}
+\section{Criteria} \label{Criteria}
 Criteria met betrekking tot esthetiek en gebruiksvriendelijkheid:
 \begin{enumerate}
 \item Voorkom vertekeningen in waarnemingen \cite{tufte2014visual} p.56. Hiermee wordt bedoeld dat de fysieke grootte van een object in verhouding moet staan met de werkelijke numerieke waarde. Een verkeerde verhouding noemt Tufte de `Lie Factor'.
@@ -50,6 +50,8 @@ Criteria met betrekking tot esthetiek en gebruiksvriendelijkheid:
 \end{enumerate}
 
 \item Ben Shneiderman heeft voor gebruiksvriendelijkheid de `Visual Information-Seeking Mantra` beschreven. Deze theorie houdt in dat eerst een overzicht gegeven moet worden, en men vervolgens moet kunnen inzoomen en filteren. Details moeten op aanvraag beschikbaar zijn \cite{A}. Tufte geeft ook een zelfde principe: `reveal the data at several levels of detail, from a broad overview to the fine structure` \cite{tufte2014visual} p. 13.
+
+\item De performance moet acceptabel zijn. We geven hier geen richtlijnen voor performance, maar gebruikers moeten niet al te lang wachten voor de visualisatie geladen is.
 \end{enumerate}
 
 
@@ -96,9 +98,11 @@ Een ander voorbeeld zijn de punten aan de zijkant van de boxplot, dit zijn er al
 
 Het aantal informatiedragende dimensies (criterium 2 in Sectie \ref{Criteria}) hebben we wel goed toegepast. De boxplots en stacked bars zijn een 1-dimensionale weergave van een metriek. In de treeview worden twee dimensies weergegeven doormiddel van kleur en grootte. 
 
-De kleurstelling (criterium 3 in Sectie \ref{Criteria}) die we hebben toegepast is in de gehele visualisatie hetzelfde. Veel neutraal blauw. De achtergrond hebben we een neutrale lichte kleur gegeven. De achtergrond aan de zijkant waar de boxplots en stacked bars staan, hebben we wel een andere kleur gegeven die iets donkerder is, maar nog steeds neutraal. Doordat dit een andere kleur is, associeert men hier een andere betekenis mee. Wij willen hiermee bereiken dat men eerst geleid wordt naar de treeview, anders zou de gehele visualisatie te overweldigend over kunnen komen.
+De kleurstelling (criterium 3 in Sectie \ref{Criteria}) die we hebben toegepast is in de gehele visualisatie hetzelfde.  De achtergrond hebben we een neutrale kleuren gegeven, waarbij de achtergrond van de rechterkant iets donkerder is. Wij willen hiermee bereiken dat men eerst geleid wordt naar de tree view.
 
 De `Visual Information-Seeking Mantra' (criterium 4 in Sectie \ref{Criteria})hebben we toegepast door de visualisatie te laten starten op project niveau. Door te klikken kan men een niveau inzoomen naar package en/of klasse niveau. Dit is dan ook de hiërarchie die verwerkt is in de visualisatie. Het op aanvraag beschikbaar zijn van de details zit verwerkt in de visualisatie door alleen de waardes te geven van een metriek wanneer men met de muis over een boxplot van een metriek gaat (popup). Dit geldt ook voor details in de tree view.
+
+Een acceptabele performance (criterium 5 in Sectie \ref{Criteria}) hebben we geïmplementeerd door het implementeren van een cache mechanisme. Dit cache mechanisme \mbox{schrijft} berekende data weg naar schijf en leest deze weer in bij het opstarten van de applicatie.
 
 \bibliographystyle{abbrv}
 \bibliography{verslag_assignment2}
