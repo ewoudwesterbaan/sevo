@@ -6,7 +6,15 @@
 \usepackage{graphicx}
 \usepackage[utf8]{inputenc}
 \usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{enumitem}
 \lstset{frameround=fttt,numbers=left,breaklines=true, extendedchars=true}
+
+\addtolength{\textwidth}{1.5in}
+\addtolength{\topmargin}{-.875in}
+\addtolength{\oddsidemargin}{-.75in}
+\addtolength{\evensidemargin}{-.75in}
+\addtolength{\textheight}{1.75in}
 
 \newcommand{\todo}[1]{\textcolor{red}{[#1]}}
 \lhead{Open Universiteit}
@@ -43,7 +51,7 @@ Criteria met betrekking tot esthetiek en gebruiksvriendelijkheid:
 \item Aantal informatiedragende dimensies mag niet groter zijn dan het aantal dimensies in de data \cite{tufte2014visual} p.71. Tufte geeft aan dat het gebruik van meerdere dimensies ten opzichte van het aantal dimensies dat de data bevat, leidt tot misleiding en fouten in het ontwerp.
 
 \item Stephen Few geeft enkele criteria met betrekking tot kleurgebruik \cite{B}:
-\begin{enumerate}
+\begin{enumerate}[nosep]
 \item Gebruik zachte kleuren, tenzij je iets uit wilt lichten;
 \item Gebruik dezelfde kleur, tenzij dit geassocieerd wordt met een andere betekenis; 
 \item Gebruik een enkele, neutrale achtergrondkleur.
@@ -56,10 +64,10 @@ Criteria met betrekking tot esthetiek en gebruiksvriendelijkheid:
 
 
 \section{Selectie van de architectural view}
-Het doel van onze visualisatie is de kwaliteit van een applicatie op basis van complexiteit en unitsize te laten zien voor ontwikkelaars in een nieuwbouw- of beheerfunctie. In Figuur \ref{fig:overview} is een overzicht van de visualisatie te zien.
+Het doel van onze visualisatie is de kwaliteit van een applicatie op basis van complexiteit en unit size te laten zien voor ontwikkelaars in een nieuwbouw- of beheerfunctie. In Figuur \ref{fig:overview} is een overzicht van de visualisatie te zien.
 
 \begin{figure}[h]
-  \includegraphics[width=\linewidth]{images/overview_with_numbers.png}
+  \includegraphics[width=0.8\linewidth]{images/overview_with_numbers.png}
   \caption{Overview}
   \label{fig:overview}
 \end{figure}
@@ -70,24 +78,26 @@ Het grootste deel van het scherm bestaat uit een tree view. De nodes representer
   \caption{Treeview met popup}
   \label{fig:treeview_popup}
 \end{figure}
-Om het overzicht te bewaren, laat de tree view niet direct waardes zien, maar zijn deze in een popup van een element (package, klasse of methode) te zien wanneer men met de muis hier overheen gaat, zie Figuur \ref{fig:treeview_popup}. Interactiviteit is ingebouwd op de volgende manieren: 1) men kan inzoomen door op een klasse of package te klikken 2) men kan uitzoomen door een shift+klik te doen op een parent node. Het meest gedetailleerde niveau is een methode of constructor, zoals te zien in Figuur \ref{fig:treeview_popup}.
 
-Om een overzicht te geven waar men zich in de hiërarchie van de applicatie bevindt, wordt een kruimelpad getoond (Figuur \ref{fig:overview}: \textcircled{1}). Men kan uitzoomen door op het gewenst niveau te klikken. De klikbare delen hebben een andere kleur (blauw) dan niet-klikbare delen (zwart).
-\begin{figure}[h]
-\centering
-  \includegraphics[width=5cm]{images/boxplot_popup.png}
+\begin{wrapfigure}{r}{0.5\textwidth}
+\begin{center}
+  \includegraphics[width=0.35\textwidth]{images/boxplot_popup.png}
+  \end{center}
   \caption{Boxplot met popup}
   \label{fig:boxplot_popup}
-\end{figure}
+\end{wrapfigure}
+Om het overzicht te bewaren, laat de tree view niet direct waardes zien, maar zijn deze in een popup van een element (package, klasse of methode) te zien wanneer men met de muis hier overheen gaat, zie Figuur \ref{fig:treeview_popup}. Interactiviteit is ingebouwd op de volgende manieren: 1) men kan inzoomen door op een klasse of package te klikken 2) men kan uitzoomen door een shift+klik te doen op een parent node. Het meest gedetailleerde niveau is een methode of constructor, zoals te zien in Figuur \ref{fig:treeview_popup}.
+
+Om een overzicht te geven waar men zich in de hiërarchie van de applicatie bevindt, wordt een kruimelpad getoond (Figuur \ref{fig:overview}: \textcircled{1}). Men kan uitzoomen door op het gewenst niveau te klikken.
 
 
-De rechterkant bevat een paneel met inzicht in de verdeling van waardes. Een stacked bar biedt inzicht in de verhouding van de classificaties in het geselecteerde niveau. Naast deze stacked bar zijn de percentages zichtbaar. Een boxplot geeft de verdeling van waardes. Een mouse-over laat een popup zien van de waardes (minimum, 1e kwartiel, mediaan, 3e kwartiel en maximum), zie Figuur \ref{fig:boxplot_popup}.
+De rechterkant bevat een paneel met inzicht in de verdeling van waardes. Een stacked bar biedt inzicht in de verhouding van de classificaties in het \mbox{geselecteerde} niveau. Naast deze stacked bar zijn de percentages zichtbaar. Een boxplot geeft de verdeling van waardes. Een mouse-over laat een popup zien van de waardes (minimum, 1e kwartiel, mediaan, 3e kwartiel en maximum), zie Figuur \ref{fig:boxplot_popup}.
 Een stacked bar en boxplot worden getoond voor complexiteit en unit size (Figuur \ref{fig:overview}: \textcircled{3}) en laten waardes zien voor het geselecteerde niveau.
 
 De visualisatie hebben we ook bruikbaar gemaakt voor mensen die minder goed kleuren kunnen onderscheiden. Door de applicatie met een extra parameter ‘BW’ (indicatie kleurenpallet) op te starten, worden de kleuren rood, oranje, geel en groen vervangen door grijstinten, zie Figuur \ref{fig:overview_blackwhite}.
 \begin{figure}[h]
 \centering
-  \includegraphics[width=\linewidth]{images/overview_blackwhite.png}
+  \includegraphics[width=0.8\linewidth]{images/overview_blackwhite.png}
   \caption{Overview in grijstinten}
   \label{fig:overview_blackwhite}
 \end{figure}
@@ -100,7 +110,7 @@ Het aantal informatiedragende dimensies (criterium 2 in Sectie \ref{Criteria}) h
 
 De kleurstelling (criterium 3 in Sectie \ref{Criteria}) die we hebben toegepast is in de gehele visualisatie hetzelfde.  De achtergrond hebben we een neutrale kleuren gegeven, waarbij de achtergrond van de rechterkant iets donkerder is. Wij willen hiermee bereiken dat men eerst geleid wordt naar de tree view.
 
-De `Visual Information-Seeking Mantra' (criterium 4 in Sectie \ref{Criteria})hebben we toegepast door de visualisatie te laten starten op project niveau. Door te klikken kan men een niveau inzoomen naar package en/of klasse niveau. Dit is dan ook de hiërarchie die verwerkt is in de visualisatie. Het op aanvraag beschikbaar zijn van de details zit verwerkt in de visualisatie door alleen de waardes te geven van een metriek wanneer men met de muis over een boxplot van een metriek gaat (popup). Dit geldt ook voor details in de tree view.
+De `Visual Information-Seeking Mantra' (criterium 4 in Sectie \ref{Criteria}) hebben we toegepast door de visualisatie te laten starten op project niveau. Door te klikken kan men een niveau inzoomen naar package en/of klasse niveau. Het op aanvraag beschikbaar zijn van de details zit verwerkt in de visualisatie door alleen de waardes te geven van een metriek wanneer men met de muis over een boxplot van een metriek gaat (popup). Dit geldt ook voor details in de tree view.
 
 Een acceptabele performance (criterium 5 in Sectie \ref{Criteria}) hebben we geïmplementeerd door het implementeren van een cache mechanisme. Dit cache mechanisme \mbox{schrijft} berekende data weg naar schijf en leest deze weer in bij het opstarten van de applicatie.
 
