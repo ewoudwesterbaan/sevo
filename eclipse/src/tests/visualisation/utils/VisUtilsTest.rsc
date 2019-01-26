@@ -6,7 +6,7 @@ import Boolean;
 import List;
 import Set;
 
-// Test de methode visualisation::utils::VisUtils::getBoxplotParams
+// Test de methode visualisation::utils::VisUtils::getBoxplotParams met een oneven aantal waarden
 test bool testgetBoxplotParamsOdd() {
 	tuple[num startRange, num q1, num median, num q3, num endRange] expected = <1.0, 2.5, 8.0, 50.0, 51.0>;
 	tuple[num startRange, num q1, num median, num q3, num endRange] actual = getBoxplotParams([51, 8, 49, 4, 1]);
@@ -18,7 +18,7 @@ test bool testgetBoxplotParamsOdd() {
 	return result;
 }
 
-// Test de methode visualisation::utils::VisUtils::getBoxplotParams
+// Test de methode visualisation::utils::VisUtils::getBoxplotParams met een even aantal waarden
 test bool testgetBoxplotParamsEven() {
 	tuple[num startRange, num q1, num median, num q3, num endRange] expected = <4.0, 8.0, 10.0, 49.0, 51.0>;
 	tuple[num startRange, num q1, num median, num q3, num endRange] actual = getBoxplotParams([51, 8, 49, 4, 9, 11]);
@@ -30,7 +30,7 @@ test bool testgetBoxplotParamsEven() {
 	return result;
 }
 
-// Test de methode visualisation::utils::VisUtils::getBoxplotParams
+// Test de methode visualisation::utils::VisUtils::getBoxplotParams met een enkele waarde
 test bool testgetBoxplotParamsSingleValue() {
 	tuple[num startRange, num q1, num median, num q3, num endRange] expected = <4.0, 4.0, 4.0, 4.0, 4.0>;
 	tuple[num startRange, num q1, num median, num q3, num endRange] actual = getBoxplotParams([4]);
@@ -42,7 +42,7 @@ test bool testgetBoxplotParamsSingleValue() {
 	return result;
 }
 
-// Test de methode visualisation::utils::VisUtils::getBoxplotParams
+// Test de methode visualisation::utils::VisUtils::getBoxplotParams met geen enkele waarde (lege lijst)
 test bool testgetBoxplotParamsEmptyList() {
 	tuple[num startRange, num q1, num median, num q3, num endRange] expected = <0.0, 0.0, 0.0, 0.0, 0.0>;
 	tuple[num startRange, num q1, num median, num q3, num endRange] actual = getBoxplotParams([]);

@@ -17,19 +17,17 @@ import visualisation::utils::VisUtils;
 import IO;
 
 private loc project = |project://VisualisationTest/|;
-//private loc project = |project://ComplexityTest/|;
 //private loc project = |project://smallsql/|;
-//private loc project = |project://DuplicationTest/|;
-//private loc project = |project://JabberPoint/|;
 
-// Start de visualisatie van metrics.
-// Laadt eerst het project, en toont dan het dashboard voor het project.
+// Start de visualisatie van metrics met het default kleurenpallet.
 public void visualizeMetrics() {
 	visualizeMetrics("default");
 }
 
+// Start de visualisatie van metrics met het opgegeven kleurenpallet.
+// Laadt eerst het project, en toont dan het dashboard voor het project.
 public void visualizeMetrics(str colorPallette) {
-	// Voorkom foutmeldingen wanneer een ongeldig kleurpallet wordt meegegeven
+	// Voorkom foutmeldingen wanneer een ongeldig kleurpallet wordt meegegeven (alleen BW en default zijn toegestaan)
 	if (colorPallette != "BW") colorPallette = "default";
 
 	// Data inladen...
@@ -44,7 +42,6 @@ public void visualizeMetrics(str colorPallette) {
 	render(grid([[loading]], gap(20), vsize(300), hsize(400), resizable(false)));
 	ProjectInfoTuple projectInfo = readProject(project);
 
-	// Dashboard tonen voor het projectniveau (polymetric tree view)
-	// Binnen deze view kan worden ingezoomed naar onderliggende views.
+	// Visualisatie tonen voor het projectniveau. Binnen deze view kan worden ingezoomed naar onderliggende views.
 	showProjectView(projectInfo, colorPallette);
 }

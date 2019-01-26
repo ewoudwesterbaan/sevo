@@ -50,7 +50,7 @@ private int subPanelSize = 240;
 private Color boxPlotFillColor = color("lightsteelblue");
 private int boxplotFontSize = 12;
 
-// Geeft een pagina terug met een titel, een kruimelpad, en inhoud (dashboard met een tree en een aantal subgrids).
+// Geeft een pagina terug met een titel, een kruimelpad, en inhoud.
 public Figure page(Figure pageTitle, Figure breadcrumPath, Figure content) {
 	return box(
 		vcat([
@@ -74,23 +74,6 @@ public FProperty popup(str msg) {
 		right(), top(),
 		gap(10),
 		resizable(false))
-	);
-}
-
-// Een button met een label en een buttontekst.
-//  - btnText: de tekst op de button,
-//  - vcallback: de methode die moet worden aangeroepen wanneer er op de button wordt geklikt.
-public Figure button(void () vcallback, str btnText){
-	return button(
-		btnText, 
-		vcallback, 
-		fillColor(buttonFillColor), 
-		lineColor(buttonLineColor), 
-		fontColor(buttonFontColor),
-		fontBold(true),
-		resizable(false),
-		vsize(35),
-		hsize(150)
 	);
 }
 
@@ -144,7 +127,7 @@ public Figure legendText(str theText, Color theColor) {
 	);
 }
 
-// Een breadcrum figure.
+// Een breadcrum path, bestaande uit de opgegeven breadcrum elementen.
 public Figure breadcrumPath(list[Figure] breadcrumElements) {
 	return box(
 		hcat(breadcrumElements, ialign(0.0), resizable(false)), 
@@ -191,7 +174,7 @@ private FProperty handleBreadcrumClick(void () vcallback) {
 	});
 }
 
-// Toont een dasboard met meerdere panels/grids
+// Een dasboard met meerdere panels/grids
 //   - hoofdgedeelte voor een tree view o.i.d.
 //   - vier subpanels voor stacked diagrams, boxplots, o.i.d.
 public Figure dashBoard(Figure mainContent, Figure topLeftContent, Figure bottomLeftContent, Figure topRightContent, Figure bottomRightContent) {
@@ -249,7 +232,13 @@ public Figure dashBoard(Figure mainContent, Figure topLeftContent, Figure bottom
 	);
 }
 
-// Een stacked diagram voor complexity rates en unit sizes
+// Een stacked diagram voor bijv. complexity rates en unit sizes
+//   - title: de titel boven het diagram
+//   - values: de (relatieve) waarden waarop het diagram is gebaseerd
+//   - colors: de verschillende kleuren; deze corresponderen met de waarden en de infoTexts
+//   - infoTexts: de legenda-teksten, per waarde een toelichting/duiding wat de waarde inhoudt
+// De lijsten met waarden, kleuren en infoTexts moetn even lang zijn, omdat ze met elkaar 
+// corresponderen. 
 public Figure stackedDiagram(str title, list[int] values, list[Color] colors, list[str] infoTexts) {
 	// Afmetingen
 	int diagramWidth = 30;
@@ -384,7 +373,3 @@ private Figure boxPlot(str title, num startRange, num q1, num median, num q3, nu
 		space(resizable(true)) // Filler
 	]);
 }
-
-
-
-
