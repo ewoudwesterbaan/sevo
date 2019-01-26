@@ -34,10 +34,6 @@ private Color footerFillColor = headerFillColor;
 private Color footerFontColor = headerFontColor;
 private Color footerLineColor = headerLineColor;
 
-private Color buttonFillColor = headerFillColor;
-private Color buttonFontColor = headerFontColor;
-private Color buttonLineColor = buttonFontColor;
-
 private Color breadcrumLineColor = defaultFillColor;
 private Color breadcrumFillColor = color("whitesmoke");
 private Color breadcrumSelectableFontColor = headerFontColor;
