@@ -22,14 +22,19 @@ import IO;
 
 private ProjectInfoTuple projectInfo;
 
-// Toont alle packages in het project (zonder de bijbehorende klassen). Deze methode is de eerste 
-// methode in deze module wordt aangeroepen (en ook de enige public methode). Hier vindt daarom de
-// initialisatie plaats van het private aatribuut projectInfo, die in andere private methoden wordt
-// gebruikt.
+// Overloaded versie van showProjectView(ProjectInfoTuple projInfo, str colorPalletteName). Deze
+// versie toont de project view met een "default" kleurenpallet (de kleurenversie van de visualisatie).
 public void showProjectView(ProjectInfoTuple projInfo) {
 	showProjectView(projInfo, "default");
 }
 
+// Toont alle packages in het project (zonder de bijbehorende klassen). Deze methode (of de overloaded 
+// versie hierboven) is de eerste methode in deze module wordt aangeroepen (en ook de enige public 
+// methode). Hier vindt daarom de initialisatie plaats van het private attribuut projectInfo, die in andere 
+// private methoden wordt gebruikt. Verder worden twee boxplots en twee stacked diagrams getoond met 
+// informatie over de grootte van de units en de complexiteit van de units in het project.
+// Deze project view van de visualisatie biedt de gebruiker de mogelijkheid om in te zoomen naar de package
+// view, en daarbinnen weer naar de class view.
 public void showProjectView(ProjectInfoTuple projInfo, str colorPalletteName) {
 	// Eenmalig vullen van de private attributen
 	projectInfo = projInfo;
@@ -42,19 +47,20 @@ public void showProjectView(ProjectInfoTuple projInfo, str colorPalletteName) {
 	PkgInfoMap pkgInfos = projectInfo.pkgInfos;
 	for (pkgInfo <- range(pkgInfos)) leaves += createPkgFigure(pkgInfo, true, colorPalletteName);
 	
-	// Render een pagina met de boom
+	// Stel een kruimelpad voor de pagina samen
 	Figure bc1 = breadcrumElement(projectInfo.projName);
 	
-	// Stel een boxplot samen voor codeLines
+	// Stel een boxplot samen voor codeLines per unit
 	Figure codeLinesBoxplot = boxPlot("Coderegels per unit", [unit.codeLines | unit <- getUnitsFromProjectInfo(projectInfo)]);
-	// Stel een boxplot samen voor complexity
+	// Stel een boxplot samen voor complexity per unit
 	Figure complexityBoxplot = boxPlot("Complexity per unit", [unit.complexity | unit <- getUnitsFromProjectInfo(projectInfo)]);
 
 	// Stel een stackedDiagram samen met de unit size informatie voor dit project
 	Figure unitSizeStackedDiagram = createUnitSizeStackedDiagram("Unit size distributie", projInfo.unitSizeCats, colorPalletteName);
-	// Stel een stackedDiagram samen met de complexity rank distributie voor ditt project
+	// Stel een stackedDiagram samen met de complexity rank distributie voor dit project
 	Figure complexityRankStackedDiagram = createComplexityRankStackedDiagram("Complexity rank dist.", projInfo.complexityRanks, colorPalletteName);
 	
+	// Render een pagina met de bovenstaande elementen
 	renderPage(
 		breadcrumPath([bc1]), 
 		createTree(root, leaves), 
@@ -65,7 +71,8 @@ public void showProjectView(ProjectInfoTuple projInfo, str colorPalletteName) {
 	);
 }
 
-// Toont een boom van een package met de bijbehorende klassen.
+// Toont een boom van een package met de bijbehorende klassen, plus twee boxplots en twee stacked diagrams. 
+// De view is vergelijkbaar met de project view, maar dan ingezoomed op een van de packages in de project view.
 private void showPackageView(str pkgName, str colorPalletteName) {
 	PkgInfoTuple pkgInfo = projectInfo.pkgInfos[pkgName];
 
@@ -77,7 +84,7 @@ private void showPackageView(str pkgName, str colorPalletteName) {
 	ClassInfoMap classInfos = pkgInfo.classInfos;
 	for (classInfo <- range(classInfos)) leaves += createClassFigure(classInfo, true, colorPalletteName);
 	
-	// Render een pagina met de boom
+	// Stel een kruimelpad voor de pagina samen om te kunnen navigeren
 	Figure bc1 = breadcrumElement(void(){showProjectView(projectInfo, colorPalletteName);}, projectInfo.projName);
 	Figure bc2 = breadcrumElement(pkgName);
 
@@ -91,6 +98,7 @@ private void showPackageView(str pkgName, str colorPalletteName) {
 	// Stel een stackedDiagram samen met de complexity rank distributie voor deze package
 	Figure complexityRankStackedDiagram = createComplexityRankStackedDiagram("Complexity rank dist.", pkgInfo.complexityRanks, colorPalletteName);
 
+	// Render een pagina met de bovenstaande elementen
 	renderPage(
 		breadcrumPath([bc1, bc2]), 
 		createTree(root, leaves), 
@@ -101,7 +109,9 @@ private void showPackageView(str pkgName, str colorPalletteName) {
 	);
 }
 
-// Toont een boom van een klasse met de bijbehorende methoden.
+// Toont een boom van een klasse met de bijbehorende methoden, plus twee boxplots en twee stacked diagrams. 
+// De view is vergelijkbaar met de project en de package view, maar dan ingezoomed op een van de classes in de 
+// package view.
 private void showClassView(str pkgName, str classId, str colorPalletteName) {
 	ClassInfoTuple classInfo = projectInfo.pkgInfos[pkgName].classInfos[classId];
 	
@@ -127,7 +137,7 @@ private void showClassView(str pkgName, str classId, str colorPalletteName) {
 	// Stel een stackedDiagram samen met de risk category informatie voor deze klasse
 	Figure riskCatStackedDiagram = createRiskCatStackedDiagram("Risico distributie", classInfo, colorPalletteName);
 	
-	// Render een pagina 
+	// Render een pagina met de bovenstaande elementen
 	renderPage(
 		breadcrumPath([bc1, bc2, bc3]), 
 		createTree(root, leaves), 
@@ -141,7 +151,6 @@ private void showClassView(str pkgName, str classId, str colorPalletteName) {
 // Rendert een pagina.
 private void renderPage(Figure breadcrumPath, Figure tree, Figure topLeftFigure, Figure bottomLeftFigure, Figure topRightFigure, Figure bottomRightFigure) {
 	Figure title = pageTitle(projectInfo.projName);
-	Figure homeButton = button(void(){visualizeMetrics();}, "Home");
 	Figure dashBoard = dashBoard(tree, topLeftFigure, bottomLeftFigure, topRightFigure, bottomRightFigure);
 	render(page(title, breadcrumPath, dashBoard));
 }
@@ -227,7 +236,7 @@ private Figure createTree(Figure root, list[Figure] leaves) {
 	return tree(root, leaves, std(size(30)), std(hgap(30)), std(vgap(2)), orientation(leftRight()), left());
 }
 
-// Maakt een Figure representatie voor een project.
+// Maakt een Figure representatie voor een project node in een boom.
 private Figure createProjectFigure(str colorPalletteName) {
 	int width = getProjectSize(projectInfo.codeLines);
 	str popupText = "Project: <projectInfo.projName>, " + 
@@ -241,7 +250,7 @@ private Figure createProjectFigure(str colorPalletteName) {
 	return hcat([t, b], id(projectInfo.projName), hgap(5));
 }
 
-// Maakt een Figure representatie voor een package.
+// Maakt een Figure representatie voor een package node in een boom.
 //   - de packagenaam fungeert als id
 //   - de breedte is afhankelijk van het aantal codeLines
 //   - de kleur is afhankelijk van de complexity rating 
@@ -260,7 +269,7 @@ private Figure createPkgFigure(PkgInfoTuple pkgInfo, bool isLeaf, str colorPalle
 	return hcat([t, rootbox], id(pkgInfo.pkgName), hgap(5));
 }
 
-// Maakt een Figure representatie voor een klasse.
+// Maakt een Figure representatie voor een klasse node in een boom.
 //   - de location van de klasse fungeert als id, 
 //   - de breedte is afhankelijk van het aantal codeLines,
 //   - de kleur is afhankelijk van de complexity rating 
@@ -282,7 +291,7 @@ private Figure createClassFigure(ClassInfoTuple classInfo, bool isLeaf, str colo
 	return hcat([t, rootbox], id(classId), hgap(5)); 
 }
 
-// Maak een Figure representatie voor een unit.
+// Maak een Figure representatie voor een unit node in een boom.
 //   - de location van de unit fungeert als id, 
 //   - de breedte is afhankelijk van het aantal codeLines,
 //   - de kleur is afhankelijk van de complexiteitsmaat van de unit.

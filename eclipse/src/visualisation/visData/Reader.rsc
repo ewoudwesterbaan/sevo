@@ -190,7 +190,7 @@ private UnitSizeDistributionMap getUnitSizeDistribution(UnitInfoList units) {
 }
 
 // Bepaalt de relatieve verdeling van de complexity ranks (++, +, 0, -, --) over alle class-coderegels.
-//   - classInfos: een lijst van ClassInfo tupels die alle classes in een package of project representeren
+//   - classInfos: een set van ClassInfo tupels die alle classes in een package of project representeren
 private ComplexityRankDistributionMap getComplexitRankDistribution(set[ClassInfoTuple] classInfos) {
 	// Totaal aantal codeLines van alle classes bij elkaar
 	int totalCodeLines = sum([0] + [classInfo.codeLines | classInfo <- classInfos]);

@@ -1,5 +1,5 @@
 //
-// Verantwoordelijk voor het lezen en schrijven van de cache.
+// Verantwoordelijk voor het lezen en schrijven van en naar de cache.
 // 
 module visualisation::visData::Cache
 
@@ -19,14 +19,12 @@ private str extension = "rscdt";
 private void writeToCache(ProjectInfoTuple projectInfoTuple) {	
 	str projectName = projectInfoTuple.projName;
 	loc writePath = path + "<projectName>.<extension>";
-	//println("Writing to <writePath>");
 	writeBinaryValueFile(writePath, projectInfoTuple);
 }
 
 // Leest een ProjectInfoTuple van disk.
 private ProjectInfoTuple readFromCache(str projectName) {
 	loc readPath = path + "<projectName>.<extension>";
-	//println("Reading from <readPath>");
 	ProjectInfoTuple projectInfoTuple = readBinaryValueFile(#ProjectInfoTuple, readPath);
 	return projectInfoTuple;
 }

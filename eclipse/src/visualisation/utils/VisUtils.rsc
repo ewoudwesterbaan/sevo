@@ -18,6 +18,8 @@ import metrics::Complexity;
 // Voor de data types en aliassen
 import visualisation::visData::DataTypes;
 
+// Een ColorPallette bevat de kleurdefinities voor de diverse metrieken
+// en aggregaties en categorieen van metrieken
 private alias ColorPallette = tuple[
 	Color simpleColor,
 	Color moderateColor,
@@ -36,8 +38,10 @@ private alias ColorPallette = tuple[
 	Color veryLargeSizeColor,
 	Color insaneSizeColor
 ];
+// Een map van kleurpalletten, met palletteName als sleutel
 private alias ColorMap = map[str palletteName, ColorPallette palette];
 
+// Twee kleurpalletten: "default" (kleur) en "BW" (Back & White, grijstinten, voor kleurenblinden)
 private ColorMap colorMap = (
 	"default" : <
 		color("limegreen"),
@@ -77,12 +81,15 @@ private ColorMap colorMap = (
 	>
 ); 
 
-// Geeft de kleur van een figure terug, op basis van de complexity rating waarin het project valt.
+// Geeft de kleur terug, op basis van de complexity rating, volgens het "default" kleurenpallet.
 //   - rank: de risico rank (++, +, 0, -, --)
 public Color getComplexityRatingIndicationColor(str rank) {
 	return getComplexityRatingIndicationColor(rank, "default");
 }
 
+// Geeft de kleur terug, op basis van de complexity rating, volgens het opgegeven kleurenpallet (palletteName).
+//   - rank: de risico rank (++, +, 0, -, --)
+//   - palletteName ("default" of "BW")
 public Color getComplexityRatingIndicationColor(str rank, str palletteName) {
 	if (rank == "++") return colorMap[palletteName].rankPlusPlusColor;
 	if (rank == "+") return colorMap[palletteName].rankPlusColor;
@@ -92,11 +99,13 @@ public Color getComplexityRatingIndicationColor(str rank, str palletteName) {
 	throw "Unexpected rank: <rank>";
 }
 
-// Geeft de kleur van een unit figure terug, op basis van de cyclomatic complexity van een unit.
+// Geeft de "default" kleur van een unit figure terug, op basis van de cyclomatic complexity van een unit.
 public Color getUnitRiskIndicationColor(int complexity) {
 	return getUnitRiskIndicationColor(complexity, "default");
 }
 
+// Geeft de kleur van een unit figure terug, op basis van de cyclomatic complexity van een unit, volgens het 
+// opgegeven kleurenpallet (palletteName).
 public Color getUnitRiskIndicationColor(int complexity, str palletteName) {
 	int simpleMax = getTupRiskCategoryByCategoryName("Simple").maxComplexity;
 	int moderateMax = getTupRiskCategoryByCategoryName("Moderate").maxComplexity;
@@ -107,20 +116,24 @@ public Color getUnitRiskIndicationColor(int complexity, str palletteName) {
 	return colorMap[palletteName].untestableColor;
 }
 
-// Geeft de kleur terug op basis van het complexity risico (categorie) van een unit.
+// Geeft de "default" kleur terug op basis van het complexity risico (categorie) van een unit.
 public Color getUnitRiskIndicationColor(TupComplexityRiskCategory cat) {
 	return getUnitRiskIndicationColor(cat, "default");
 }
 
+// Geeft de kleur terug op basis van het complexity risico (categorie) van een unit, volgens het
+// opgegeven kleurenpallet (palletteName).
 public Color getUnitRiskIndicationColor(TupComplexityRiskCategory cat, str palletteName) {
 	return getUnitRiskIndicationColor(cat.categoryName, palletteName);
 }
 
-// Geeft de kleur terug op basis van het complexity risico (categorienaam) van een unit.
+// Geeft de "default" kleur terug op basis van het complexity risico (categorienaam) van een unit.
 public Color getUnitRiskIndicationColor(str categoryName) {
 	return getUnitRiskIndicationColor(categoryName, "default");
 }
 
+// Geeft de kleur terug op basis van het complexity risico (categorienaam) van een unit, volgens het
+// opgegeven kleurenpallet (palletteName).
 public Color getUnitRiskIndicationColor(str categoryName, str palletteName) {
 	if (categoryName == "Simple") return colorMap[palletteName].simpleColor;
 	if (categoryName == "Moderate") return colorMap[palletteName].moderateColor;
@@ -128,11 +141,13 @@ public Color getUnitRiskIndicationColor(str categoryName, str palletteName) {
 	return colorMap[palletteName].untestableColor;
 }
 
-// Geeft de kleur terug op basis van de grootte-categorienaam van een unit.
+// Geeft de "default" kleur terug op basis van de grootte-categorienaam van een unit.
 public Color getUnitSizeIndicationColor(str categoryName) {
 	return getUnitSizeIndicationColor(categoryName, "default");
 }
 
+// Geeft de kleur terug op basis van de grootte-categorienaam van een unit, volgens het opgegeven
+// kleurenpallet (palletteName).
 public Color getUnitSizeIndicationColor(str categoryName, str palletteName) {
 	if (categoryName == "Small") return colorMap[palletteName].smallSizeColor;
 	if (categoryName == "Medium") return colorMap[palletteName].mediumSizeColor;
@@ -141,7 +156,7 @@ public Color getUnitSizeIndicationColor(str categoryName, str palletteName) {
 	return colorMap[palletteName].insaneSizeColor;
 }
 
-// Bepaalt de parameters voor een pboxplot, op basis van een lijst van waarden
+// Bepaalt de parameters voor een boxplot, op basis van een lijst van waarden
 //   - values: een lijst van waarden waarvan een boxplot moet worden gemaakt
 public tuple[num startRange, num q1, num median, num q3, num endRange] getBoxplotParams(list[int] values) {
 	// De uitzonderingen
