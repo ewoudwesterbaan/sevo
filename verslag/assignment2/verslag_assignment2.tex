@@ -10,6 +10,8 @@
 \usepackage{enumitem}
 \lstset{frameround=fttt,numbers=left,breaklines=true, extendedchars=true}
 
+\hyphenation{be-schre-ven}
+
 \addtolength{\textwidth}{1.5in}
 \addtolength{\topmargin}{-.875in}
 \addtolength{\oddsidemargin}{-.75in}
@@ -91,7 +93,7 @@ Om het overzicht te bewaren, laat de tree view niet direct waardes zien, maar zi
 Om een overzicht te geven waar men zich in de hiërarchie van de applicatie bevindt, wordt een kruimelpad getoond (Figuur \ref{fig:overview}: \textcircled{1}). Men kan uitzoomen door op het gewenst niveau te klikken.
 
 
-De rechterkant bevat een paneel met inzicht in de verdeling van waardes. Een stacked bar biedt inzicht in de verhouding van de classificaties in het \mbox{geselecteerde} niveau. Naast deze stacked bar zijn de percentages zichtbaar. Een boxplot geeft de verdeling van waardes. Een mouse-over laat een popup zien van de waardes (minimum, 1e kwartiel, mediaan, 3e kwartiel en maximum), zie Figuur \ref{fig:boxplot_popup}.
+De rechterkant bevat een paneel met inzicht in de verdeling van waardes. Een stacked bar biedt inzicht in de verhouding van de classificaties in het \mbox{geselecteerde} niveau. Naast deze stacked bar zijn de percentages zichtbaar. Een boxplot geeft de verdeling van waardes. Een mouse-over laat een popup zien van de waardes (startwaarde, 1e kwartiel, mediaan, 3e kwartiel en eindwaarde), zie Figuur \ref{fig:boxplot_popup}.
 Een stacked bar en boxplot worden getoond voor complexiteit en unit size (Figuur \ref{fig:overview}: \textcircled{3}) en laten waardes zien voor het geselecteerde niveau.
 
 De visualisatie hebben we ook bruikbaar gemaakt voor mensen die minder goed kleuren kunnen onderscheiden. Door de applicatie met een extra parameter ‘BW’ (indicatie kleurenpallet) op te starten, worden de kleuren rood, oranje, geel en groen vervangen door grijstinten, zie Figuur \ref{fig:overview_blackwhite}.
@@ -106,7 +108,7 @@ De visualisatie hebben we ook bruikbaar gemaakt voor mensen die minder goed kleu
 Met het voorkomen van vertekeningen van waarnemingen (criterium 1 in Sectie \ref{Criteria}) hebben we beperkt rekening kunnen houden. De tree view wordt onleesbaar als we dit wel zouden toepassen. Een voorbeeld is een klasse waar een methode inzit met een unitsize van één en een methode met een unit size van 200.
 Een ander voorbeeld zijn de punten aan de zijkant van de boxplot, dit zijn er altijd 10 en dat kan misleidend zijn.
 
-Het aantal informatiedragende dimensies (criterium 2 in Sectie \ref{Criteria}) hebben we wel goed toegepast. De boxplots en stacked bars zijn een 1-dimensionale weergave van een metriek. In de treeview worden twee dimensies weergegeven doormiddel van kleur en grootte. 
+Het aantal informatiedragende dimensies (criterium 2 in Sectie \ref{Criteria}) hebben we wel goed toegepast. De boxplots en stacked bars zijn een 1-dimensionale weergave van een metriek. In de tree view worden twee dimensies weergegeven doormiddel van kleur en grootte. 
 
 De kleurstelling (criterium 3 in Sectie \ref{Criteria}) die we hebben toegepast is in de gehele visualisatie hetzelfde.  De achtergrond hebben we een neutrale kleuren gegeven, waarbij de achtergrond van de rechterkant iets donkerder is. Wij willen hiermee bereiken dat men eerst geleid wordt naar de tree view.
 
